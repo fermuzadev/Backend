@@ -10,7 +10,7 @@ class ProductManager {
     addProduct(title, description, price, thumbnail, code, stock) {
         if(this.products.find(product => product.code ===code)) {
             console.log(`Error: The product code ${code} already exists`)
-        }else if(title==="" || description==="" || price==="" || thumbnail==="" || code==="" || stock==="" ){
+        }else if(title===undefined || description===undefined || price===undefined || thumbnail===undefined || code===undefined || stock===undefined ){
             console.log('Error: One or more field is empty, the product is not added')    
         }else{
             this.products.push({
@@ -39,7 +39,7 @@ products.getProducts()
 products.addProduct('producto prueba', 'Este es un producto prueba', 200, 'Sin imagen', 'abc123', 25)
 products.getProducts()
 
-products.addProduct('producto prueba', 'Este es un producto prueba', 200, 'Sin imagen',"",  25)
+products.addProduct('producto prueba', 'Este es un producto prueba', 200, 'Sin imagen')
 products.getProducts()
 
 products.getProductById(2)
