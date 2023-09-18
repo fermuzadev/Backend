@@ -4,7 +4,7 @@ class ProductManager {
     }
     
     getProducts() {
-        console.log('Products : ', this.products);
+        return this.products;
     }
     
     addProduct(title, description, price, thumbnail, code, stock) {
@@ -25,25 +25,31 @@ class ProductManager {
             console.log(`Product code ${code} its added`)
         }
     }
+
     getProductById(id) {
-        this.products.find(product=> {product.id === id ? console.log(product) : console.log(`Error: The product id ${id} is not found`)})
+        let product = this.products.find((prod) => prod.id === id);
+        if (!product) {
+            let noEncontrado = `The product with id ${id} doesn't exist`;
+            return noEncontrado;
+        } else {
+            return product;
+        }
     }
-    
 }
 
 products = new ProductManager();
-products.getProducts()
+console.log('Products : ' , products.getProducts())
 
 products.addProduct('producto prueba', 'Este es un producto prueba', 200, 'Sin imagen', 'abc123', 25)
-products.getProducts()
+console.log('Products : ' , products.getProducts())
 
 products.addProduct('producto prueba', 'Este es un producto prueba', 200, 'Sin imagen', 'abc123', 25)
-products.getProducts()
+console.log('Products : ' , products.getProducts())
 
 products.addProduct('producto prueba', 'Este es un producto prueba', 200, 'Sin imagen')
 products.addProduct('', null, 200, '')
-products.getProducts()
+console.log('Products : ' , products.getProducts())
 
-products.getProductById(2)
-products.getProductById(1)
+console.log('The find is : ',products.getProductById(2))
+console.log('The find is : ' , products.getProductById(1))
 
