@@ -1,1 +1,0 @@
-products.getProductById(2)

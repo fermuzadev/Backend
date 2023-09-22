@@ -36,7 +36,7 @@ class ProductManager {
         }
     }
 }
-
+//Test
 products = new ProductManager();
 console.log('Products : ' , products.getProducts())
 
