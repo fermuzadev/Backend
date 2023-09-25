@@ -55,7 +55,7 @@ class ProductManager {
         }else {
             products.splice(id -1 , 1)
             saveJSONToFile(this.path, products);
-            console.log("The product have been removed")
+            console.log("The product has been removed")
         }
     }
 
