@@ -15,10 +15,10 @@ class ProductManager {
     
     async addProduct(product) {
         const { title, description, price, thumbnail, code, stock} = product;
-        if (!title || !description || !price || !thumbnail || !code || !stock ){
+        if (!(title && description && price && thumbnail && code && stock)){
             console.log(`Error: One or more field is empty, the product wasn't add`)    
-        }
-        const products = await getJSONFromFile(this.path);
+        }else {
+            const products = await getJSONFromFile(this.path);
             if(products.find(prod => prod.code ===code)) {
                 console.log(`Error: The product code ${code} already exists`)
             }else{
@@ -34,6 +34,7 @@ class ProductManager {
                 await saveJSONToFile(this.path, products);
                 console.log(`Product code ${code} its added`)
             }
+        }
     }
 
     async getProductById(id) {
@@ -83,8 +84,6 @@ class ProductManager {
 
         }
     }
-
-
 
 //End Product Manager Class
 
