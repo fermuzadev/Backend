@@ -49,12 +49,12 @@ class ProductManager {
     
     async deleteProduct(id) {
         const products = await getJSONFromFile(this.path);
-        let productToDelete = products.find((prod => prod.id === id))
+        let productToDelete = products.find(prod => prod.id === id)
         if(!productToDelete){
             console.log('The product doesn`t exist')
         }else {
             products.splice(id -1 , 1)
-            await saveJSONToFile(this.path, products);
+            saveJSONToFile(this.path, products);
             console.log("The product have been removed")
         }
     }
@@ -68,7 +68,7 @@ class ProductManager {
         } else if (!id) {
             console.log('The ID is wrong');
         }else {
-            let updatedProducts = { 
+            let updatedProducts = [{ 
                 id: id,
                 title: updTitle,
                 description : updDescription,
@@ -76,8 +76,9 @@ class ProductManager {
                 thumbnail: updThumbnail,
                 code: updCode,
                 stock: updStock
-            }
-            console.log(updatedProducts)
+            }]
+            await saveJSONToFile(this.path, updatedProducts);
+            console.log("Products updated")
         }
 
         }
@@ -131,7 +132,7 @@ const testingJSON = async () => {
     try {
         const testingProducts = new ProductManager("./data.json");
         let initial = await testingProducts.getProducts();
-        console.log('The products are : ' , initial)
+        console.log('The products are : ' ,  initial)
         await testingProducts.addProduct({
             title: "producto prueba",
             description: "Este es un producto prueba",
@@ -144,8 +145,8 @@ const testingJSON = async () => {
         console.log("getProducts", 'The products are: ', products);
         testingProducts.getProductById(1)
         testingProducts.getProductById(2)  //No existe 
-        await testingProducts.updateProduct(1, "probando", 10 , "probando", 1231, 50)
-        testingProducts.deleteProduct(1) 
+        await testingProducts.updateProduct(1, "probando", 10 , "probando", 1231, 50, 50 )
+        await testingProducts.deleteProduct(1) 
     } catch (error) {
         console.error(' Ha ocurrido un error: ', error.message);
     }
