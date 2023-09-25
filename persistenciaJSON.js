@@ -148,7 +148,7 @@ const testingJSON = async () => {
         await testingProducts.updateProduct(1, "probando", 10 , "probando", 1231, 50, 50 )
         await testingProducts.deleteProduct(1) 
     } catch (error) {
-        console.error(' Ha ocurrido un error: ', error.message);
+        console.error(' Error: ', error.message);
     }
 };
 
