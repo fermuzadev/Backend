@@ -41,7 +41,7 @@ class ProductManager {
         const products = await getJSONFromFile(this.path);
         let product = products.find((prod) => prod.id === id);
         if (!product) {
-            let noEncontrado = `The product with id ${id} doesn't exist`;
+            let noEncontrado = `The product with id ${id} doesn't exists`;
             console.log(noEncontrado);
         } else {
             console.log(`The product with ID ${id} is : `,product);
@@ -52,10 +52,10 @@ class ProductManager {
         const products = await getJSONFromFile(this.path);
         let productToDelete = products.find(prod => prod.id === id)
         if(!productToDelete){
-            console.log('The product doesn`t exist')
+            console.log('The product doesn`t exists')
         }else {
-            products.splice(id -1 , 1)
-            saveJSONToFile(this.path, products);
+            let filterProd = products.filter(p => p.id !== id)
+            saveJSONToFile(this.path, filterProd);
             console.log("The product has been removed")
         }
     }
@@ -68,9 +68,11 @@ class ProductManager {
             console.log(`Product not found`)
         } else if (!id) {
             console.log('The ID is wrong');
+        } else if (products.find(p =>  p.code === updCode)){
+            console.log(`Code ${updCode} already exists`)
         }else {
-            let updatedProducts = [{ 
-                id: id,
+            let updatedProducts = [...products, {  
+                id: products.length + 1,
                 title: updTitle,
                 description : updDescription,
                 price: updPrice,
@@ -78,6 +80,7 @@ class ProductManager {
                 code: updCode,
                 stock: updStock
             }]
+            console.log('Updated with spread? ', updatedProducts)
             await saveJSONToFile(this.path, updatedProducts);
             console.log("Products updated")
         }
@@ -144,8 +147,12 @@ const testingJSON = async () => {
         console.log("getProducts", 'The products are: ', products);
         testingProducts.getProductById(1)
         testingProducts.getProductById(2)  //No existe 
-        await testingProducts.updateProduct(1, "probando", 10 , "probando", 1231, 50, 50 )
-        await testingProducts.deleteProduct(1) 
+        await testingProducts.addProduct({title: "t", description: "d", price: 1, thumbnail: "t", code: "123456", stock: 30 })
+        await testingProducts.updateProduct(2, "probando", 10 , "probando", 1231, 50, 50 )
+        await testingProducts.updateProduct(1, "producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 500) //Duplicar Code en Update
+        await testingProducts.deleteProduct(1)
+        await testingProducts.deleteProduct(2) 
+        await testingProducts.deleteProduct(3) 
     } catch (error) {
         console.error(' Error: ', error.message);
     }
