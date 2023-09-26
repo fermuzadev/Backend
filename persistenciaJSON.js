@@ -71,8 +71,9 @@ class ProductManager {
         } else if (products.find(p =>  p.code === updCode)){
             console.log(`Code ${updCode} already exists`)
         }else {
-            let updatedProducts = [...products, {  
-                id: products.length + 1,
+            let filterProd = products.filter(p => p.id !== id)
+            let updatedProducts = [...filterProd, {  
+                id: id,
                 title: updTitle,
                 description : updDescription,
                 price: updPrice,
@@ -147,9 +148,9 @@ const testingJSON = async () => {
         console.log("getProducts", 'The products are: ', products);
         testingProducts.getProductById(1)
         testingProducts.getProductById(2)  //No existe 
-        await testingProducts.addProduct({title: "t", description: "d", price: 1, thumbnail: "t", code: "123456", stock: 30 })
         await testingProducts.updateProduct(2, "probando", 10 , "probando", 1231, 50, 50 )
         await testingProducts.updateProduct(1, "producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 500) //Duplicar Code en Update
+        await testingProducts.addProduct({title: "t", description: "d", price: 1, thumbnail: "t", code: "123456", stock: 30 })
         await testingProducts.deleteProduct(1)
         await testingProducts.deleteProduct(2) 
         await testingProducts.deleteProduct(3) 
