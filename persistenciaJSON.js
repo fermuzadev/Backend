@@ -16,11 +16,11 @@ class ProductManager {
     async addProduct(product) {
         const { title, description, price, thumbnail, code, stock} = product;
         if (!(title && description && price && thumbnail && code && stock)){
-            console.log(`Error: One or more field is empty, the product wasn't add`)    
+            console.log(`Add Error: One or more field is empty, the product wasn't add`)    
         }else {
             const products = await getJSONFromFile(this.path);
             if(products.find(prod => prod.code ===code)) {
-                console.log(`Error: The product code ${code} already exists`)
+                console.log(`Add Error: The product code ${code} already exists`)
             }else{
                 products.push({
                     id: products.length + 1,
@@ -42,9 +42,10 @@ class ProductManager {
         let product = products.find((prod) => prod.id === id);
         if (!product) {
             let noEncontrado = `The product with id ${id} doesn't exists`;
-            console.log(noEncontrado);
+            return noEncontrado;
         } else {
-            console.log(`The product with ID ${id} is : `,product);
+            console.log('GetID' , product)
+            return product;
         }
     }
     
@@ -52,7 +53,7 @@ class ProductManager {
         const products = await getJSONFromFile(this.path);
         let productToDelete = products.find(prod => prod.id === id)
         if(!productToDelete){
-            console.log('The product doesn`t exists')
+            console.log('Delete Error : The product doesn`t exists')
         }else {
             let filterProd = products.filter(p => p.id !== id)
             saveJSONToFile(this.path, filterProd);
@@ -71,6 +72,9 @@ class ProductManager {
         } else if (products.find(p =>  p.code === updCode)){
             console.log(`Code ${updCode} already exists`)
         }else {
+            if (!(updTitle && updDescription && updPrice && updThumbnail && updCode && updStock)){
+                console.log(`Update Error: One or more field is empty, the product wasn't add`)
+            }else{
             let filterProd = products.filter(p => p.id !== id)
             let updatedProducts = [...filterProd, {  
                 id: id,
@@ -84,10 +88,10 @@ class ProductManager {
             console.log('Updated with spread? ', updatedProducts)
             await saveJSONToFile(this.path, updatedProducts);
             console.log("Products updated")
-        }
-
+            }
         }
     }
+}
 
 //End Product Manager Class
 
@@ -147,13 +151,13 @@ const testingJSON = async () => {
         const products = await testingProducts.getProducts();
         console.log("getProducts", 'The products are: ', products);
         testingProducts.getProductById(1)
-        testingProducts.getProductById(2)  //No existe 
-        await testingProducts.updateProduct(2, "probando", 10 , "probando", 1231, 50, 50 )
+        testingProducts.getProductById(4) //Not found 
+        await testingProducts.updateProduct(2, undefined, 10 )  //Test sin campos o undefined con update 
         await testingProducts.updateProduct(1, "producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 500) //Duplicar Code en Update
         await testingProducts.addProduct({title: "t", description: "d", price: 1, thumbnail: "t", code: "123456", stock: 30 })
-        await testingProducts.deleteProduct(1)
-        await testingProducts.deleteProduct(2) 
-        await testingProducts.deleteProduct(3) 
+        // await testingProducts.deleteProduct(1)
+        // await testingProducts.deleteProduct(2) 
+        // await testingProducts.deleteProduct(3) 
     } catch (error) {
         console.error(' Error: ', error.message);
     }
