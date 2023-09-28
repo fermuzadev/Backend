@@ -1,5 +1,4 @@
-//CRUD JSON 
-//Entregable 2 BackEnd Coder
+//Entregable 3 - Servidor Express 
 
 const { promises:fs} = require('fs');
 
@@ -135,7 +134,7 @@ const saveJSONToFile = async (path, data) => {
 
 //Testing
 
-const testingJSON = async () => {
+/* const testingJSON = async () => {
     try {
         const testingProducts = new ProductManager("./data.json");
         let initial = await testingProducts.getProducts();
@@ -163,4 +162,6 @@ const testingJSON = async () => {
     }
 };
 
-testingJSON()
+testingJSON() */
+
+module.exports = ProductManager;
