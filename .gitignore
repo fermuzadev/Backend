@@ -1,5 +1,5 @@
-# ignorar todos los archivos que terminen en .log
+# ignorar todos los archivos que terminen en .js
 *.js
 
-# excepto production.log
+# excepto persistenciaJSON.log
 !persistenciaJSON.js
