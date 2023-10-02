@@ -1,8 +1,13 @@
 //Entregable 3 Express BackEnd Coder
+//Server Express
+
+const express = require('express');
+const app = express();
+app.use(express.urlencoded({ extended:true }));
 
 //Importo la clase productManager
 
-const productManager = require('./ProductManager')
+const productManager = require('./ProductManager');
 // const products = require('./data.json')
 let productos;
 
@@ -12,21 +17,14 @@ const testingJSON = async () => {
         const products = await testingProducts.getProducts();
         console.log("getProducts", 'The products are: ', products);
         productos = products;
+        return productos;
     } catch (error) {
         console.error(' Error: ', error.message);
     }
     
 };
 
-testingJSON()
-
-
-//Server Express
-
-const express = require('express');
-const app = express();
-
-app.use(express.urlencoded({ extended:true }));
+productos = testingJSON()
 
 //EndPoints
 
@@ -39,14 +37,16 @@ app.get('/', (req, res) => {
 app.get('/products/:pid', async (req, res) => {
     try {
         const {pid} = req.params
-        prodFind = productos.find(p => p.id === parseInt(pid))
+        const testingProducts = new productManager("./data.json");
+        const products = await testingProducts.getProducts();
+        prodFind = products.find(p => p.id === parseInt(pid))
         if (!prodFind){
             res.json({
                 error: 'Product Not Found',
                 message: `The product id ${pid} not found`
             })
         }else{
-            await res.send(prodFind);
+            res.send(prodFind);
         }
     }catch(error) {
         res.status(400).json({
@@ -58,9 +58,11 @@ app.get('/products/:pid', async (req, res) => {
 
 app.get('/products', async (req, res) => {
     try {
+        const testingProducts = new productManager("./data.json");
+        const products = await testingProducts.getProducts();
         const {limit} = req.query;
         if (limit <= 10) {
-            prodFind = productos.filter(p => p.id <= limit)
+            prodFind = products.filter(p => p.id <= limit)
             res.send(prodFind)
         }else{
             res.send(productos)
