@@ -1,1 +1,5 @@
-./clase02.js
+# ignorar todos los archivos que terminen en .log
+*.js
+
+# excepto production.log
+!persistenciaJSON.js
