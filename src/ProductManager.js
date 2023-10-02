@@ -136,34 +136,34 @@ const saveJSONToFile = async (path, data) => {
 
 //Testing
 
-/* const testingJSON = async () => {
+const testingJSON = async () => {
     try {
         const testingProducts = new ProductManager("./data.json");
-        let initial = await testingProducts.getProducts();
-        console.log('The products are : ' ,  initial)
-        await testingProducts.addProduct({
-            title: "producto prueba",
-            description: "Este es un producto prueba",
-            price: 200,
-            thumbnail: "sin imagen",
-            code: "abc123",
-            stock: 25
-        });
+        // let initial = await testingProducts.getProducts();
+        // console.log('The products are : ' ,  initial)
+        // await testingProducts.addProduct({
+        //     title: "producto prueba",
+        //     description: "Este es un producto prueba",
+        //     price: 200,
+        //     thumbnail: "sin imagen",
+        //     code: "abc123",
+        //     stock: 25
+        // });
         const products = await testingProducts.getProducts();
         console.log("getProducts", 'The products are: ', products);
-        testingProducts.getProductById(1)
-        testingProducts.getProductById(4) //Not found 
-        await testingProducts.updateProduct(2, undefined, 10 )  //Test sin campos o undefined con update 
-        await testingProducts.updateProduct(1, "producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 500) //Duplicar Code en Update
-        await testingProducts.addProduct({title: "t", description: "d", price: 1, thumbnail: "t", code: "123456", stock: 30 })
-        await testingProducts.deleteProduct(1)
-        await testingProducts.deleteProduct(2) 
-        await testingProducts.deleteProduct(3) 
+        // testingProducts.getProductById(1)
+        // testingProducts.getProductById(4) //Not found 
+        // await testingProducts.updateProduct(2, undefined, 10 )  //Test sin campos o undefined con update 
+        // await testingProducts.updateProduct(1, "producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 500) //Duplicar Code en Update
+        // await testingProducts.addProduct({title: "t", description: "d", price: 1, thumbnail: "t", code: "123456", stock: 30 })
+        // await testingProducts.deleteProduct(1)
+        // await testingProducts.deleteProduct(2) 
+        // await testingProducts.deleteProduct(3) 
     } catch (error) {
         console.error(' Error: ', error.message);
     }
 };
 
-testingJSON() */
+testingJSON()
 
 module.exports = ProductManager;

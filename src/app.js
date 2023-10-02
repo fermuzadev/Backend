@@ -8,10 +8,11 @@ app.use(express.urlencoded({ extended:true }));
 //Importo la clase productManager
 
 const productManager = require('./ProductManager');
+const testingProducts = new productManager("./data.json");
 // const products = require('./data.json')
 let productos;
 
-const testingJSON = async () => {
+/* const testingJSON = async () => {
     try {
         const testingProducts = new productManager("./data.json");
         const products = await testingProducts.getProducts();
@@ -24,7 +25,7 @@ const testingJSON = async () => {
     
 };
 
-productos = testingJSON()
+testingJSON() */
 
 //EndPoints
 
@@ -37,7 +38,7 @@ app.get('/', (req, res) => {
 app.get('/products/:pid', async (req, res) => {
     try {
         const {pid} = req.params
-        const testingProducts = new productManager("./data.json");
+        // const testingProducts = new productManager("./data.json");
         const products = await testingProducts.getProducts();
         prodFind = products.find(p => p.id === parseInt(pid))
         if (!prodFind){
@@ -56,16 +57,16 @@ app.get('/products/:pid', async (req, res) => {
     }   
 });
 
-app.get('/products', async (req, res) => {
+app.get('/products',  async (req, res) => {
     try {
-        const testingProducts = new productManager("./data.json");
+        // const testingProducts = new productManager("./data.json");
         const products = await testingProducts.getProducts();
         const {limit} = req.query;
         if (limit <= 10) {
             prodFind = products.filter(p => p.id <= limit)
             res.send(prodFind)
         }else{
-            res.send(productos)
+            res.send(products)
         }        
     }catch(error) {
         res.status(400).json({
