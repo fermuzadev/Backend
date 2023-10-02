@@ -1,5 +1,6 @@
 //Entregable 3 - Servidor Express 
 
+
 const { promises:fs} = require('fs');
 
 //Class ProductManager
@@ -64,15 +65,16 @@ class ProductManager {
     async updateProduct(id, updTitle, updDescription, updPrice, updThumbnail, updCode, updStock ) {
         const products = await getJSONFromFile(this.path);
         let findProduct = products.find(prod => prod.id === id)
-        if (!findProduct) {
-            console.log(`Product not found`)
-        } else if (!id) {
-            console.log('The ID is wrong');
+        if (!findProduct || !id) {
+            console.log(`Product id ${id} not found`)
+            return;
         } else if (products.find(p =>  p.code === updCode)){
-            console.log(`Code ${updCode} already exists`)
+            console.log(`Code ${updCode} already exists`);
+            return;
         }else {
             if (!(updTitle && updDescription && updPrice && updThumbnail && updCode && updStock)){
-                console.log(`Update Error: One or more field is empty, the product wasn't add`)
+                console.log(`Update Error: One or more field is empty, the product wasn't updated`)
+                return;
             }else{
             let filterProd = products.filter(p => p.id !== id)
             let updatedProducts = [...filterProd, {  
@@ -154,9 +156,9 @@ const saveJSONToFile = async (path, data) => {
         await testingProducts.updateProduct(2, undefined, 10 )  //Test sin campos o undefined con update 
         await testingProducts.updateProduct(1, "producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 500) //Duplicar Code en Update
         await testingProducts.addProduct({title: "t", description: "d", price: 1, thumbnail: "t", code: "123456", stock: 30 })
-        // await testingProducts.deleteProduct(1)
-        // await testingProducts.deleteProduct(2) 
-        // await testingProducts.deleteProduct(3) 
+        await testingProducts.deleteProduct(1)
+        await testingProducts.deleteProduct(2) 
+        await testingProducts.deleteProduct(3) 
     } catch (error) {
         console.error(' Error: ', error.message);
     }
