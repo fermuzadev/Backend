@@ -140,7 +140,6 @@ const testingJSON = async () => {
     try {
         const testingProducts = new ProductManager("./data.json");
         // let initial = await testingProducts.getProducts();
-        // console.log('The products are : ' ,  initial)
         // await testingProducts.addProduct({
         //     title: "producto prueba",
         //     description: "Este es un producto prueba",
