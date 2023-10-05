@@ -19,14 +19,14 @@ app.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
     pid = parseInt(pid);
-    const productID = await testingProducts.getProductById(pid);
-    if (!productID) {
+    const productById = await testingProducts.getProductById(pid);
+    if (!productById) {
       res.json({
         error: "Product Not Found",
         message: `The product id ${pid} not found`,
       });
     } else {
-      res.send(productID);
+      res.send(productById);
     }
   } catch (error) {
     res.status(400).json({
@@ -40,10 +40,10 @@ app.get("/products", async (req, res) => {
   try {
     const products = await testingProducts.getProducts();
     const { limit } = req.query;
-    let prodFilter;
-    if (limit <= 10) {
-      prodFilter = products.filter((p) => p.id <= limit);
-      res.send(prodFilter);
+    let prodLimit;
+    if (limit) {
+      prodLimit = products.slice(0, limit);
+      res.send(prodLimit);
     } else {
       res.send(products);
     }
