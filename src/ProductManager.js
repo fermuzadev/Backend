@@ -160,7 +160,6 @@ const testingJSON = async () => {
   try {
     const testingProducts = new ProductManager("./data.json");
     const products = await testingProducts.getProducts();
-    console.log("getProducts", "The products are: ", products);
   } catch (error) {
     console.error(" Error: ", error.message);
   }
