@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import { getRandomId } from "./utils";
 //Class ProductManager
 class ProductManager {
   constructor(path) {
@@ -21,7 +22,7 @@ class ProductManager {
         console.log(`Add Error: The product code ${code} already exists`);
       } else {
         products.push({
-          id: products.length + 1,
+          id: getRandomId(),
           title,
           description,
           price,
@@ -156,6 +157,7 @@ const saveJSONToFile = async (path, data) => {
 const testingJSON = async () => {
   try {
     const testingProducts = new ProductManager("./data.json");
+    testingProducts.addProduct();
     const products = await testingProducts.getProducts();
   } catch (error) {
     console.error(" Error: ", error.message);
