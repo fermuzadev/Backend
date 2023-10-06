@@ -1,6 +1,4 @@
-//Entregable 3 - Servidor Express
 
-// const { promises: fs } = require("fs");
 import fs from "fs/promises";
 //Class ProductManager
 class ProductManager {
