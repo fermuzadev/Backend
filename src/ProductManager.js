@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import { getRandomId } from "./utils";
+import { getRandomId } from "./utils/utils.js";
 //Class ProductManager
 class ProductManager {
   constructor(path) {
@@ -11,8 +11,17 @@ class ProductManager {
   }
 
   async addProduct(product) {
-    const { title, description, price, thumbnail, code, stock } = product;
-    if (!(title && description && price && thumbnail && code && stock)) {
+    const {
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnails,
+    } = product;
+    if (!(title && description && code && price && stock && category)) {
       console.log(
         `Add Error: One or more field is empty, the product wasn't add`
       );
@@ -22,13 +31,15 @@ class ProductManager {
         console.log(`Add Error: The product code ${code} already exists`);
       } else {
         products.push({
-          id: getRandomId(),
+          id: getRandomId(products),
           title,
           description,
-          price,
-          thumbnail,
           code,
+          price,
+          status,
           stock,
+          category,
+          thumbnails,
         });
         await saveJSONToFile(this.path, products);
         console.log(`Product code ${code} its added`);
@@ -64,52 +75,39 @@ class ProductManager {
     id,
     updTitle,
     updDescription,
-    updPrice,
-    updThumbnail,
     updCode,
-    updStock
+    updPrice,
+    updStatus,
+    updStock,
+    updCategory,
+    updThumbnails
   ) {
     const products = await getJSONFromFile(this.path);
     let findProduct = products.find((prod) => prod.id === id);
     if (!findProduct || !id) {
       console.log(`Product id ${id} not found`);
       return;
-    } else if (products.find((p) => p.code === updCode)) {
-      console.log(`Code ${updCode} already exists`);
-      return;
     } else {
-      if (
-        !(
-          updTitle &&
-          updDescription &&
-          updPrice &&
-          updThumbnail &&
-          updCode &&
-          updStock
-        )
-      ) {
-        console.log(
-          `Update Error: One or more field is empty, the product wasn't updated`
-        );
-        return;
-      } else {
-        let filterProd = products.filter((p) => p.id !== id);
-        let updatedProducts = [
-          ...filterProd,
-          {
-            id: id,
-            title: updTitle,
-            description: updDescription,
-            price: updPrice,
-            thumbnail: updThumbnail,
-            code: updCode,
-            stock: updStock,
-          },
-        ];
-        console.log("Updated with spread? ", updatedProducts);
-        await saveJSONToFile(this.path, updatedProducts);
-        console.log("Products updated");
-      }
+      let filterProd = products.filter((p) => p.id !== id);
+      let arrayProd = products.filter((p) => p.id === id);
+      console.log("thumb", arrayProd[0].thumbnails);
+      let updatedProducts = [
+        ...filterProd,
+        {
+          id: id,
+          title: updTitle,
+          description: updDescription,
+          code: updCode,
+          price: updPrice,
+          status: updStatus ?? true,
+          stock: updStock,
+          category: updCategory,
+          thumbnails: [arrayProd[0].thumbnails, updThumbnails].flat(),
+        },
+      ];
+      console.log("Updated with spread? ", updatedProducts);
+      await saveJSONToFile(this.path, updatedProducts);
+      console.log("Products updated");
     }
   }
 }
@@ -154,10 +152,9 @@ const saveJSONToFile = async (path, data) => {
 
 //Testing
 
-const testingJSON = async () => {
+export const testingJSON = async () => {
   try {
-    const testingProducts = new ProductManager("./data.json");
-    testingProducts.addProduct();
+    const testingProducts = new ProductManager("./productos.json");
     const products = await testingProducts.getProducts();
   } catch (error) {
     console.error(" Error: ", error.message);

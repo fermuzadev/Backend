@@ -1,7 +1,6 @@
 import express from "express";
 import prodRouter from "./routers/products.router.js";
 import cartsRouter from "./routers/carts.router.js";
-import { getRandomId } from "./utils.js";
 
 const app = express();
 const PORT = 8080;
