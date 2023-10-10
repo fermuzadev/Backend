@@ -1,5 +1,6 @@
-import fs from "fs/promises";
-import { getRandomId } from "./utils/utils.js";
+
+import { getRandomId, saveJSONToFile, getJSONFromFile } from "./utils/utils.js";
+
 //Class ProductManager
 class ProductManager {
   constructor(path) {
@@ -113,42 +114,6 @@ class ProductManager {
 }
 
 //End Product Manager Class
-
-const existFile = async (path) => {
-  try {
-    await fs.access(path);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
-const getJSONFromFile = async (path) => {
-  if (!(await existFile(path))) {
-    return [];
-  } else {
-    let content;
-    try {
-      content = await fs.readFile(path, "utf-8");
-    } catch (error) {
-      throw new Error(`The file ${path} could not be read`);
-    }
-    try {
-      return JSON.parse(content);
-    } catch (error) {
-      throw new Error(`The file ${path} hasn't a JSON format`);
-    }
-  }
-};
-
-const saveJSONToFile = async (path, data) => {
-  const content = JSON.stringify(data, null, "\t");
-  try {
-    await fs.writeFile(path, content, "utf-8");
-  } catch (error) {
-    throw new Error(`The file ${path} couldn't be write`);
-  }
-};
 
 //Testing
 
