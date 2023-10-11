@@ -9,8 +9,6 @@ const prodRouter = Router();
 
 const testingProducts = new ProductManager(prodPath);
 
-// testingProducts.deleteProduct(2625);
-
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await testingProducts.getProducts();
