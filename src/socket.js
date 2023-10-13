@@ -19,3 +19,7 @@ export const init = (httpServer) => {
   });
   console.log(`Server socket is running ❤️`);
 };
+
+export const emitFromAPI = (event, data) => {
+  io.emit(event, data);
+};

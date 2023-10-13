@@ -26,6 +26,10 @@
     updateLogMessages(messages);
   });
 
+  socket.on("new-message-from-api", (message) => {
+    console.log("new-message-from-api --> message", message);
+  });
+
   socket.on("new-client", () => {
     Swal.fire({
       text: "Nuevo usuario conectado",
