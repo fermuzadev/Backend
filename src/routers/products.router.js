@@ -8,7 +8,6 @@ const prodPath = path.resolve(__dirname, "../productos.json");
 const prodRouter = Router();
 
 const testingProducts = new ProductManager(prodPath);
-
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await testingProducts.getProducts();
@@ -88,7 +87,7 @@ prodRouter.post("/products", async (req, res) => {
     });
     const newProd = await testingProducts.getProducts();
     try {
-      res.status(201).send(newProd);
+      res.status(201).send(newProd.find((prod) => prod.code === prodCode));
     } catch (error) {
       res.status(400).json({
         status: "error",
@@ -124,7 +123,7 @@ prodRouter.put("/products/:pid", async (req, res) => {
   );
   const products = await testingProducts.getProducts();
   try {
-    await res.status(200).send(products);
+    await res.status(200).send(products.find((prod) => prod.id === pid));
   } catch (error) {
     res.status(400).json({
       status: "error",
@@ -139,7 +138,11 @@ prodRouter.delete("/products/:pid", async (req, res) => {
   await testingProducts.deleteProduct(pid);
   const products = await testingProducts.getProducts();
   try {
-    res.status(200).send(products);
+    if (products.find((prod) => prod.id === pid)) {
+      res.status(200).json({ message: `The product id ${pid} was deleted` });
+    } else {
+      res.status(404).json({ message: `The product ${pid} not found` });
+    }
   } catch (error) {
     res.status(400).json({
       status: "error",
