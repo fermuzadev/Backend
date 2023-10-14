@@ -1,19 +1,26 @@
 import express from "express";
-import prodRouter from "./routers/products.router.js";
-import cartsRouter from "./routers/carts.router.js";
+import handlebars from "express-handlebars";
+import path from "path";
+
+import chatRouter from "./routers/chat.routers.js";
+import { __dirname } from "./utils.js";
 
 const app = express();
-const PORT = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "../public")));
 
-app.use("/api", prodRouter, cartsRouter);
+app.engine("handlebars", handlebars.engine());
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "handlebars");
 
-app.get("/", (req, res) => {
-  res.send("<h1>Proyecto Final - Primera Entrega</h1>");
+app.use("/", chatRouter);
+
+app.use((error, req, res, next) => {
+  const message = `Ha ocurrido un error desconocido😥: ${error.message}`;
+  console.log(message);
+  res.status(500).json({ status: "error", message });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+export default app;
