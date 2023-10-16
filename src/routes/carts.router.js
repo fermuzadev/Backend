@@ -1,18 +1,12 @@
 import { Router } from "express";
-import { __dirname } from "../utils/utils.js";
+import { __dirname } from "../utils.js";
 import path from "path";
-import {
-  getRandomId,
-  saveJSONToFile,
-  getJSONFromFile,
-} from "../utils/utils.js";
+import { getRandomId, saveJSONToFile, getJSONFromFile } from "../utils.js";
 import ProductManager from "../ProductManager.js";
 
 const cartPath = path.resolve(__dirname, "../carrito.json");
 const prodPath = path.resolve(__dirname, "../productos.json");
 const instanceProducts = new ProductManager(prodPath);
-const products = await instanceProducts.getProducts();
-const onlyId = await products.map((prod) => ({ id: prod.id }));
 
 const cartsRouter = Router();
 

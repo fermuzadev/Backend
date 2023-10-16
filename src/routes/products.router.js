@@ -1,6 +1,6 @@
 import { Router } from "express";
 import ProductManager from "../ProductManager.js";
-import { __dirname } from "../utils/utils.js";
+import { __dirname } from "../utils.js";
 import path from "path";
 
 const prodPath = path.resolve(__dirname, "../productos.json");
