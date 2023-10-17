@@ -1,5 +1,5 @@
 {
-  "name": "WebSocketHandlebars",
+  "name": "websocketchat",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
@@ -9,7 +9,14 @@
     "start": "node .",
     "dev": "nodemon ."
   },
-  "keywords": [],
+  "keywords": [
+    "socket.io",
+    "javascript",
+    "node js",
+    "handlebars",
+    "websocket",
+    "chat"
+  ],
   "author": "fermuzadev",
   "license": "MIT",
   "dependencies": {
