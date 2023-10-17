@@ -6,29 +6,23 @@ import { __dirname } from "./utils.js";
 import prodRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
-
+import realTimeProducts from "./routes/realtimeproducts.router.js";
 const app = express();
 
 //HANDLEBARS
-//Le indicamos el motor a utilizar
+//Handlebars Motor
 app.engine("handlebars", handlebars.engine());
-//Aca abajo establezco donde van a estar las vistas de handlebars
+//Set the path of the views for handlebars
 app.set("views", path.join(__dirname, "views"));
-//Indicamos la extension de nuestros archivos
+//Set the extension of the files
 app.set("view engine", "handlebars");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "./public")));
 
-app.get("/handlebars", (req, res) => {
-  let testUser = {
-    name: "Fer",
-    last_name: "Muzaber",
-  };
-  res.render("index", testUser);
-});
 app.use("/", indexRouter);
+app.use("/realtimeproducts", realTimeProducts);
 
 app.use("/api", prodRouter, cartsRouter);
 
@@ -37,8 +31,6 @@ app.use((error, req, res, next) => {
   console.log(message);
   res.status(500).json({ status: "error", message });
 });
-/* app.get("/", (req, res) => {
-  res.send("<h1>Proyecto Final - Primera Entrega</h1>");
-}); */
+
 
 export default app;
