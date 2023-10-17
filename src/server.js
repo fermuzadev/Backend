@@ -13,9 +13,9 @@ const testingProducts = new ProductManager(prodPath);
 //Http server
 const serverHttp = http.createServer(app);
 //Socket io server
-const serverSocket = new Server(serverHttp);
+const io = new Server(serverHttp);
 //Backend Emits
-serverSocket.on("connection", async (socketClient) => {
+io.on("connection", async (socketClient) => {
   const productsJSON = await testingProducts.getProducts();
   console.log(`A new client is connected 👌 (${socketClient.id}) `);
   socketClient.emit("products", ...productsJSON);
@@ -33,7 +33,7 @@ serverSocket.on("connection", async (socketClient) => {
     await testingProducts.deleteProduct(deleteProduct);
   });
 
-  serverSocket.emit("message_everyone", `Client connected😎`);
+  io.emit("message_everyone", `Client connected😎`);
 });
 
 const PORT = 8080;
