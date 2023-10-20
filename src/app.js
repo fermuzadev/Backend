@@ -7,6 +7,7 @@ import prodRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
 import realTimeProducts from "./routes/realtimeproducts.router.js";
+
 const app = express();
 
 //HANDLEBARS
@@ -31,6 +32,5 @@ app.use((error, req, res, next) => {
   console.log(message);
   res.status(500).json({ status: "error", message });
 });
-
 
 export default app;
