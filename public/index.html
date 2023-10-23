@@ -12,7 +12,7 @@
     <main class="container">
       <h1 >Hello, world!💻</h1>
  <article>
-  <form action="/api/pets" method="post"  >
+  <form action="/api/pets" method="post" enctype="multipart/form-data" >
     <div class="mb-3">
       <label for="exampleInput1" class="form-label">Pet Name</label>
       <input type="text" name="name" required placeholder="Pet Name" class="form-control" id="exampleInput1" >
@@ -27,7 +27,7 @@
     </div>
     <div class="mb-3">
       <label for="exampleInput4" class="form-label">Avatar</label>
-      <input type="file" name="image" placeholder="Avatar" class="form-control" id="exampleInput4">
+      <input type="file" name="thumbnail" placeholder="Avatar" class="form-control" id="exampleInput4">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>

@@ -1,9 +1,23 @@
 import { fileURLToPath } from "url";
+import path from "path";
 import { dirname } from "path";
 import fs from "fs/promises";
+import multer from "multer";
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
+
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    const folderPath = path.join(__dirname, "../public/img"); //directorio donde va a guardar los archivos
+    callback(null, folderPath);
+  },
+  filename: (req, file, callback) => {
+    const filename = `${Date.now()}-- ${file.originalname}`;
+    callback(null, filename);
+  },
+});
+export const uploader = multer({ storage });
 
 export const getRandomId = (array) => {
   let numId = parseInt(Math.random() * (10000 - 1) + 1);
