@@ -1,8 +1,8 @@
 {
-  "name": "websocketchat",
+  "name": "routermulter",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "src/app.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,20 +10,19 @@
     "dev": "nodemon ."
   },
   "keywords": [
-    "socket.io",
-    "javascript",
-    "node js",
-    "handlebars",
-    "websocket",
-    "chat"
+    "router",
+    "express",
+    "morgan",
+    "middlewares",
+    "multer",
+    "uuid"
   ],
   "author": "fermuzadev",
   "license": "MIT",
   "dependencies": {
-    "@picocss/pico": "^1.5.10",
-    "bootstrap": "^5.3.2",
     "express": "^4.18.2",
-    "express-handlebars": "^7.1.2",
-    "socket.io": "^4.7.2"
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.1"
   }
 }
