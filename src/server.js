@@ -5,6 +5,9 @@ import app from "./app.js";
 import ProductManager from "./ProductManager.js";
 import { __dirname } from "./utils.js";
 import path from "path";
+import init from "./db/mongodb.js";
+
+await init(); //En type module se puede usar top level await
 
 const prodPath = path.resolve(__dirname, "../productos.json");
 

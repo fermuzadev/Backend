@@ -7,7 +7,7 @@ import prodRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
 import realTimeProducts from "./routes/realtimeproducts.router.js";
-
+import usersRouter from "./routes/user.router.js";
 const app = express();
 
 //HANDLEBARS
