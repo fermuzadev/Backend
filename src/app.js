@@ -1,18 +1,23 @@
 import express from "express";
+import handlebars from "express-handlebars";
 import path from "path";
 import { __dirname } from "./utils.js";
-
+import { fileURLToPath } from "url";
 import prodRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
 import realTimeProducts from "./routes/realtimeproducts.router.js";
-import usersRouter from "./routes/user.router.js";
+import userRouter from "./routes/user.router.js";
+import morgan from "morgan";
+
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 app.use(morgan("dev"));
+
+app.engine("handlebars", handlebars.engine());
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "handlebars");
+
 app.use(express.json()); //Middleware incorporado
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static(path.join(__dirname, "../public")));
@@ -29,16 +34,9 @@ app.use(middleware);
 
 //Endpoint middlewares
 
-app.get("/demo", middleware, (req, res) => {
-  //throw new Error("Error de prueba"); //Para ver el handlerError
-  res.send("Esta es una prueba");
-});
-
-app.get("/", (req, res) => {
-  res.send("<h1>Hello people!❤️</h1>");
-});
-
-app.use("/api", userRouter, petsRouter);
+app.use("/", indexRouter);
+app.use("/realtimeproducts", realTimeProducts);
+app.use("/api", userRouter, cartsRouter, prodRouter);
 
 //Errorhandler middleware
 
@@ -50,6 +48,4 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+export default app;

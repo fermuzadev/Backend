@@ -1,10 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 //adress es subesquema
-const Address = new Schema({
-  street: { type: String },
-  city: { type: String },
-  country: { type: String },
-});
+const Address = new Schema(
+  {
+    street: { type: String },
+    city: { type: String },
+    country: { type: String },
+  },
+  { _id: false }
+);
 const userSchema = new mongoose.Schema(
   {
     fullname: { type: String, required: true },
