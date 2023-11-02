@@ -2,6 +2,7 @@
 <div class="card-group">
   <h1>Products JSON</h1>
   {{#each productsJSON}}
+  <article>
   <div class="card">
     <img src={{this.thumbnails}} class="card-img-top img-fluid img-thumbnail" alt="...">
       <div class="card-body">
@@ -11,12 +12,13 @@
         <p class="card-text">Description: {{this.description}}</p>
         <p class="card-text">Price: ${{this.price}}</p>
         <p class="card-text">Category: {{this.category}}</p>
-        <p class="card-text"><small class="text-muted">Stock: {{this.stock}}</small></p>
+        <p class="card-text">Stock: {{this.stock}}</small></p>
       </div>
   </div>
+  </article>
 </div>
 <div>
   {{/each }}
 </div>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/index.js"></script>
+<script src="public/js/products/index.js"></script>

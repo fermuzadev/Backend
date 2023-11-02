@@ -1,5 +1,5 @@
 {
-  "name": "mongoDB",
+  "name": "desafiocomplementario",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
@@ -10,14 +10,16 @@
     "dev": "nodemon ."
   },
   "keywords": [
-    "socket.io",
+    "multer",
     "javascript",
     "node js",
     "handlebars",
     "websocket",
     "chat",
     "mongoose",
-    "mongoDB"
+    "mongoDB",
+    "morgan",
+    "ecommerce"
   ],
   "author": "fermuzadev",
   "license": "MIT",

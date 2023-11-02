@@ -1,4 +1,5 @@
 import express from "express";
+import handlebars from "express-handlebars";
 import path from "path";
 import { __dirname } from "./utils.js";
 import { fileURLToPath } from "url";
@@ -7,13 +8,16 @@ import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
 import realTimeProducts from "./routes/realtimeproducts.router.js";
 import userRouter from "./routes/user.router.js";
-import petsRouter from "./routers/pets.router.js";
-import usersRouter from "./routers/users.router.js";
 import morgan from "morgan";
 
 const app = express();
 
-// app.use(morgan("dev"));
+app.use(morgan("dev"));
+
+app.engine("handlebars", handlebars.engine());
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "handlebars");
+
 app.use(express.json()); //Middleware incorporado
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static(path.join(__dirname, "../public")));
@@ -30,10 +34,9 @@ app.use(middleware);
 
 //Endpoint middlewares
 
-app.get("/", indexRouter);
-
-app.use("/api", usersRouter, petsRouter);
-app.use("/api", userRouter);
+app.use("/", indexRouter);
+app.use("/realtimeproducts", realTimeProducts);
+app.use("/api", userRouter, cartsRouter, prodRouter);
 
 //Errorhandler middleware
 

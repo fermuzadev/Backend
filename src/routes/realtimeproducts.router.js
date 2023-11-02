@@ -4,17 +4,20 @@ import ProductManager from "../ProductManager.js";
 import path from "path";
 
 const prodPath = path.resolve(__dirname, "../productos.json");
-const testingProducts = new ProductManager(prodPath);
 
 const router = Router();
+const testingProducts = new ProductManager(prodPath);
 
 router.get("/", async (req, res) => {
-  const productsJSON = await testingProducts.getProducts();
-
-  res.render("realTimeProducts", {
-    title: "Websocket - Handlebars ",
-    productsJSON,
-  });
+  try {
+    const productsJSON = await testingProducts.getProducts();
+    res.render("realTimeProducts", {
+      title: "Websocket - Handlebars ",
+      productsJSON,
+    });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 });
 
 export default router;
