@@ -2,17 +2,16 @@
 import http from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
-import ProductManager from "./ProductManager.js";
+import ProductManager from "./dao/ProductManager.js";
 import { __dirname } from "./utils.js";
 import path from "path";
-import init from "./db/mongodb.js";
+import init from "./dao/mongodb.js";
 
 await init(); //En type module se puede usar top level await
 
-const prodPath = path.resolve(__dirname, "../productos.json");
+const prodPath = path.resolve(__dirname, "./dao/productos.json");
 
 const testingProducts = new ProductManager(prodPath);
-
 //Http server
 const serverHttp = http.createServer(app);
 //Socket io server
