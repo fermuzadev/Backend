@@ -2,10 +2,10 @@ import { Router } from "express";
 import { __dirname } from "../utils.js";
 import path from "path";
 import { getRandomId, saveJSONToFile, getJSONFromFile } from "../utils.js";
-import ProductManager from "../ProductManager.js";
+import ProductManager from "../dao/ProductManager.js";
 
-const cartPath = path.resolve(__dirname, "../carrito.json");
-const prodPath = path.resolve(__dirname, "../productos.json");
+const cartPath = path.resolve(__dirname, "../dao/carrito.json");
+const prodPath = path.resolve(__dirname, "../dao/productos.json");
 const instanceProducts = new ProductManager(prodPath);
 
 const cartsRouter = Router();

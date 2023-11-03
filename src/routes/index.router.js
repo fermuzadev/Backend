@@ -2,8 +2,8 @@ import { Router } from "express";
 import { __dirname } from "../utils.js";
 import path from "path";
 
-const prodPath = path.resolve(__dirname, "../productos.json");
-import ProductManager from "../ProductManager.js";
+const prodPath = path.resolve(__dirname, "./dao/productos.json");
+import ProductManager from "../dao/ProductManager.js";
 
 const router = Router();
 const productManager = new ProductManager(prodPath);

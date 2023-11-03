@@ -1,4 +1,4 @@
-import { getRandomId, saveJSONToFile, getJSONFromFile } from "./utils.js";
+import { getRandomId, saveJSONToFile, getJSONFromFile } from "../utils.js";
 
 //Class ProductManager
 class ProductManager {
