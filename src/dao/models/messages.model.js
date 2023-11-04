@@ -9,6 +9,4 @@ const messagesSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Messages", messagesSchema); //User sera el nombre de la coleccion y en plural lo convertira mongoose
-
-//asi se definen productos , cart , etc
+export default mongoose.model("Messages", messagesSchema);
