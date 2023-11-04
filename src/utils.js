@@ -9,7 +9,7 @@ export const __dirname = path.dirname(__filename);
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    const folderPath = path.join(__dirname, "../public/img"); //directorio donde va a guardar los archivos
+    const folderPath = path.join(__dirname, "../public/img");
     callback(null, folderPath);
   },
   filename: (req, file, callback) => {
