@@ -7,6 +7,7 @@ import prodRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
 import realTimeProducts from "./routes/realtimeproducts.router.js";
+import messaggesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/user.router.js";
 import morgan from "morgan";
 
@@ -34,7 +35,7 @@ app.use(middleware);
 
 //Endpoint middlewares
 
-app.use("/", indexRouter);
+app.use("/", indexRouter, messaggesRouter);
 app.use("/realtimeproducts", realTimeProducts);
 app.use("/api", userRouter, cartsRouter, prodRouter);
 

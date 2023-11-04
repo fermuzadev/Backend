@@ -1,16 +1,18 @@
+//FS
+// import ProductManager from "../dao/ProductManager.js";
+// import path from "path";
+// const prodPath = path.resolve(__dirname, "./dao/productos.json");
+// const testingProducts = new ProductManager(prodPath);
+
 import { Router } from "express";
-import ProductManager from "../dao/ProductManager.js";
 import { __dirname } from "../utils.js";
-import path from "path";
 
-const prodPath = path.resolve(__dirname, "./dao/productos.json");
-
+import productModel from "../dao/models/product.model.js";
 const prodRouter = Router();
 
-const testingProducts = new ProductManager(prodPath);
 prodRouter.get("/products", async (req, res) => {
   try {
-    const products = await testingProducts.getProducts();
+    const products = await productModel.find();
     const { limit } = req.query;
     let prodLimit;
     if (limit) {
@@ -31,7 +33,7 @@ prodRouter.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
     pid = parseInt(pid);
-    const productById = await testingProducts.getProductById(pid);
+    const productById = await productModel.findById(pid);
     if (!productById) {
       res.json({
         error: "Product Not Found",
@@ -49,7 +51,7 @@ prodRouter.get("/products/:pid", async (req, res) => {
 });
 
 prodRouter.post("/products", async (req, res) => {
-  const products = await testingProducts.getProducts();
+  const products = await productModel.find();
   const {
     title: prodTitle,
     description: prodDescription,
@@ -75,7 +77,7 @@ prodRouter.post("/products", async (req, res) => {
       status: `One or more required field in the JSON is empty, the product wasn't add or Code ${prodCode} already exists`,
     });
   } else {
-    await testingProducts.addProduct({
+    await productModel.create({
       title: prodTitle,
       description: prodDescription,
       code: prodCode,
@@ -85,7 +87,7 @@ prodRouter.post("/products", async (req, res) => {
       category: prodCategory,
       thumbnails: prodThumbnails || "",
     });
-    const newProd = await testingProducts.getProducts();
+    const newProd = await productModel.find();
     try {
       res.status(201).send(newProd.find((prod) => prod.code === prodCode));
     } catch (error) {
@@ -110,7 +112,7 @@ prodRouter.put("/products/:pid", async (req, res) => {
     category: prodCategory,
     thumbnails: prodThumbnails,
   } = req.body;
-  await testingProducts.updateProduct(
+  await productModel.updateOne(
     pid,
     prodTitle,
     prodDescription,
@@ -121,7 +123,7 @@ prodRouter.put("/products/:pid", async (req, res) => {
     prodCategory,
     prodThumbnails
   );
-  const products = await testingProducts.getProducts();
+  const products = await productModel.find();
   try {
     await res.status(200).send(products.find((prod) => prod.id === pid));
   } catch (error) {
@@ -135,8 +137,8 @@ prodRouter.put("/products/:pid", async (req, res) => {
 prodRouter.delete("/products/:pid", async (req, res) => {
   let { pid } = req.params;
   pid = parseInt(pid);
-  await testingProducts.deleteProduct(pid);
-  const products = await testingProducts.getProducts();
+  await productModel.deleteOne(pid);
+  const products = await productModel.find();
   try {
     if (products.find((prod) => prod.id === pid)) {
       res.status(200).json({ message: `The product id ${pid} was deleted` });
