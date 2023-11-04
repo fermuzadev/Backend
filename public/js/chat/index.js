@@ -15,8 +15,6 @@
   });
 
   function updateLogMessages(messages) {
-    logMessages.innerText = "";
-
     if (Array.isArray(messages)) {
       messages.forEach((msg) => {
         const p = document.createElement("p");
@@ -32,7 +30,7 @@
   socket.on("messages", (messages) => {
     updateLogMessages(messages);
   });
-  
+
   socket.on("new-client", () => {
     Swal.fire({
       text: "Nuevo usuario conectado",
@@ -44,11 +42,11 @@
   Swal.fire({
     title: "Identificate por favor",
     input: "text",
-    inputLabel: "Ingresa tu username",
+    inputLabel: "Ingresa tu mail",
     allowOutsideClick: false,
     inputValidator: (value) => {
-      if (!value) {
-        return "Necesitamos que ingreses tu username!";
+      if (!value || !value.includes("@")) {
+        return "Necesitamos que ingreses tu correo en un formato válido!";
       }
     },
   }).then((result) => {

@@ -38,16 +38,16 @@ io.on("connection", async (socketClient) => {
     await productModel.deleteOne({ _id: deleteProduct });
   });
 
-  socketClient.on("new-message", async ( {username, text} ) => {
+  socketClient.on("new-message", async ({ username, text }) => {
     let messages = await messagesModel.create({
       user: username,
       message: text,
     });
-    console.log("back messages: ", messages);
     io.emit("messages", messages);
   });
 
   io.emit("message_everyone", `Client connected😎`);
+  socketClient.broadcast.emit("new-client");
 });
 
 const PORT = 8080;
