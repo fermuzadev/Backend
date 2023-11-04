@@ -12,7 +12,7 @@ const Products = new Schema(
 );
 const cartSchema = new mongoose.Schema(
   {
-    products: { type: Products, default: {} },
+    products: { type: [Products], default: [] },
   },
   { timestamps: true }
 );

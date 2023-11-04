@@ -32,7 +32,6 @@ prodRouter.get("/products", async (req, res) => {
 prodRouter.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
-    pid = parseInt(pid);
     const productById = await productModel.findById(pid);
     if (!productById) {
       res.json({
@@ -101,7 +100,6 @@ prodRouter.post("/products", async (req, res) => {
 
 prodRouter.put("/products/:pid", async (req, res) => {
   let { pid } = req.params;
-  pid = parseInt(pid);
   const {
     title: prodTitle,
     description: prodDescription,
@@ -113,19 +111,23 @@ prodRouter.put("/products/:pid", async (req, res) => {
     thumbnails: prodThumbnails,
   } = req.body;
   await productModel.updateOne(
-    pid,
-    prodTitle,
-    prodDescription,
-    prodCode,
-    prodPrice,
-    prodStatus,
-    prodStock,
-    prodCategory,
-    prodThumbnails
+    { _id: pid },
+    {
+      $set: {
+        title: prodTitle,
+        description: prodDescription,
+        code: prodCode,
+        price: prodPrice,
+        status: prodStatus,
+        stock: prodStock,
+        category: prodCategory,
+        thumbnails: prodThumbnails,
+      },
+    }
   );
   const products = await productModel.find();
   try {
-    await res.status(200).send(products.find((prod) => prod.id === pid));
+    await res.status(204).end();
   } catch (error) {
     res.status(400).json({
       status: "error",
@@ -136,11 +138,10 @@ prodRouter.put("/products/:pid", async (req, res) => {
 
 prodRouter.delete("/products/:pid", async (req, res) => {
   let { pid } = req.params;
-  pid = parseInt(pid);
-  await productModel.deleteOne(pid);
+  await productModel.deleteOne({ _id: pid });
   const products = await productModel.find();
   try {
-    if (products.find((prod) => prod.id === pid)) {
+    if (products.find((prod) => prod._id === pid)) {
       res.status(200).json({ message: `The product id ${pid} was deleted` });
     } else {
       res.status(404).json({ message: `The product ${pid} not found` });
