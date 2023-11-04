@@ -14,22 +14,25 @@
     inputMessage.focus();
   });
 
-  function updateLogMessages({ messages }) {
+  function updateLogMessages(messages) {
     logMessages.innerText = "";
-    messages.forEach((msg) => {
+
+    if (Array.isArray(messages)) {
+      messages.forEach((msg) => {
+        const p = document.createElement("p");
+        p.innerText = `${msg.user} : ${msg.message}`;
+        logMessages.appendChild(p);
+      });
+    } else {
       const p = document.createElement("p");
-      p.innerText = `${msg.username} : ${msg.text}`;
+      p.innerText = `${messages.user} : ${messages.message}`;
       logMessages.appendChild(p);
-    });
+    }
   }
-  socket.on("notification", (messages) => {
+  socket.on("messages", (messages) => {
     updateLogMessages(messages);
   });
-
-  socket.on("new-message-from-api", (message) => {
-    console.log("new-message-from-api --> message", message);
-  });
-
+  
   socket.on("new-client", () => {
     Swal.fire({
       text: "Nuevo usuario conectado",

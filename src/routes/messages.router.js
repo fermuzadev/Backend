@@ -3,11 +3,21 @@ import { __dirname } from "../utils.js";
 
 import messagesModel from "../dao/models/messages.model.js";
 
-const router = Router();
+const messagesRouter = Router();
 
-router.get("/messages", async (req, res) => {
+messagesRouter.get("/messages", async (req, res) => {
   const messages = await messagesModel.find();
-  res.status(200).json(messages);
+  res.status(200).render("chat");
 });
 
-export default router;
+messagesRouter.post("/messages", async (req, res) => {
+  await emitFromAPI("new-message-from-api", {
+    username: "api",
+    text: "Hola desde la API 😍",
+  });
+  res.status(200).json({
+    ok: true,
+  });
+});
+
+export default messagesRouter;

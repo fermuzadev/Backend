@@ -1,38 +1,50 @@
+// import ProductManager from "./dao/ProductManager.js";
+// import path from "path";
+// const prodPath = path.resolve(__dirname, "./dao/productos.json");
+// const testingProducts = new ProductManager(prodPath);
 //BACKEND
 import http from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
-import ProductManager from "./dao/ProductManager.js";
 import { __dirname } from "./utils.js";
-import path from "path";
 import init from "./dao/mongodb.js";
+import productModel from "./dao/models/product.model.js";
+import messagesModel from "./dao/models/messages.model.js";
 
-await init(); //En type module se puede usar top level await
+await init();
 
-const prodPath = path.resolve(__dirname, "./dao/productos.json");
-
-const testingProducts = new ProductManager(prodPath);
 //Http server
 const serverHttp = http.createServer(app);
 //Socket io server
 const io = new Server(serverHttp);
 //Backend Emits
 io.on("connection", async (socketClient) => {
-  const productsJSON = await testingProducts.getProducts();
+  const products = await productModel.find();
+  const messages = await messagesModel.find();
   console.log(`A new client is connected 👌 (${socketClient.id}) `);
-  socketClient.emit("products", ...productsJSON);
+  socketClient.emit("products", ...products);
+  socketClient.emit("messages", messages);
   socketClient.on("disconnect", () => {
     console.log(`Client id ${socketClient.id} disconnected`);
   });
 
   socketClient.on("productSocket", async (newProduct) => {
-    await testingProducts.addProduct(...newProduct);
-    const productsUpdated = await testingProducts.getProducts();
+    await productModel.create(...newProduct);
+    const productsUpdated = await productModel.find();
     await socketClient.emit("productsUpdated", productsUpdated);
   });
 
   socketClient.on("idToDelete", async (deleteProduct) => {
-    await testingProducts.deleteProduct(deleteProduct);
+    await productModel.deleteOne({ _id: deleteProduct });
+  });
+
+  socketClient.on("new-message", async ( {username, text} ) => {
+    let messages = await messagesModel.create({
+      user: username,
+      message: text,
+    });
+    console.log("back messages: ", messages);
+    io.emit("messages", messages);
   });
 
   io.emit("message_everyone", `Client connected😎`);
