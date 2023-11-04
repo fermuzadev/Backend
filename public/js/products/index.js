@@ -66,7 +66,7 @@
       <img src=${product.thumbnails} class="card-img-top" alt="...">
       <div class="card-body">
         <h5 class="card-title">Product Title: ${product.title}</h5>
-        <p class="card-text">ID: ${product.id}</p>
+        <p class="card-text">ID: ${product._id}</p>
         <p class="card-text">CODE: ${product.code}.</p>
         <p class="card-text">Description: ${product.description}.</p>
         <p class="card-text">Price: ${product.price}.</p>

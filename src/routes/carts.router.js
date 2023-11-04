@@ -27,59 +27,51 @@ cartsRouter.post("/carts", async (req, res) => {
   let newCart;
   let carts = await getCart();
   newCart = await addCart();
-  carts.push(...newCart);
+  carts.push(newCart);
   await cartsModel.create(carts);
   res.status(201).send(newCart);
 });
 
 cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
-  let { cid, pid } = req.params;
-  cid = cid;
-  pid = pid;
-  let cart = await getCart();
-  let cartFind;
-  let products = await productModel.find();
-  let productFind;
-  let newCart = cart;
   try {
-    cartFind = cart.find((c) => c.id === cid);
-    productFind = await products.find((prod) => prod._id === pid);
-    if (!productFind) {
+    const { cid, pid } = req.params;
+    let cart = await cartsModel.findOne({ _id: cid });
+    let product = await productModel.findOne({ _id: pid });
+
+    if (!product) {
       //if product id dont't exists in products array
       res.status(404).send({
         status: "error",
-        message: `The product ${pid} doesn't exists`,
+        message: `The product ${pid} doesn't exist`,
       });
       return;
     }
-    if (cartFind) {
-      //if cartId exists in cart array
-      let { id, products } = cartFind;
-      const cartProductFind = products.find((c) => c.product._id === pid);
-      if (cartProductFind) {
-        //if product exists inside cart array
-        cartProductFind.quantity++;
-        newCart = cart;
-        await cartsModel.updateOne({ _id: cid }, newCart);
-        res.status(201).send(cartFind);
-      } else {
-        //If the products doesn't exists into the cart array
-        products.push({
-          product: pid,
-          quantity: 1,
-        });
-        await cartsModel.updateOne({ _id: cid }, cart);
-        res.status(201).send(cartFind);
-      }
-    } else {
-      //If cart doesn't exists
-      res.status(404).send({
-        status: "error",
-        message: `The cart ${cid} doesn't exists`,
-      });
+    if (!cart) {
+      //if cartId doesn't exits in cart array
+      res
+        .status(404)
+        .json({ status: "Error", message: `The cart ID ${cid} doesn't exist` });
+      return;
     }
+
+    const productFind = cart.products.find(
+      (cartProduct) => cartProduct.productId === pid
+    );
+
+    if (productFind) {
+      //if product exists inside cart array
+      productFind.quantity++;
+      //await cartsModel.updateOne({ _id: cid }, newCart);
+      res.status(201).send(cart);
+    } else {
+      //If the products doesn't exists into the cart array
+      cart.products.push({ productId: pid, quantity: 1 });
+      //await cartsModel.updateOne({ _id: cid }, { products: cart });
+      res.status(201).send(cart);
+    }
+    await cart.save();
   } catch (error) {
-    res.status(404).json({
+    res.status(500).json({
       status: "error",
       message: error.message,
     });
@@ -88,11 +80,10 @@ cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
 
 cartsRouter.get("/carts/:cid", async (req, res) => {
   let { cid } = req.params;
-  cid = parseInt(cid);
-  let cart = await getCart();
-  let findCart = await cart.find((c) => c.id === cid);
-  if (findCart) {
-    res.status(200).send(findCart.products);
+  let cart = await cartsModel.findOne({ _id: cid });
+  console.log(cart);
+  if (cart) {
+    res.status(200).send(cart.products);
   } else {
     res.status(404).json({
       status: "error",
@@ -115,10 +106,8 @@ cartsRouter.get("/carts", async (req, res) => {
 
 cartsRouter.delete("/carts/:cid", async (req, res) => {
   let { cid } = req.params;
-  cid = parseInt(cid);
   let cart = await getCart();
-  let findCart = cart.find((c) => c._id === cid);
-  let newCart = await cart.filter((cart) => cart._id !== cid);
+  let findCart = await cartsModel.findOne({ _id: cid });
   if (!findCart) {
     res.status(404).json({
       message: `Cart ${cid} not found`,
@@ -126,7 +115,7 @@ cartsRouter.delete("/carts/:cid", async (req, res) => {
     return;
   }
   try {
-    cartsModel.deleteOne({ _id: cid });
+    await cartsModel.deleteOne({ _id: cid });
     res.status(200).json({ message: `The cart ${cid} was deleted` });
   } catch (error) {
     res.status(404).json({
