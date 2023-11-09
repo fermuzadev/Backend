@@ -6,7 +6,7 @@
 import http from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
-import { __dirname } from "./utils.js";
+import { __dirname } from "./helpers/utils.js";
 import init from "./dao/mongodb.js";
 import productModel from "./dao/models/product.model.js";
 import messagesModel from "./dao/models/messages.model.js";
