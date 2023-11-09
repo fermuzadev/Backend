@@ -7,9 +7,11 @@ import multer from "multer";
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 
+
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    const folderPath = path.join(__dirname, "../public/img");
+    const folderPath = path.join(__dirname, "../../public/img");
+    console.log("multer path to public img ", folderPath);
     callback(null, folderPath);
   },
   filename: (req, file, callback) => {
@@ -63,3 +65,10 @@ export const saveJSONToFile = async (path, data) => {
     throw new Error(`The file ${path} couldn't be write`);
   }
 };
+
+export class Exception extends Error {
+  constructor(message, status) {
+    super(message);
+    this.statusCode = status;
+  }
+}
