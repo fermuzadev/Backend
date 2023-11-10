@@ -13,6 +13,7 @@
   const thumbnails = document.getElementById("thumbnails");
   const idInputDelete = document.getElementById("idDelete");
   const productsListSocket = document.getElementById("productsSocket");
+  const URL_BASE = `http://localhost:8080/img/`;
 
   deleteForm.addEventListener("submit", (ev) => {
     ev.preventDefault();
@@ -44,17 +45,24 @@
 
   form.addEventListener("submit", (ev) => {
     ev.preventDefault();
-    products.push({
-      title: title.value,
-      description: description.value,
-      code: code.value,
-      price: price.value,
-      stock: stock.value,
-      category: category.value,
-      thumbnails: thumbnails.value,
-    });
-    socket.emit("productSocket", products);
-    showProductSocket(products);
+    try {
+      const formData = new FormData(form);
+      const imageURL = `${URL_BASE}${thumbnails.files[0].name}`;
+      const product = {};
+      products.push({
+        title: formData.get("title"),
+        description: formData.get("description"),
+        code: formData.get("code"),
+        price: formData.get("price"),
+        stock: formData.get("stock"),
+        category: formData.get("category"),
+        thumbnails: imageURL,
+      });
+      socket.emit("productSocket", products);
+      showProductSocket(products);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   });
 
   function showProductSocket(products) {

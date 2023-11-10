@@ -1,8 +1,7 @@
 import express from "express";
 import handlebars from "express-handlebars";
 import path from "path";
-import { __dirname } from "./helpers/utils.js";
-import { fileURLToPath } from "url";
+import { __dirname } from "./utils.js";
 import prodRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
@@ -13,15 +12,21 @@ import morgan from "morgan";
 
 const app = express();
 
-app.use(morgan("dev"));
-
-app.engine("handlebars", handlebars.engine());
-app.set("views", path.join(__dirname, "../views"));
-app.set("view engine", "handlebars");
+app.use((req, res, next) => {
+  console.log("Request URL:", req.originalUrl);
+  console.log("Request Method:", req.method);
+  console.log("Request Body:", req.body);
+  next();
+});
 
 app.use(express.json()); //Middleware incorporado
 app.use(express.urlencoded({ extended: true }));
-app.use("/public", express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, "../public")));
+app.use(morgan("dev"));
+
+app.engine("handlebars", handlebars.engine());
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "handlebars");
 
 //App middleware
 const middleware = (req, res, next) => {
