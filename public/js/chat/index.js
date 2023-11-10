@@ -50,7 +50,7 @@
       }
     },
   }).then((result) => {
-    username = result.value.trim();
+    username = result.value;
     console.log(`Hola ${username} bienvenido`);
   });
 })();

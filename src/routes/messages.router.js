@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { __dirname } from "../helpers/utils.js";
+import { __dirname } from "../utils.js";
 
 import messagesModel from "../dao/models/messages.model.js";
 

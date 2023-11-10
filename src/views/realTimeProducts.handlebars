@@ -1,5 +1,5 @@
 {{! Lista de productos agregados hasta el momento con websocket}}
-<form id="form">
+<form id="form" action="/api/products" method="post" enctype="multipart/form-data">
   <h1>Products upload by Socket.io</h1>
   <div class="grid">
     <label for="title">
@@ -92,5 +92,5 @@
 </div>
 <div id="productsSocket">
 </div>
-<script src="./socket.io/socket.io.js"></script>
-<script src="/public/js/products/index.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/products/index.js"></script>

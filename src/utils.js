@@ -7,15 +7,15 @@ import multer from "multer";
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 
-
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    const folderPath = path.join(__dirname, "../../public/img");
-    console.log("multer path to public img ", folderPath);
+    const folderPath = path.join(__dirname, "../public/img");
+    console.log("Destination folder", folderPath);
     callback(null, folderPath);
   },
   filename: (req, file, callback) => {
     const filename = `${Date.now()}-${file.originalname}`;
+    console.log("filename", filename);
     callback(null, filename);
   },
 });
