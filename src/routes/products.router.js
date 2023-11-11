@@ -9,19 +9,21 @@ import { __dirname } from "../utils.js";
 
 import productModel from "../dao/models/product.model.js";
 import { uploader } from "../utils.js";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const prodRouter = Router();
 const URL_BASE = `http://localhost:8080/img/`;
+
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await productModel.find();
-    const { limit } = req.query;
+    const { limit, page, query } = req.query;
     let prodLimit;
     if (limit) {
       prodLimit = products.slice(0, limit);
       res.status(200).send(prodLimit);
     } else {
-      res.status(200).send(products);
+      res.status(200).send(products.slice(0, 10));
     }
   } catch (error) {
     res.status(404).json({
