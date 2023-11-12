@@ -45,18 +45,16 @@
 
   form.addEventListener("submit", (ev) => {
     ev.preventDefault();
+    console.log("Form submitted!");
     try {
-      const formData = new FormData(form);
-      const imageURL = `${URL_BASE}${thumbnails.files[0].name}`;
-      const product = {};
       products.push({
-        title: formData.get("title"),
-        description: formData.get("description"),
-        code: formData.get("code"),
-        price: formData.get("price"),
-        stock: formData.get("stock"),
-        category: formData.get("category"),
-        thumbnails: imageURL,
+        title: title.value,
+        description: description.value,
+        code: code.value,
+        price: price.value,
+        stock: stock.value,
+        category: category.value,
+        thumbnails: thumbnails.file,
       });
       socket.emit("productSocket", products);
       showProductSocket(products);
