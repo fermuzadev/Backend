@@ -13,18 +13,43 @@ import mongoosePaginate from "mongoose-paginate-v2";
 
 const prodRouter = Router();
 const URL_BASE = `http://localhost:8080/img/`;
+const URL_PRODUCTS = "http://localhost:8080/api/products";
 
+const buildResponse = (data) => {
+  return {
+    status: "success",
+    payload: data.docs.map((product) => product.toJSON()),
+    totalPages: data.totalPages,
+    prevPage: data.prevPage,
+    nextPage: data.nextPage,
+    page: data.page,
+    hasPrevPage: data.hasPrevPage,
+    hasNextPage: data.hasNextPage,
+    prevLink: data.hasPrevPage
+      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.prevPage}`
+      : "",
+    nextLink: data.hasNextPage
+      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.nextPage}`
+      : "",
+  };
+};
+
+const getProductsPaginated = async (limited, pages) => {
+  const result = await productModel.paginate(
+    {},
+    { limit: limited || 10, page: pages || 1 }
+  );
+  return result;
+};
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await productModel.find();
     const { limit, page, query } = req.query;
     let prodLimit;
-    if (limit) {
-      prodLimit = products.slice(0, limit);
-      res.status(200).send(prodLimit);
-    } else {
-      res.status(200).send(products.slice(0, 10));
-    }
+    const opts = { page, limit };
+    const criteria = {};
+    const paginate = await getProductsPaginated(criteria, opts);
+    res.status(200).json(buildResponse(paginate));
   } catch (error) {
     res.status(404).json({
       status: "error",
