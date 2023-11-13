@@ -16,6 +16,7 @@ const URL_BASE = `http://localhost:8080/img/`;
 const URL_PRODUCTS = "http://localhost:8080/api/products";
 
 const buildResponse = (data) => {
+  console.log("buildresponse", data);
   return {
     status: "success",
     payload: data.docs.map((product) => product.toJSON()),
@@ -34,22 +35,17 @@ const buildResponse = (data) => {
   };
 };
 
-const getProductsPaginated = async (limited, pages) => {
-  const result = await productModel.paginate(
-    {},
-    { limit: Number(limited) || 10, page: Number(pages) || 1 }
-  );
-  return result;
-};
+
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await productModel.find();
-    const { limit, page, query, sort } = req.query;
+    const { limit, page, query } = req.query;
     let prodLimit;
     const opts = { page, limit };
     const criteria = {};
-    const paginate = await getProductsPaginated(criteria, opts);
-    res.status(200).json(buildResponse(paginate));
+    const paginate = await productModel.paginate(criteria, opts);
+    console.log(paginate);
+    res.status(200).render("home", buildResponse(paginate));
   } catch (error) {
     res.status(404).json({
       status: "error",
