@@ -37,14 +37,14 @@ const buildResponse = (data) => {
 const getProductsPaginated = async (limited, pages) => {
   const result = await productModel.paginate(
     {},
-    { limit: limited || 10, page: pages || 1 }
+    { limit: Number(limited) || 10, page: Number(pages) || 1 }
   );
   return result;
 };
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await productModel.find();
-    const { limit, page, query } = req.query;
+    const { limit, page, query, sort } = req.query;
     let prodLimit;
     const opts = { page, limit };
     const criteria = {};
