@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
+
 const { Schema } = mongoose;
 
 const Products = new Schema(
@@ -22,4 +24,5 @@ cartSchema.pre("find", function () {
 });
 
 cartSchema.pre("save", function () {}); // Validation
+cartSchema.plugin(mongoosePaginate);
 export default mongoose.model("Carts", cartSchema);
