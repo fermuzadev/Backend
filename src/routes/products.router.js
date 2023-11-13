@@ -35,7 +35,6 @@ const buildResponse = (data) => {
   };
 };
 
-
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await productModel.find();
@@ -44,7 +43,6 @@ prodRouter.get("/products", async (req, res) => {
     const opts = { page, limit };
     const criteria = {};
     const paginate = await productModel.paginate(criteria, opts);
-    console.log(paginate);
     res.status(200).render("home", buildResponse(paginate));
   } catch (error) {
     res.status(404).json({
@@ -58,13 +56,14 @@ prodRouter.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
     const productById = await productModel.findById(pid);
+    const paginateId = await productModel.paginate({ _id: pid }, { limit: 1 });
     if (!productById) {
       res.json({
         error: "Product Not Found",
         message: `The product id ${pid} not found`,
       });
     } else {
-      res.send(productById);
+      res.status(200).render("home", buildResponse(paginateId));
     }
   } catch (error) {
     res.status(400).json({
