@@ -34,22 +34,21 @@ const buildResponse = (data) => {
   };
 };
 
-const getProductsPaginated = async (limited, pages) => {
-  const result = await productModel.paginate(
-    {},
-    { limit: Number(limited) || 10, page: Number(pages) || 1 }
-  );
-  return result;
-};
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await productModel.find();
-    const { limit, page, query, sort } = req.query;
-    let prodLimit;
+    let { limit, page, query } = req.query;
+    if (!limit) {
+      limit = 10;
+    }
+    if (!page) {
+      page = 1;
+    }
     const opts = { page, limit };
     const criteria = {};
-    const paginate = await getProductsPaginated(criteria, opts);
-    res.status(200).json(buildResponse(paginate));
+    const paginate = await productModel.paginate(criteria, opts);
+    // res.status(200).render("home", buildResponse(paginate));
+    res.status(200).render("products", buildResponse(paginate));
   } catch (error) {
     res.status(404).json({
       status: "error",
@@ -62,13 +61,14 @@ prodRouter.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
     const productById = await productModel.findById(pid);
+    const paginateId = await productModel.paginate({ _id: pid }, { limit: 1 });
     if (!productById) {
       res.json({
         error: "Product Not Found",
         message: `The product id ${pid} not found`,
       });
     } else {
-      res.send(productById);
+      res.render("home", buildResponse(paginateId));
     }
   } catch (error) {
     res.status(400).json({
@@ -83,7 +83,6 @@ prodRouter.post(
   uploader.single("thumbnails"),
   async (req, res) => {
     try {
-      console.log("Received file:", req.file);
       const filename = req.file.filename;
       const imageURL = `${URL_BASE}${filename}`;
       const {
