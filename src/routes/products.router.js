@@ -26,10 +26,14 @@ const buildResponse = (data) => {
     hasPrevPage: data.hasPrevPage,
     hasNextPage: data.hasNextPage,
     prevLink: data.hasPrevPage
-      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.prevPage}`
+      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.prevPage}${
+          data.category ? `&category=${data.category}` : ""
+        }${data.stock ? `&stock=${data.stock}` : ""}`
       : "",
     nextLink: data.hasNextPage
-      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.nextPage}`
+      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.nextPage}${
+          data.category ? `&category=${data.category}` : ""
+        }${data.stock ? `&stock=${data.stock}` : ""}`
       : "",
   };
 };
@@ -37,7 +41,7 @@ const buildResponse = (data) => {
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await productModel.find();
-    let { limit, page, group } = req.query;
+    let { limit, page, category, stock } = req.query;
     if (!limit) {
       limit = 10;
     }
@@ -46,9 +50,17 @@ prodRouter.get("/products", async (req, res) => {
     }
     const opts = { page, limit };
     const criteria = {};
+    if (category) {
+      criteria.category = category;
+    }
+    if (stock) {
+      criteria.stock = stock;
+    }
     const paginate = await productModel.paginate(criteria, opts);
     // res.status(200).render("home", buildResponse(paginate));
-    res.status(200).render("products", buildResponse(paginate));
+    res
+      .status(200)
+      .render("products", buildResponse({ ...paginate, category, stock }));
   } catch (error) {
     res.status(404).json({
       status: "error",
