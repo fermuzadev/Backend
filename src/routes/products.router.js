@@ -16,7 +16,6 @@ const URL_BASE = `http://localhost:8080/img/`;
 const URL_PRODUCTS = "http://localhost:8080/api/products";
 
 const buildResponse = (data) => {
-  console.log("buildresponse", data);
   return {
     status: "success",
     payload: data.docs.map((product) => product.toJSON()),
@@ -38,12 +37,18 @@ const buildResponse = (data) => {
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await productModel.find();
-    const { limit, page, query } = req.query;
-    let prodLimit;
+    let { limit, page, query } = req.query;
+    if (!limit) {
+      limit = 10;
+    }
+    if (!page) {
+      page = 1;
+    }
     const opts = { page, limit };
     const criteria = {};
     const paginate = await productModel.paginate(criteria, opts);
-    res.status(200).render("home", buildResponse(paginate));
+    // res.status(200).render("home", buildResponse(paginate));
+    res.status(200).render("products", buildResponse(paginate));
   } catch (error) {
     res.status(404).json({
       status: "error",
@@ -63,7 +68,7 @@ prodRouter.get("/products/:pid", async (req, res) => {
         message: `The product id ${pid} not found`,
       });
     } else {
-      res.status(200).render("home", buildResponse(paginateId));
+      res.render("home", buildResponse(paginateId));
     }
   } catch (error) {
     res.status(400).json({
@@ -78,7 +83,6 @@ prodRouter.post(
   uploader.single("thumbnails"),
   async (req, res) => {
     try {
-      console.log("Received file:", req.file);
       const filename = req.file.filename;
       const imageURL = `${URL_BASE}${filename}`;
       const {
