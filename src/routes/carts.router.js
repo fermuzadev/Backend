@@ -105,6 +105,27 @@ cartsRouter.get("/carts", async (req, res) => {
   }
 });
 
+cartsRouter.put("/carts/:cid", async (req, res) => {
+  const { cid } = req.params;
+  const { products } = req.body;
+  try {
+    if (!products || !Array.isArray(products)) {
+      res.status(404).send("Not a valid data format");
+      return;
+    }
+    const result = await cartsModel.findOneAndUpdate(
+      { _id: cid },
+      { $set: { products: products } },
+      { new: true }
+    );
+    if (result) {
+      res.status(200).send(result);
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 cartsRouter.delete("/carts/:cid", async (req, res) => {
   let { cid } = req.params;
   let cart = await getCart();
@@ -118,6 +139,41 @@ cartsRouter.delete("/carts/:cid", async (req, res) => {
   try {
     await cartsModel.deleteOne({ _id: cid });
     res.status(200).json({ message: `The cart ${cid} was deleted` });
+  } catch (error) {
+    res.status(404).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+cartsRouter.delete("/carts/:cid/product/:pid", async (req, res) => {
+  let { cid, pid } = req.params;
+  let findCart = await cartsModel.findOne({ _id: cid });
+  if (!findCart) {
+    res.status(404).json({
+      message: `Cart ${cid} not found`,
+    });
+    return;
+  }
+  try {
+    const indexProduct = findCart.products.findIndex(
+      (cartProduct) => cartProduct.productId.toString() === pid
+    );
+    if (indexProduct !== -1) {
+      findCart.products.splice(indexProduct, 1);
+      await cartsModel.findOneAndUpdate(
+        { _id: cid },
+        { $set: { products: findCart.products } }
+      );
+      res
+        .status(200)
+        .json({ message: `The product ${pid} was deleted on ${cid} cart` });
+    } else {
+      res
+        .status(404)
+        .json({ message: `Product ${pid} doesn't found in the cart ${cid}` });
+    }
   } catch (error) {
     res.status(404).json({
       status: "error",
