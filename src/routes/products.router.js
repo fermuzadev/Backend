@@ -40,16 +40,8 @@ const buildResponse = (data) => {
 
 prodRouter.get("/products", async (req, res) => {
   try {
-    const products = await productModel.find();
-    let { limit, page, category, stock, query } = req.query;
-    query = JSON.parse(query);
-    if (!limit) {
-      limit = 10;
-    }
-    if (!page) {
-      page = 1;
-    }
-    const opts = { page, limit };
+    let { limit = 10, page = 1, category, stock, query, sort } = req.query; //query, sort
+    const opts = { page, limit, sort: { price: sort || "asc" } };
     const criteria = {};
     if (category) {
       criteria.category = category;
@@ -58,6 +50,7 @@ prodRouter.get("/products", async (req, res) => {
       criteria.stock = stock;
     }
     if (query) {
+      query = JSON.parse(query);
       criteria.query = query;
     }
     const paginate = await productModel.paginate(criteria, opts);
