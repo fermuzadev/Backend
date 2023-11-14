@@ -37,7 +37,7 @@ const buildResponse = (data) => {
 prodRouter.get("/products", async (req, res) => {
   try {
     const products = await productModel.find();
-    let { limit, page, query } = req.query;
+    let { limit, page, group } = req.query;
     if (!limit) {
       limit = 10;
     }
