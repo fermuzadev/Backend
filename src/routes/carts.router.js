@@ -167,8 +167,8 @@ cartsRouter.delete("/carts/:cid", async (req, res) => {
     return;
   }
   try {
-    await cartsModel.deleteOne({ _id: cid });
-    res.status(200).json({ message: `The cart ${cid} was deleted` });
+    await cartsModel.updateOne({ _id: cid }, { $set: { products: [] } });
+    res.status(200).json({ message: `The cart ${cid} was empty` });
   } catch (error) {
     res.status(404).json({
       status: "error",
