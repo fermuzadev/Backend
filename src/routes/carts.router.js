@@ -14,6 +14,8 @@ import { Exception } from "../utils.js";
 
 const cartsRouter = Router();
 
+//HELPERS
+
 async function getCart() {
   const products = await cartsModel.find().populate("products.productId");
   return products;
@@ -23,6 +25,7 @@ async function addCart() {
   let newCart = await cartsModel.create();
   return newCart;
 }
+//POST METHODS
 
 cartsRouter.post("/carts", async (req, res) => {
   let newCart;
@@ -79,6 +82,7 @@ cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
   }
 });
 
+//GET METHODS
 cartsRouter.get("/carts/:cid", async (req, res) => {
   let { cid } = req.params;
   let cart = await cartsModel.findOne({ _id: cid });
@@ -105,14 +109,19 @@ cartsRouter.get("/carts", async (req, res) => {
   }
 });
 
+//PUT METHODS
+
+//This function update the cart with a put method with postman in an Array format(it replaces the quantity, it isn't an add method)
 cartsRouter.put("/carts/:cid", async (req, res) => {
   const { cid } = req.params;
-  const { products } = req.body;
+  const products = req.body;
   try {
+    //Validate products & data format => Array
     if (!products || !Array.isArray(products)) {
       res.status(404).send("Not a valid data format");
       return;
     }
+    //I use find&update cause it do the two action and return the object updated with new : true
     const result = await cartsModel.findOneAndUpdate(
       { _id: cid },
       { $set: { products: products } },
@@ -125,6 +134,33 @@ cartsRouter.put("/carts/:cid", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+cartsRouter.put("/carts/:cid/products/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
+  console.log("cantBody", quantityBody);
+  // const { quantity } = quantityBody;
+  // console.log(quantity);
+
+  try {
+    if (!quantityBody) {
+      res
+        .status(404)
+        .json(`The quantity must be a number for the product ${pid}`);
+      return;
+    }
+    const result = await cartsModel.updateOne(
+      { _id: cid },
+      { "products.productId": pid },
+      { $set: { "products.$.quantity": quantityBody } }
+    );
+    console.log("result", result);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+//DELETE METHODS
 
 cartsRouter.delete("/carts/:cid", async (req, res) => {
   let { cid } = req.params;
@@ -160,6 +196,7 @@ cartsRouter.delete("/carts/:cid/product/:pid", async (req, res) => {
     const indexProduct = findCart.products.findIndex(
       (cartProduct) => cartProduct.productId.toString() === pid
     );
+    //If its founded
     if (indexProduct !== -1) {
       findCart.products.splice(indexProduct, 1);
       await cartsModel.findOneAndUpdate(
