@@ -69,7 +69,8 @@ prodRouter.get("/products", async (req, res) => {
 prodRouter.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
-    const productById = await productModel.findById(pid);
+    // let productById = await productModel.findById(pid);
+
     const paginateId = await productModel.paginate({ _id: pid }, { limit: 1 });
     if (!productById) {
       res.json({

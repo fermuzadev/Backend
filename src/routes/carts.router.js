@@ -85,10 +85,9 @@ cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
 //GET METHODS
 cartsRouter.get("/carts/:cid", async (req, res) => {
   let { cid } = req.params;
-  let cart = await cartsModel.findOne({ _id: cid });
-  console.log(cart);
+  let cart = await cartsModel.find({ _id: cid }).populate("products.productId");
   if (cart) {
-    res.status(200).send(cart.products);
+    res.status(200).json(cart);
   } else {
     res.status(404).json({
       status: "error",
@@ -138,24 +137,19 @@ cartsRouter.put("/carts/:cid", async (req, res) => {
 cartsRouter.put("/carts/:cid/products/:pid", async (req, res) => {
   const { cid, pid } = req.params;
   const { quantity } = req.body;
-  console.log("cantBody", quantityBody);
-  // const { quantity } = quantityBody;
-  // console.log(quantity);
 
   try {
-    if (!quantityBody) {
+    if (!quantity) {
       res
         .status(404)
         .json(`The quantity must be a number for the product ${pid}`);
       return;
     }
     const result = await cartsModel.updateOne(
-      { _id: cid },
-      { "products.productId": pid },
-      { $set: { "products.$.quantity": quantityBody } }
+      { _id: cid, "products.productId": pid },
+      { $set: { "products.$.quantity": quantity } }
     );
-    console.log("result", result);
-    res.status(200).json(result);
+    res.status(200).send("Product updated");
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
