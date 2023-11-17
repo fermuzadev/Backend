@@ -38,6 +38,16 @@ const buildResponse = (data) => {
   };
 };
 
+prodRouter.get("/products/cookie", (req, res) => {
+  if (req.session.counter) {
+    req.session.counter += 1;
+  } else {
+    req.session.counter = 1;
+  }
+  req.session.message = "Nuevo usuario";
+  res.status(200).render("<h1>Hello people😎</h1>");
+});
+
 prodRouter.get("/products", async (req, res) => {
   try {
     let { limit = 10, page = 1, category, stock, query, sort } = req.query; //query, sort

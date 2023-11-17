@@ -1,24 +1,25 @@
 import express from "express";
 import expressSession from "express-session";
-import sessionFS from "session-file-store";
+import FileStore from "session-file-store";
 import handlebars from "express-handlebars";
 import path from "path";
-
+import dotenv from "dotenv";
 import indexRouter from "./routers/index.router.js";
 import { __dirname } from "./utils.js";
-
+dotenv.config();
+const SESSION_SECRET = process.env.SESSION_SECRET;
 const app = express();
 
-const SESSION_SECRET = "s2NWk`sljg]H!f20gG6~WS>PRam[t";
+const SessionFS = FileStore(expressSession);
 app.use(
   expressSession({
     secret: SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-    store: new sessionFS({
-      path: "./session", //path
-      ttl: 100, //segundos
-      retries: 0, //reintentos
+    resave: false,
+    saveUninitialized: false,
+    store: new SessionFS({
+      path: path.join(__dirname, "session"),
+      ttl: 100,
+      retries: 0,
     }),
   })
 );

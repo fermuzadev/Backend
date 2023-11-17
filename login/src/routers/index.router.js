@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
     req.session.counter = 1;
   }
   req.session.message = "Nuevo usuario";
-  res.status(200).render("index", { title: "Socket.io " });
+  res.status(200).send("<h1>Hello world😎</h1>");
 });
 
 export default router;

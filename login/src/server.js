@@ -7,7 +7,7 @@ import app from "./app.js";
 const serverHttp = http.createServer(app);
 const serverSocket = new Server(serverHttp);
 
-const PORT = 8080;
+const PORT = 8081;
 const messages = [
   {
     socketId: 1234,
