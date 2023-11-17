@@ -1,4 +1,6 @@
 import express from "express";
+import expressSession from "express-session";
+import FileStore from "session-file-store";
 import handlebars from "express-handlebars";
 import path from "path";
 import { __dirname } from "./utils.js";
@@ -9,8 +11,25 @@ import indexRouter from "./routes/index.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/user.router.js";
 import morgan from "morgan";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
+const SessionFS = FileStore(expressSession);
+const SESSION_SECRET = process.env.SESSION_SECRET;
+app.use(
+  expressSession({
+    secret: SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    store: new SessionFS({
+      path: "./session",
+      ttl: 100,
+      retries: 0,
+    }),
+  })
+);
 
 app.use(express.json()); //Middleware incorporado
 app.use(express.urlencoded({ extended: true }));
