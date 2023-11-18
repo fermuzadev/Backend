@@ -1,8 +1,8 @@
 import express from "express";
 import expressSession from "express-session";
-import FileStore from "session-file-store";
 import handlebars from "express-handlebars";
 import path from "path";
+import MongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
 import { uploader } from "./utils.js";
 import prodRouter from "./routes/products.router.js";
@@ -16,17 +16,16 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const SessionFS = FileStore(expressSession);
-const SESSION_SECRET = process.env.SESSION_SECRET;
+
 app.use(
   expressSession({
-    secret: SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-    store: new SessionFS({
-      path: "./session",
-      ttl: 100,
-      retries: 0,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      mongoOptions: {},
+      ttl: 60,
     }),
   })
 );

@@ -1,25 +1,24 @@
 import express from "express";
 import expressSession from "express-session";
-import FileStore from "session-file-store";
 import handlebars from "express-handlebars";
 import path from "path";
+import MongoStore from "connect-mongo";
 import dotenv from "dotenv";
 import indexRouter from "./routers/index.router.js";
 import { __dirname } from "./utils.js";
 dotenv.config();
-const SESSION_SECRET = process.env.SESSION_SECRET;
+
 const app = express();
 
-const SessionFS = FileStore(expressSession);
 app.use(
   expressSession({
-    secret: SESSION_SECRET,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: new SessionFS({
-      path: path.join(__dirname, "session"),
-      ttl: 100,
-      retries: 0,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      mongoOptions: {},
+      ttl: 20, //por defecto tiene 14 dias
     }),
   })
 );

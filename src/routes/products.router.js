@@ -45,7 +45,7 @@ prodRouter.get("/products/cookie", (req, res) => {
     req.session.counter = 1;
   }
   req.session.message = "Nuevo usuario";
-  res.status(200).render("<h1>Hello people😎</h1>");
+  res.status(200).render("products");
 });
 
 prodRouter.get("/products", async (req, res) => {
