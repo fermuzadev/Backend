@@ -39,13 +39,7 @@ const buildResponse = (data) => {
 };
 
 prodRouter.get("/products/cookie", (req, res) => {
-  if (req.session.counter) {
-    req.session.counter += 1;
-  } else {
-    req.session.counter = 1;
-  }
-  req.session.message = "Nuevo usuario";
-  res.status(200).render("products");
+
 });
 
 prodRouter.get("/products", async (req, res) => {

@@ -3,7 +3,9 @@
 import http from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
+import init from "./dao/mongodb.js";
 
+await init();
 const serverHttp = http.createServer(app);
 const serverSocket = new Server(serverHttp);
 
