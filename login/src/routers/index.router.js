@@ -6,18 +6,34 @@ import UserModel from "../dao/models/user.model.js";
 const router = Router();
 
 router.get("/profile", (req, res) => {
-  res.status(200).render("profile", { title: "User profile" });
+  if (!req.session.user) {
+    return res.redirect("/login");
+  }
+
+  res
+    .status(200)
+    .render("profile", { title: "User profile", user: req.session.user });
 });
 
 router.get("/register", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/profile");
+  }
+
   res.status(200).render("register", { title: "User register" });
 });
 
 router.get("/", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/profile");
+  }
   res.status(200).render("register", { title: "User register" });
 });
 
 router.get("/login", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/profile");
+  }
   res.status(200).render("login", { title: "User login" });
 });
 
