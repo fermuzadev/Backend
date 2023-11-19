@@ -38,10 +38,6 @@ const buildResponse = (data) => {
   };
 };
 
-prodRouter.get("/products/cookie", (req, res) => {
-
-});
-
 prodRouter.get("/products", async (req, res) => {
   try {
     let { limit = 10, page = 1, category, stock, query, sort } = req.query; //query, sort

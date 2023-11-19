@@ -51,11 +51,11 @@ app.use(middleware);
 
 //Endpoint middlewares
 
-app.use("/", indexRouter);
+app.use("/", userRouter);
 app.use(
   "/api",
   uploader.single("thumbnails"),
-  userRouter,
+  indexRouter,
   cartsRouter,
   prodRouter,
   messagesRouter

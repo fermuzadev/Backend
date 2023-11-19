@@ -1,1 +1,25 @@
-<h1>Register</h1>
+<article>
+  <form action="/api/session/register" method="post">
+    <header><h1>Register</h1></header>
+    <input type="text" name="first_name" placeholder="Name" required />
+    <input
+      type="text"
+      name="last_name"
+      id=""
+      placeholder="Last Name"
+      required
+    />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="number" name="age" placeholder="Age" required />
+    <input
+      type="password"
+      name="password"
+      id=""
+      placeholder="Password"
+      required
+    />
+    <footer>
+      <input type="submit" value="Submit" />
+    </footer>
+  </form>
+</article>

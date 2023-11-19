@@ -4,7 +4,8 @@ import handlebars from "express-handlebars";
 import path from "path";
 import MongoStore from "connect-mongo";
 import dotenv from "dotenv";
-import indexRouter from "./routers/index.router.js";
+import sessionRouter from "./routers/session.router.js";
+import userRouter from "./routers/index.router.js";
 import { __dirname } from "./utils.js";
 dotenv.config();
 
@@ -31,7 +32,7 @@ app.engine("handlebars", handlebars.engine());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "handlebars");
 
-app.use("/", indexRouter);
+app.use("/", userRouter, sessionRouter);
 app.use((error, req, res, next) => {
   const message = `Ha ocurrido un error : ${error.message}`;
   res.status(500).json({ status: "error", message });
