@@ -10,6 +10,7 @@ import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/user.router.js";
+import sessionRouter from "./routes/session.router.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
 
@@ -58,7 +59,9 @@ app.use(
   indexRouter,
   cartsRouter,
   prodRouter,
-  messagesRouter
+  messagesRouter,
+  sessionRouter,
+  userRouter
 );
 
 //Errorhandler middleware

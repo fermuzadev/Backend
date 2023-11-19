@@ -32,7 +32,8 @@ app.engine("handlebars", handlebars.engine());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "handlebars");
 
-app.use("/", userRouter, sessionRouter);
+app.use("/", userRouter);
+app.use("/api", sessionRouter);
 app.use((error, req, res, next) => {
   const message = `Ha ocurrido un error : ${error.message}`;
   res.status(500).json({ status: "error", message });

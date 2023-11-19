@@ -10,7 +10,7 @@ router.post("/session/register", async (req, res) => {
       return;
     } else {
       const newUser = await UserModel.create(body);
-      res.status(200).redirect("./login");
+      res.status(200).redirect("/login");
     }
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -21,11 +21,9 @@ router.post("/session/login", async (req, res) => {
   const {
     body: { email, password },
   } = req;
-  const userFound = await UserModel.findOne({ email });
+  const user = await UserModel.findOne({ email });
+  console.log(user);
   try {
-    if (!body || !userFound) {
-      return res.status(401).send("User or password wrong");
-    }
     if (!user) {
       return res.status(401).send("User or password wrong");
     }
@@ -33,12 +31,11 @@ router.post("/session/login", async (req, res) => {
     if (!isValidPass) {
       return res.status(401).send("User or password wrong");
     }
-    const { first_name, last_name, email } = user;
+    const { first_name, last_name } = user;
     req.session.user = { first_name, last_name, email };
-    res.status(200).redirect("/profile");
+    res.redirect("/profile");
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 });
-
 export default router;

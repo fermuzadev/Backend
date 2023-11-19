@@ -13,6 +13,10 @@ router.get("/register", (req, res) => {
   res.status(200).render("register", { title: "User register" });
 });
 
+router.get("/", (req, res) => {
+  res.status(200).render("register", { title: "User register" });
+});
+
 router.get("/login", (req, res) => {
   res.status(200).render("login", { title: "User login" });
 });
