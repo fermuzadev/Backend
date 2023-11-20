@@ -5,34 +5,35 @@ import UserModel from "../dao/models/user.model.js";
 
 const router = Router();
 
-router.get("/profile", (req, res) => {
+const privateRouter = (req, res, next) => {
   if (!req.session.user) {
     return res.redirect("/login");
   }
+  next();
+};
+
+const publicRouter = (req, res, next) => {
+  if (req.session.user) {
+    return res.redirect("/profile");
+  }
+  next();
+};
+
+router.get("/profile", privateRouter, (req, res) => {
   res
     .status(200)
     .render("profile", { title: "User profile", user: req.session.user });
 });
 
-router.get("/register", (req, res) => {
-  if (req.session.user) {
-    return res.redirect("/profile");
-  }
-
+router.get("/register", publicRouter, (req, res) => {
   res.status(200).render("register", { title: "User register" });
 });
 
-router.get("/", (req, res) => {
-  if (req.session.user) {
-    return res.redirect("/profile");
-  }
+router.get("/", publicRouter, (req, res) => {
   res.status(200).render("register", { title: "User register" });
 });
 
-router.get("/login", (req, res) => {
-  if (req.session.user) {
-    return res.redirect("/profile");
-  }
+router.get("/login", publicRouter, (req, res) => {
   res.status(200).render("login", { title: "User login" });
 });
 
