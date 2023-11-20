@@ -22,7 +22,6 @@ router.post("/session/login", async (req, res) => {
     body: { email, password },
   } = req;
   const user = await UserModel.findOne({ email });
-  console.log(user);
   try {
     if (!user) {
       return res.status(401).send("User or password wrong");
@@ -31,11 +30,17 @@ router.post("/session/login", async (req, res) => {
     if (!isValidPass) {
       return res.status(401).send("User or password wrong");
     }
-    const { first_name, last_name } = user;
-    req.session.user = { first_name, last_name, email };
+    const { first_name, last_name, rol } = user;
+    req.session.user = { first_name, last_name, email, rol };
     res.redirect("/profile");
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
+});
+
+router.get("/session/logout", (req, res) => {
+  req.session.destroy((error) => {
+    res.redirect("/login");
+  });
 });
 export default router;
