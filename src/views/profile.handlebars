@@ -1,1 +1,11 @@
-<h1>Welcome {{user}} to your profile</h1>
+<article>
+  <header>
+    <p><b>Welcome { {{user.rol}} } to the Online Store App</b></p>
+  </header>
+  <p><b>User name: </b> <i>{{user.first_name}}</i></p>
+  <p><b>Last name: </b> <i>{{user.last_name}}</i></p>
+  <p><b>Mail : </b><i>{{user.email}}</i></p>
+  <footer>
+    <a href="/api/session/logout" role="button">Logout</a>
+  </footer>
+</article>

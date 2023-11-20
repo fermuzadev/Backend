@@ -26,7 +26,7 @@ app.use(
     store: MongoStore.create({
       mongoUrl: process.env.MONGODB_URI,
       mongoOptions: {},
-      ttl: 60,
+      ttl: 120,
     }),
   })
 );
