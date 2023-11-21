@@ -43,8 +43,6 @@ router.post("/session/login", async (req, res) => {
       return res.status(401).send("User or password wrong");
     }
     const { first_name, last_name, rol } = user;
-    //Hardcodeo p/ user admin
-    console.log("3", user);
 
     req.session.user = { first_name, last_name, email, rol };
     res.redirect("/api/realtimeproducts");

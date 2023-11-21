@@ -26,7 +26,7 @@ router.get("/", (req, res) => {
   if (req.session.user) {
     return res.redirect("/profile");
   }
-  res.status(200).render("register", { title: "User register" });
+  res.status(200).render("login", { title: "User login" });
 });
 
 router.get("/login", (req, res) => {
