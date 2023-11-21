@@ -32,7 +32,7 @@ router.post("/session/login", async (req, res) => {
     }
     const { first_name, last_name, rol } = user;
     req.session.user = { first_name, last_name, email, rol };
-    res.redirect("/profile");
+    res.redirect("/api/realtimeproducts");
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
