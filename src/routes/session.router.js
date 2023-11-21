@@ -21,16 +21,31 @@ router.post("/session/login", async (req, res) => {
   const {
     body: { email, password },
   } = req;
-  const user = await UserModel.findOne({ email });
   try {
+    let user = await UserModel.findOne({ email });
     if (!user) {
-      return res.status(401).send("User or password wrong");
+      //HARDCODEO
+      if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
+        user = {
+          first_name: "Coderhouse",
+          last_name: "Administrator",
+          email: "adminCoder@coder.com",
+          age: 9,
+          password: "adminCod3r123",
+          rol: "admin",
+        };
+      } else {
+        return res.status(401).send("User or password wrong");
+      }
     }
     const isValidPass = user.password === password;
     if (!isValidPass) {
       return res.status(401).send("User or password wrong");
     }
     const { first_name, last_name, rol } = user;
+    //Hardcodeo p/ user admin
+    console.log("3", user);
+
     req.session.user = { first_name, last_name, email, rol };
     res.redirect("/api/realtimeproducts");
   } catch (error) {
