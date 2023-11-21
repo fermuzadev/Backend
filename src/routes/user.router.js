@@ -9,7 +9,6 @@ router.get("/profile", (req, res) => {
   if (!req.session.user) {
     return res.redirect("/login");
   }
-
   res
     .status(200)
     .render("profile", { title: "User profile", user: req.session.user });
