@@ -47,7 +47,6 @@ router.post("/session/login", async (req, res) => {
       }
     }
     const isValidPass = await isValidPassword(password, user);
-    console.log("user2", user);
     if (!isValidPass) {
       return res.status(401).send("User or password wrong");
     }
