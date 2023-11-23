@@ -1,5 +1,6 @@
 import { Router } from "express";
 import UserModel from "../dao/models/user.model.js";
+import { createHash, isValidPassword } from "../utils.js";
 const router = Router();
 
 router.post("/session/register", async (req, res) => {
@@ -9,7 +10,10 @@ router.post("/session/register", async (req, res) => {
       res.status(404).send("No data or one field wrong");
       return;
     } else {
-      const newUser = await UserModel.create(body);
+      const newUser = await UserModel.create({
+        ...body,
+        password: createHash(body.password),
+      });
       res.status(200).redirect("/login");
     }
   } catch (error) {
@@ -34,16 +38,19 @@ router.post("/session/login", async (req, res) => {
           password: "adminCod3r123",
           rol: "admin",
         };
+        const { first_name, last_name, rol } = user;
+        req.session.user = { first_name, last_name, email, rol };
+        res.redirect("/api/realtimeproducts");
+        return;
       } else {
         return res.status(401).send("User or password wrong");
       }
     }
-    const isValidPass = user.password === password;
+    const isValidPass = await isValidPassword(password, user);
     if (!isValidPass) {
       return res.status(401).send("User or password wrong");
     }
     const { first_name, last_name, rol } = user;
-
     req.session.user = { first_name, last_name, email, rol };
     res.redirect("/api/realtimeproducts");
   } catch (error) {
