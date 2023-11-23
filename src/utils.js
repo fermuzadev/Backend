@@ -1,6 +1,6 @@
 import { fileURLToPath } from "url";
 import path from "path";
-
+import bcrypt, { compare } from "bcrypt";
 import fs from "fs/promises";
 import multer from "multer";
 
@@ -72,3 +72,9 @@ export class Exception extends Error {
     this.statusCode = status;
   }
 }
+
+export const createHash = (password) =>
+  bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
+export const isValidPassword = (password, user) =>
+  bcrypt.compareSync(password, user.password);
