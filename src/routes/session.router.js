@@ -38,16 +38,20 @@ router.post("/session/login", async (req, res) => {
           password: "adminCod3r123",
           rol: "admin",
         };
+        const { first_name, last_name, rol } = user;
+        req.session.user = { first_name, last_name, email, rol };
+        res.redirect("/api/realtimeproducts");
+        return;
       } else {
         return res.status(401).send("User or password wrong");
       }
     }
-    const isValidPass = isValidPassword(password, user);
+    const isValidPass = await isValidPassword(password, user);
+    console.log("user2", user);
     if (!isValidPass) {
       return res.status(401).send("User or password wrong");
     }
     const { first_name, last_name, rol } = user;
-
     req.session.user = { first_name, last_name, email, rol };
     res.redirect("/api/realtimeproducts");
   } catch (error) {
