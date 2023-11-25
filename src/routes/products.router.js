@@ -1,8 +1,8 @@
-//FS
-// import ProductManager from "../dao/ProductManager.js";
-// import path from "path";
-// const prodPath = path.resolve(__dirname, "./dao/productos.json");
-// const testingProducts = new ProductManager(prodPath);
+//!FS
+//! import ProductManager from "../dao/ProductManager.js";
+//! import path from "path";
+//! const prodPath = path.resolve(__dirname, "./dao/productos.json");
+//! const testingProducts = new ProductManager(prodPath);
 
 import { Router } from "express";
 import { __dirname } from "../utils.js";
@@ -69,7 +69,7 @@ prodRouter.get("/products", async (req, res) => {
 prodRouter.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
-    // let productById = await productModel.findById(pid);
+    //! let productById = await productModel.findById(pid);
 
     const paginateId = await productModel.paginate({ _id: pid }, { limit: 1 });
     if (!productById) {

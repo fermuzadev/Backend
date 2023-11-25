@@ -4,7 +4,7 @@ body {
 }
 
 .img-thumbnail {
-    max-height: 100px; /* Adjust the height as needed */
+    max-height: 100px; /*! Adjust the height as needed */
   }
 
   table {
@@ -19,7 +19,7 @@ body {
 
   @media screen and (min-width: 769px) {
     table {
-      max-width: 80%; /* Adjust the maximum width as needed */
+      max-width: 80%; /*! Adjust the maximum width as needed */
       margin: auto;
     }
   }

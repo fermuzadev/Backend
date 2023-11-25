@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-//Funcion para arrancar la db
+//!Function for init database
 const init = async () => {
   try {
     const URI = process.env.MONGODB_URI;

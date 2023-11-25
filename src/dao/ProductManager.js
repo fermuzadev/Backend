@@ -1,6 +1,6 @@
 import { getRandomId, saveJSONToFile, getJSONFromFile } from "../utils.js";
 
-//Class ProductManager
+//!Class ProductManager
 class ProductManager {
   constructor(path) {
     this.path = path;
@@ -112,9 +112,9 @@ class ProductManager {
   }
 }
 
-//End Product Manager Class
+//!End Product Manager Class
 
-//Testing
+//!Testing
 
 export const testingJSON = async () => {
   try {

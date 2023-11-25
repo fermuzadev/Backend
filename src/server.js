@@ -53,5 +53,5 @@ io.on("connection", async (socketClient) => {
 const PORT = 8080;
 
 serverHttp.listen(PORT, () => {
-  console.log(`Server running on http://!localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

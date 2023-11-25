@@ -1,8 +1,8 @@
-//FS
-//import ProductManager from "../dao/ProductManager.js";
-// import path from "path";
-//const prodPath = path.resolve(__dirname, "./dao/productos.json");
-// const productManager = new ProductManager(prodPath);
+//!FS
+//!import ProductManager from "../dao/ProductManager.js";
+//! import path from "path";
+//!const prodPath = path.resolve(__dirname, "./dao/productos.json");
+//! const productManager = new ProductManager(prodPath);
 
 import { Router } from "express";
 import { __dirname } from "../utils.js";

@@ -76,13 +76,13 @@
       productsListSocket.appendChild(prod);
     });
   }
-  //Show realTime Products
+  //!Show realTime Products
 
   socket.on("products", (...products) => {
     showProductSocket(products);
   });
 
-  //Reception Events from Backend
+  //!Reception Events from Backend
 
   socket.on("message_everyone", (message) => {
     console.log("message_everyone", message);
