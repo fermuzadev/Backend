@@ -1,6 +1,7 @@
 import { Router } from "express";
 import UserModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
+import userModel from "../dao/models/user.model.js";
 const router = Router();
 
 router.post("/session/register", async (req, res) => {
@@ -58,6 +59,18 @@ router.post("/session/login", async (req, res) => {
   }
 });
 
+router.post("/session/recovery-password", async (req, res) => {
+  const { email, newPassword } = req.body;
+  const user = await userModel.findOne({ email });
+  if (!user) {
+    return res.status(401).send("User not found");
+  }
+  await userModel.updateOne(
+    { email },
+    { $set: { password: createHash(newPassword) } }
+  );
+  res.redirect("/login");
+});
 router.get("/session/logout", (req, res) => {
   req.session.destroy((error) => {
     res.redirect("/login");

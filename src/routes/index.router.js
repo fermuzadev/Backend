@@ -30,7 +30,9 @@ router.get("/profile", privateRouter, (req, res) => {
     .status(200)
     .render("profile", { title: "User profile", user: req.session.user });
 });
-
+router.get("/login", publicRouter, (req, res) => {
+  res.status(200).render("login", { title: "User login" });
+});
 router.get("/register", publicRouter, (req, res) => {
   res.status(200).render("register", { title: "User register" });
 });
@@ -39,8 +41,8 @@ router.get("/", publicRouter, (req, res) => {
   res.status(200).render("register", { title: "User register" });
 });
 
-router.get("/login", publicRouter, (req, res) => {
-  res.status(200).render("login", { title: "User login" });
+router.get("/recovery-password", publicRouter, (req, res) => {
+  res.render("recovery-password", { title: "Password Recover" });
 });
 
 router.get("/user", async (req, res) => {
