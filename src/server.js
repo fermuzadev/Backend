@@ -1,8 +1,8 @@
-// import ProductManager from "./dao/ProductManager.js";
-// import path from "path";
-// const prodPath = path.resolve(__dirname, "./dao/productos.json");
-// const testingProducts = new ProductManager(prodPath);
-//BACKEND
+//! import ProductManager from "./dao/ProductManager.js";
+//! import path from "path";
+//! const prodPath = path.resolve(__dirname, "./dao/productos.json");
+//! const testingProducts = new ProductManager(prodPath);
+//!BACKEND
 import http from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
@@ -13,11 +13,11 @@ import messagesModel from "./dao/models/messages.model.js";
 
 await init();
 
-//Http server
+//!Http server
 const serverHttp = http.createServer(app);
-//Socket io server
+//!Socket io server
 const io = new Server(serverHttp);
-//Backend Emits
+//!Backend Emits
 io.on("connection", async (socketClient) => {
   const products = await productModel.find();
   const messages = await messagesModel.find();
@@ -53,5 +53,5 @@ io.on("connection", async (socketClient) => {
 const PORT = 8080;
 
 serverHttp.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://!localhost:${PORT}`);
 });

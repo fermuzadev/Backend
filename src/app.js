@@ -66,7 +66,7 @@ app.use(
   realTimeRouter
 );
 
-//Errorhandler middleware
+//!Errorhandler middleware
 
 const errorHandler = (error, req, res, next) => {
   console.error(`Ha ocurrido un error : ${error.message}`);
