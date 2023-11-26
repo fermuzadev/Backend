@@ -1,4 +1,5 @@
 import express from "express";
+import passport from "passport";
 import expressSession from "express-session";
 import handlebars from "express-handlebars";
 import path from "path";
@@ -14,6 +15,7 @@ import userRouter from "./routes/user.router.js";
 import sessionRouter from "./routes/session.router.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import { init as initPassportConfig } from "./config/passport.config.js";
 
 dotenv.config();
 
@@ -42,6 +44,10 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "handlebars");
 
 //!App middleware
+initPassportConfig();
+app.use(passport.initialize());
+app.use(passport.session());
+
 const middleware = (req, res, next) => {
   const today = new Date();
   const message = `📅${today.toLocaleDateString()} - ⌚${today.toLocaleTimeString()}`;
