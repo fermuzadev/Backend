@@ -26,11 +26,11 @@ router.get("/profile", privateRouter, (req, res) => {
 });
 
 router.get("/register", publicRouter, (req, res) => {
-  res.status(200).render("register", { title: "User register" });
+  res.render("register", { title: "User register" });
 });
 
 router.get("/", publicRouter, (req, res) => {
-  res.status(200).render("register", { title: "User register" });
+  res.render("register", { title: "User register" });
 });
 
 router.get("/recovery-password", publicRouter, (req, res) => {
@@ -38,7 +38,7 @@ router.get("/recovery-password", publicRouter, (req, res) => {
 });
 
 router.get("/login", publicRouter, (req, res) => {
-  res.status(200).render("login", { title: "User login" });
+  res.render("login", { title: "User login" });
 });
 
 router.get("/user", async (req, res) => {

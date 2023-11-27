@@ -13,9 +13,9 @@ import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/user.router.js";
 import sessionRouter from "./routes/session.router.js";
+import { init as initPassportConfig } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import { init as initPassportConfig } from "./config/passport.config.js";
 
 dotenv.config();
 
@@ -33,21 +33,43 @@ app.use(
     }),
   })
 );
-
+//!Express
 app.use(express.json()); //Middleware incorporado
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(morgan("dev"));
-
+//!Handlebars
 app.engine("handlebars", handlebars.engine());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "handlebars");
 
 //!App middleware
+//!Passport
 initPassportConfig();
+
 app.use(passport.initialize());
 app.use(passport.session());
 
+//!Endpoint middlewares
+
+app.use(
+  "/",
+  uploader.single("thumbnails"),
+  userRouter,
+  realTimeRouter,
+  sessionRouter
+);
+app.use(
+  "/api",
+  indexRouter,
+  cartsRouter,
+  prodRouter,
+  messagesRouter,
+  sessionRouter
+  //!userRouter
+);
+
+//!Errorhandler middleware
 const middleware = (req, res, next) => {
   const today = new Date();
   const message = `📅${today.toLocaleDateString()} - ⌚${today.toLocaleTimeString()}`;
@@ -56,23 +78,6 @@ const middleware = (req, res, next) => {
 };
 
 app.use(middleware);
-
-//!Endpoint middlewares
-
-app.use("/", userRouter);
-app.use(
-  "/api",
-  uploader.single("thumbnails"),
-  indexRouter,
-  cartsRouter,
-  prodRouter,
-  messagesRouter,
-  sessionRouter,
-  userRouter,
-  realTimeRouter
-);
-
-//!Errorhandler middleware
 
 const errorHandler = (error, req, res, next) => {
   console.error(`Ha ocurrido un error : ${error.message}`);
