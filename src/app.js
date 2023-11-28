@@ -64,8 +64,8 @@ app.use(
   indexRouter,
   cartsRouter,
   prodRouter,
-  messagesRouter,
-  sessionRouter
+  messagesRouter
+  // sessionRouter
   //!userRouter
 );
 
@@ -77,14 +77,17 @@ const middleware = (req, res, next) => {
   next();
 };
 
-app.use(middleware);
-
-const errorHandler = (error, req, res, next) => {
+export const errorHandler = (error, req, res, next) => {
   console.error(`Ha ocurrido un error : ${error.message}`);
   console.error(`El stack es ${error.stack}`); //Muestra todo para saber donde esta el error
+  if (error instanceof Error) {
+    return res.status(401).send(error.message);
+  }
+
   res.status(500).send("Algo se rompio, intente mas tarde");
 };
 
 app.use(errorHandler);
+app.use(middleware);
 
 export default app;

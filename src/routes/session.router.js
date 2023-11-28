@@ -26,7 +26,7 @@ const router = Router();
 router.post(
   "/register",
   passport.authenticate("register", { failureRedirect: "/register" }),
-  (req, res) => {
+  async (req, res) => {
     res.redirect("/login");
   }
 );

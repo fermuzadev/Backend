@@ -15,37 +15,19 @@ export const init = () => {
     new LocalStrategy(opts, async (req, email, password, done) => {
       try {
         const user = await userModel.findOne({ email });
+        console.log(user);
         if (user) {
-          return done(new Error("User already register"));
-          console.log("estoy aca");
+          throw new Error("User already register");
         }
         const newUser = await userModel.create({
           ...req.body,
           password: createHash(password),
         });
         done(null, newUser);
-        console.log("estoy aca 2");
       } catch (error) {
-        done(new Error(`Error while User Authenticated  => ${error.message}`));
-      }
-    })
-  );
-  passport.use(
-    "login",
-    new LocalStrategy(opts, async (req, email, password, done) => {
-      try {
-        const user = await userModel.findOne({ email });
-        if (!user) {
-          return done(new Error("Email or password invalid"));
-        }
-        const isValidPass = isValidPassword(password, user);
-        if (!isValidPass) {
-          return done(new Error("Email or password not valid"));
-        }
-        console.log("Here");
-        done(null, user);
-      } catch (error) {
-        done(new Error(`Error while user authenticated ${error.message}`));
+        return done(
+          new Error(`Error while User Authenticated  => ${error.message}`)
+        );
       }
     })
   );
