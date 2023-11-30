@@ -55,9 +55,10 @@ app.use(passport.session());
 app.use(
   "/",
   uploader.single("thumbnails"),
-  sessionRouter,
+
   userRouter,
-  realTimeRouter
+  realTimeRouter,
+  sessionRouter
 );
 app.use(
   "/api",
@@ -65,8 +66,9 @@ app.use(
   cartsRouter,
   prodRouter,
   messagesRouter,
-  sessionRouter,
-  userRouter
+
+  userRouter,
+  sessionRouter
 );
 
 //!Errorhandler middleware

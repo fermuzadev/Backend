@@ -1,33 +1,40 @@
 import { Router } from "express";
 import passport from "passport";
-//import UserModel from "../dao/models/user.model.js";
+import UserModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import userModel from "../dao/models/user.model.js";
 const router = Router();
 
-// router.post("/session/register", async (req, res) => {
-//   const { body } = req;
-//   try {
-//     if (!body) {
-//       res.status(404).send("No data or one field wrong");
-//       return;
-//     } else {
-//       const newUser = await UserModel.create({
-//         ...body,
-//         password: createHash(body.password),
-//       });
-//       res.redirect("/login");
-//     }
-//   } catch (error) {
-//     res.status(404).json({ message: error.message });
-//   }
-// });
+router.post("/register", async (req, res) => {
+  const { body } = req;
+  try {
+    if (!body) {
+      res.status(404).send("No data or one field wrong");
+      return;
+    } else {
+      const newUser = await UserModel.create({
+        ...body,
+        password: createHash(body.password),
+      });
+      res.redirect("/login");
+    }
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+});
 
 router.post(
   "/register",
   passport.authenticate("register", { failureRedirect: "/register" }),
   async (req, res) => {
-    res.redirect("/login");
+    res.status(200).redirect("/login");
+  }
+);
+router.post(
+  "/login",
+  passport.authenticate("login", { failureRedirect: "/login" }),
+  async (req, res) => {
+    res.status(200).redirect("/profile");
   }
 );
 
