@@ -9,7 +9,7 @@
     "start": "node .",
     "dev": "nodemon .",
     "build": "npm install && npm run transpile",
-    "transpile": "babel -d dist"
+    "transpile": "babel src -d dist"
   },
   "keywords": [
     "multer",
