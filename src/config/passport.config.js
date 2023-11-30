@@ -31,4 +31,26 @@ export const init = () => {
       }
     })
   );
+
+  passport.use(
+    "login",
+    new LocalStrategy(opts, async (req, email, password, done) => {
+      const user = await userModel.findOne({ email });
+      if (!user) {
+        return done(new Error("Invalid user or password❌"));
+      }
+      const isValidPass = await isValidPassword(password, user);
+      if (!isValidPass) {
+        return done(new Error("Invalid user or password❌"));
+      }
+      done(null, user);
+    })
+  );
+  passport.serializeUser((user, done) => {
+    done(null, user._id);
+  });
+  passport.deserializeUser(async (uid, done) => {
+    const user = await userModel.findById(uid);
+    done(null, user);
+  });
 };

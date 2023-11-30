@@ -1,18 +1,18 @@
 import express from "express";
-import passport from "passport";
 import expressSession from "express-session";
+import passport from "passport";
 import handlebars from "express-handlebars";
 import path from "path";
 import MongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
 import { uploader } from "./utils.js";
+import sessionRouter from "./routes/session.router.js";
 import prodRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
 import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/user.router.js";
-import sessionRouter from "./routes/session.router.js";
 import { init as initPassportConfig } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
@@ -55,18 +55,18 @@ app.use(passport.session());
 app.use(
   "/",
   uploader.single("thumbnails"),
+  sessionRouter,
   userRouter,
-  realTimeRouter,
-  sessionRouter
+  realTimeRouter
 );
 app.use(
   "/api",
   indexRouter,
   cartsRouter,
   prodRouter,
-  messagesRouter
-  // sessionRouter
-  //!userRouter
+  messagesRouter,
+  sessionRouter,
+  userRouter
 );
 
 //!Errorhandler middleware

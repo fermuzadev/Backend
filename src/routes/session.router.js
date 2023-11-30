@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import UserModel from "../dao/models/user.model.js";
+//import UserModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import userModel from "../dao/models/user.model.js";
 const router = Router();
@@ -37,32 +37,35 @@ router.post("/login", async (req, res) => {
   } = req;
   try {
     let user = await UserModel.findOne({ email });
-    if (!user) {
-      //HARDCODEO
-      if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
-        user = {
-          first_name: "Coderhouse",
-          last_name: "Administrator",
-          email: "adminCoder@coder.com",
-          age: 9,
-          password: "adminCod3r123",
-          rol: "admin",
-        };
+    // if (!user) {
+    //HARDCODEO
+    if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
+      let user = {
+        first_name: "Coderhouse",
+        last_name: "Administrator",
+        email: "adminCoder@coder.com",
+        age: 9,
+        password: "adminCod3r123",
+        rol: "admin",
+      };
+      const { first_name, last_name, rol } = user;
+      req.session.user = { first_name, last_name, email, rol };
+      res.redirect("/realtimeproducts");
+
+      return;
+    } else {
+      if (user) {
+        const isValidPass = await isValidPassword(password, user);
+        if (!isValidPass) {
+          return res.status(401).send("User or password wrong");
+        }
         const { first_name, last_name, rol } = user;
         req.session.user = { first_name, last_name, email, rol };
         res.redirect("/realtimeproducts");
         return;
-      } else {
-        return res.status(401).send("User or password wrong");
       }
-    }
-    const isValidPass = await isValidPassword(password, user);
-    if (!isValidPass) {
       return res.status(401).send("User or password wrong");
     }
-    const { first_name, last_name, rol } = user;
-    req.session.user = { first_name, last_name, email, rol };
-    res.redirect("/realtimeproducts");
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
