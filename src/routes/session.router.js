@@ -27,14 +27,16 @@ router.post(
   "/register",
   passport.authenticate("register", { failureRedirect: "/register" }),
   async (req, res) => {
-    res.status(200).redirect("/login");
+    res.redirect("/login");
   }
 );
 router.post(
   "/login",
   passport.authenticate("login", { failureRedirect: "/login" }),
   async (req, res) => {
-    res.status(200).redirect("/profile");
+    req.session.user = req.user;
+    console.log(req.session);
+    res.redirect("/profile");
   }
 );
 

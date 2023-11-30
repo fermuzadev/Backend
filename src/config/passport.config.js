@@ -25,9 +25,7 @@ export const init = () => {
         });
         done(null, newUser);
       } catch (error) {
-        return done(
-          new Error(`Error while User Authenticated  => ${error.message}`)
-        );
+        done(new Error(`Error while User Authenticated  => ${error.message}`));
       }
     })
   );
@@ -35,15 +33,19 @@ export const init = () => {
   passport.use(
     "login",
     new LocalStrategy(opts, async (req, email, password, done) => {
-      const user = await userModel.findOne({ email });
-      if (!user) {
-        return done(new Error("Invalid user or password❌"));
+      try {
+        const user = await userModel.findOne({ email });
+        if (!user) {
+          return done(new Error("Invalid user or password❌"));
+        }
+        const isValidPass = await isValidPassword(password, user);
+        if (!isValidPass) {
+          return done(new Error("Invalid user or password❌"));
+        }
+        done(null, user);
+      } catch (error) {
+        done(new Error(`Error while User Authenticated  => ${error.message}`));
       }
-      const isValidPass = await isValidPassword(password, user);
-      if (!isValidPass) {
-        return done(new Error("Invalid user or password❌"));
-      }
-      done(null, user);
     })
   );
   passport.serializeUser((user, done) => {
