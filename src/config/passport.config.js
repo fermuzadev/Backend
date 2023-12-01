@@ -51,8 +51,8 @@ export const init = () => {
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });
-  passport.deserializeUser(async (uid, done) => {
-    const user = await userModel.findById(uid);
+  passport.deserializeUser(async (_id, done) => {
+    const user = await userModel.findById(_id);
     done(null, user);
   });
 };
