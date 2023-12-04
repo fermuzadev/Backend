@@ -2,10 +2,10 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
 import { createHash, isValidPassword } from "../utils.js";
-import userModel from "../dao/models/user.model.js";
+import UserModel from "../dao/models/user.model.js";
 
 const opts = {
-  userNameField: "email",
+  usernameField: "email",
   passReqToCallback: true,
 };
 
@@ -14,18 +14,19 @@ export const init = () => {
     "register",
     new LocalStrategy(opts, async (req, email, password, done) => {
       try {
-        const user = await userModel.findOne({ email });
-        console.log(user);
+        const user = await UserModel.findOne({ email });
         if (user) {
-          throw new Error("User already register");
+          return done(new Error("User already register"));
         }
-        const newUser = await userModel.create({
+        const newUser = await UserModel.create({
           ...req.body,
           password: createHash(password),
         });
         done(null, newUser);
       } catch (error) {
-        done(new Error(`Error while User Authenticated  => ${error.message}`));
+        return done(
+          new Error(`Error while User Authenticated  => ${error.message}`)
+        );
       }
     })
   );
@@ -34,7 +35,7 @@ export const init = () => {
     "login",
     new LocalStrategy(opts, async (req, email, password, done) => {
       try {
-        const user = await userModel.findOne({ email });
+        const user = await UserModel.findOne({ email });
         if (!user) {
           return done(new Error("Invalid user or password❌"));
         }
@@ -44,7 +45,9 @@ export const init = () => {
         }
         done(null, user);
       } catch (error) {
-        done(new Error(`Error while User Authenticated  => ${error.message}`));
+        return done(
+          new Error(`Error while User Authenticated  => ${error.message}`)
+        );
       }
     })
   );
@@ -52,7 +55,7 @@ export const init = () => {
     done(null, user._id);
   });
   passport.deserializeUser(async (_id, done) => {
-    const user = await userModel.findById(_id);
+    const user = await UserModel.findById(_id);
     done(null, user);
   });
 };

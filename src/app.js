@@ -12,7 +12,7 @@ import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
 import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
-import userRouter from "./routes/user.router.js";
+import UserRouter from "./routes/user.router.js";
 import { init as initPassportConfig } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
@@ -55,29 +55,29 @@ app.use(passport.session());
 app.use(
   "/",
   uploader.single("thumbnails"),
-
-  userRouter,
-  realTimeRouter,
-  sessionRouter
+  sessionRouter,
+  UserRouter,
+  realTimeRouter
 );
 app.use(
   "/api",
+  sessionRouter,
   indexRouter,
   cartsRouter,
   prodRouter,
   messagesRouter,
-  userRouter,
-  sessionRouter
+  UserRouter
 );
 
 //!Errorhandler middleware
+
 const middleware = (req, res, next) => {
   const today = new Date();
   const message = `📅${today.toLocaleDateString()} - ⌚${today.toLocaleTimeString()}`;
   console.log(message);
   next();
 };
-
+app.use(middleware);
 export const errorHandler = (error, req, res, next) => {
   console.error(`Ha ocurrido un error : ${error.message}`);
   console.error(`El stack es ${error.stack}`); //Muestra todo para saber donde esta el error
@@ -89,6 +89,5 @@ export const errorHandler = (error, req, res, next) => {
 };
 
 app.use(errorHandler);
-app.use(middleware);
 
 export default app;

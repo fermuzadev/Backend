@@ -8,19 +8,19 @@ import { Server } from "socket.io";
 import app from "./app.js";
 import { __dirname } from "./utils.js";
 import init from "./dao/mongodb.js";
-import productModel from "./dao/models/product.model.js";
-import messagesModel from "./dao/models/messages.model.js";
+import ProductModel from "./dao/models/product.model.js";
+import MessagesModel from "./dao/models/messages.model.js";
 
 await init();
-
+const PORT = 8080;
 //!Http server
 const serverHttp = http.createServer(app);
 //!Socket io server
 const io = new Server(serverHttp);
 //!Backend Emits
 io.on("connection", async (socketClient) => {
-  const products = await productModel.find();
-  const messages = await messagesModel.find();
+  const products = await ProductModel.find();
+  const messages = await MessagesModel.find();
   console.log(`A new client is connected 👌 (${socketClient.id}) `);
   socketClient.emit("products", ...products);
   socketClient.emit("messages", messages);
@@ -29,17 +29,17 @@ io.on("connection", async (socketClient) => {
   });
 
   socketClient.on("productSocket", async (newProduct) => {
-    await productModel.create(...newProduct);
-    const productsUpdated = await productModel.find();
+    await ProductModel.create(...newProduct);
+    const productsUpdated = await ProductModel.find();
     await socketClient.emit("productsUpdated", productsUpdated);
   });
 
   socketClient.on("idToDelete", async (deleteProduct) => {
-    await productModel.deleteOne({ _id: deleteProduct });
+    await ProductModel.deleteOne({ _id: deleteProduct });
   });
 
   socketClient.on("new-message", async ({ username, text }) => {
-    let messages = await messagesModel.create({
+    let messages = await MessagesModel.create({
       user: username,
       message: text,
     });
@@ -49,8 +49,6 @@ io.on("connection", async (socketClient) => {
   io.emit("message_everyone", `Client connected😎`);
   socketClient.broadcast.emit("new-client");
 });
-
-const PORT = 8080;
 
 serverHttp.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

@@ -2,26 +2,25 @@ import { Router } from "express";
 import passport from "passport";
 import UserModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
-import userModel from "../dao/models/user.model.js";
 const router = Router();
 
-router.post("/register", async (req, res) => {
-  const { body } = req;
-  try {
-    if (!body) {
-      res.status(404).send("No data or one field wrong");
-      return;
-    } else {
-      const newUser = await UserModel.create({
-        ...body,
-        password: createHash(body.password),
-      });
-      res.redirect("/login");
-    }
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
-});
+// router.post("/register", async (req, res) => {
+//   const { body } = req;
+//   try {
+//     if (!body) {
+//       res.status(404).send("No data or one field wrong");
+//       return;
+//     } else {
+//       const newUser = await UserModel.create({
+//         ...body,
+//         password: createHash(body.password),
+//       });
+//       res.redirect("/login");
+//     }
+//   } catch (error) {
+//     res.status(404).json({ message: error.message });
+//   }
+// });
 
 router.post(
   "/register",
@@ -35,8 +34,7 @@ router.post(
   passport.authenticate("login", { failureRedirect: "/login" }),
   async (req, res) => {
     req.session.user = req.user;
-    console.log(req.session);
-    res.redirect("/profile");
+    res.redirect("/realtimeproducts");
   }
 );
 
@@ -82,11 +80,11 @@ router.post("/login", async (req, res) => {
 
 router.post("/recovery-password", async (req, res) => {
   const { email, newPassword } = req.body;
-  const user = await userModel.findOne({ email });
+  const user = await UserModel.findOne({ email });
   if (!user) {
     return res.status(401).send("User not found");
   }
-  await userModel.updateOne(
+  await UserModel.updateOne(
     { email },
     { $set: { password: createHash(newPassword) } }
   );
