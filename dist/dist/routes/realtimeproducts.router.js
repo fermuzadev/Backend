@@ -18,11 +18,11 @@ router.get("/realtimeproducts", async (req, res) => {
     res.render("realTimeProducts", {
       title: "MongoDB Real-Time Products ",
       products,
-      user: req.session.user
+      user: req.session.user,
     });
   } catch (error) {
     res.status(404).json({
-      message: error.message
+      message: error.message,
     });
   }
 });

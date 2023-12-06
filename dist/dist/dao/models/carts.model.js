@@ -1,27 +1,33 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-const {
-  Schema
-} = mongoose;
-const Products = new Schema([{
-  productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Products"
+const { Schema } = mongoose;
+const Products = new Schema(
+  [
+    {
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Products",
+      },
+      quantity: {
+        type: Number,
+      },
+    },
+  ],
+  {
+    _id: false,
+  }
+);
+const cartSchema = new mongoose.Schema(
+  {
+    products: {
+      type: [Products],
+      default: [],
+    },
   },
-  quantity: {
-    type: Number
+  {
+    timestamps: true,
   }
-}], {
-  _id: false
-});
-const cartSchema = new mongoose.Schema({
-  products: {
-    type: [Products],
-    default: []
-  }
-}, {
-  timestamps: true
-});
+);
 cartSchema.pre("find", function () {
   this.populate("products.productId");
 });

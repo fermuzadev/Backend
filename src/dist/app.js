@@ -18,21 +18,25 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
-app.use(expressSession({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
-    mongoOptions: {},
-    ttl: 120
+app.use(
+  expressSession({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      mongoOptions: {},
+      ttl: 120,
+    }),
   })
-}));
+);
 //!Express
 app.use(express.json()); //Middleware incorporado
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(morgan("dev"));
 //!Handlebars
@@ -48,10 +52,21 @@ app.use(passport.session());
 
 //!Endpoint middlewares
 
-app.use("/", uploader.single("thumbnails"), userRouter, realTimeRouter, sessionRouter);
-app.use("/api", indexRouter, cartsRouter, prodRouter, messagesRouter
-// sessionRouter
-//!userRouter
+app.use(
+  "/",
+  uploader.single("thumbnails"),
+  userRouter,
+  realTimeRouter,
+  sessionRouter
+);
+app.use(
+  "/api",
+  indexRouter,
+  cartsRouter,
+  prodRouter,
+  messagesRouter
+  // sessionRouter
+  //!userRouter
 );
 
 //!Errorhandler middleware

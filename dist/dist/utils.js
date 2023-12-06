@@ -15,12 +15,12 @@ const storage = multer.diskStorage({
     const filename = `${Date.now()}-${file.originalname}`;
     console.log("filename", filename);
     callback(null, filename);
-  }
+  },
 });
 export const uploader = multer({
-  storage
+  storage,
 });
-export const getRandomId = array => {
+export const getRandomId = (array) => {
   let numId = parseInt(Math.random() * (10000 - 1) + 1);
   if (numId === array.id) {
     numId = parseInt(Math.random() * (10000 - 1) + 1);
@@ -28,7 +28,7 @@ export const getRandomId = array => {
     return numId;
   }
 };
-export const existFile = async path => {
+export const existFile = async (path) => {
   try {
     await fs.access(path);
     return true;
@@ -36,7 +36,7 @@ export const existFile = async path => {
     return false;
   }
 };
-export const getJSONFromFile = async path => {
+export const getJSONFromFile = async (path) => {
   if (!(await existFile(path))) {
     return [];
   } else {
@@ -67,5 +67,7 @@ export class Exception extends Error {
     this.statusCode = status;
   }
 }
-export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-export const isValidPassword = (password, user) => bcrypt.compareSync(password, user.password);
+export const createHash = (password) =>
+  bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+export const isValidPassword = (password, user) =>
+  bcrypt.compareSync(password, user.password);
