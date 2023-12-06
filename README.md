@@ -8,3 +8,11 @@ Node.JS || Express.js || Websocket || Socket.io || Sweet Alert 2 || Routers || H
 #Chat => https://selective-wind-pepper.glitch.me/
 
 #Ecommerce & User Login => https://codingclothes.onrender.com/
+
+#Testing Endpoints
+/api/products
+/api/messages
+/realtimeproducts
+/login
+/logout
+/register
