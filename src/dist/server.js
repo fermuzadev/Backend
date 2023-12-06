@@ -17,7 +17,7 @@ const serverHttp = http.createServer(app);
 //!Socket io server
 const io = new Server(serverHttp);
 //!Backend Emits
-io.on("connection", async socketClient => {
+io.on("connection", async (socketClient) => {
   const products = await productModel.find();
   const messages = await messagesModel.find();
   console.log(`A new client is connected 👌 (${socketClient.id}) `);
@@ -26,23 +26,20 @@ io.on("connection", async socketClient => {
   socketClient.on("disconnect", () => {
     console.log(`Client id ${socketClient.id} disconnected`);
   });
-  socketClient.on("productSocket", async newProduct => {
+  socketClient.on("productSocket", async (newProduct) => {
     await productModel.create(...newProduct);
     const productsUpdated = await productModel.find();
     await socketClient.emit("productsUpdated", productsUpdated);
   });
-  socketClient.on("idToDelete", async deleteProduct => {
+  socketClient.on("idToDelete", async (deleteProduct) => {
     await productModel.deleteOne({
-      _id: deleteProduct
+      _id: deleteProduct,
     });
   });
-  socketClient.on("new-message", async ({
-    username,
-    text
-  }) => {
+  socketClient.on("new-message", async ({ username, text }) => {
     let messages = await messagesModel.create({
       user: username,
-      message: text
+      message: text,
     });
     io.emit("messages", messages);
   });

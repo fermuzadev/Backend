@@ -1,12 +1,21 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-
+import GithubStrategy from "passport-github2";
 import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const opts = {
   usernameField: "email",
   passReqToCallback: true,
+};
+
+const githubOpts = {
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  callbackURL: process.env.GITHUB_CALLBACK,
 };
 
 export const init = () => {
@@ -51,6 +60,8 @@ export const init = () => {
       }
     })
   );
+
+  passport.use("github", new GithubStrategy(githubOpts));
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });

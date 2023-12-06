@@ -14,7 +14,7 @@
   const idInputDelete = document.getElementById("idDelete");
   const productsListSocket = document.getElementById("productsSocket");
   const URL_BASE = `http://localhost:8080/img/`;
-  deleteForm.addEventListener("submit", ev => {
+  deleteForm.addEventListener("submit", (ev) => {
     ev.preventDefault();
     Swal.fire({
       title: "Are you sure?",
@@ -23,10 +23,14 @@
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
-    }).then(result => {
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Deleted!", `Your file ${idInputDelete.value} has been deleted.`, "success");
+        Swal.fire(
+          "Deleted!",
+          `Your file ${idInputDelete.value} has been deleted.`,
+          "success"
+        );
         let idToDelete;
         ev.preventDefault();
         idToDelete = parseInt(idInputDelete.value);
@@ -37,7 +41,7 @@
       }
     });
   });
-  form.addEventListener("submit", ev => {
+  form.addEventListener("submit", (ev) => {
     ev.preventDefault();
     console.log("Form submitted!");
     try {
@@ -48,7 +52,7 @@
         price: price.value,
         stock: stock.value,
         category: category.value,
-        thumbnails: thumbnails.file
+        thumbnails: thumbnails.file,
       });
       socket.emit("productSocket", products);
       showProductSocket(products);
@@ -58,7 +62,7 @@
   });
   function showProductSocket(products) {
     productsListSocket.innerHTML = "";
-    products.forEach(product => {
+    products.forEach((product) => {
       const prod = document.createElement("div");
       prod.className = "card";
       prod.innerHTML = `  
@@ -83,7 +87,7 @@
 
   //Reception Events from Backend
 
-  socket.on("message_everyone", message => {
+  socket.on("message_everyone", (message) => {
     console.log("message_everyone", message);
   });
 })();
