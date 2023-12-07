@@ -3,3 +3,5 @@
 
 # excepto persistenciaJSON.log
 !persistenciaJSON.js
+
+/node_modules
