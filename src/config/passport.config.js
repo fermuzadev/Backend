@@ -13,9 +13,9 @@ const opts = {
 };
 
 const githubOpts = {
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: process.env.GITHUB_CALLBACK,
+  clientID: process.env.GHCLIENTID,
+  clientSecret: process.env.GITHUBCLIENTSECRET,
+  callbackURL: process.env.GHCALLBACK,
 };
 
 export const init = () => {
@@ -61,7 +61,31 @@ export const init = () => {
     })
   );
 
-  passport.use("github", new GithubStrategy(githubOpts));
+  passport.use(
+    "github",
+    new GithubStrategy(
+      githubOpts,
+      async (accessToken, refreshToken, profile, done) => {
+        console.log("profile", profile);
+        const email = profile._json.email;
+        let user = await UserModel.findOne({ email });
+        if (user) {
+          return done(null, user);
+        }
+        let nameSeparator = profile._json.name;
+        user = {
+          first_name: nameSeparator[0],
+          last_name: nameSeparator[1],
+          email: profile._json.name,
+          age: 32,
+          password: "",
+          provider: "GitHub",
+        };
+        const newUser = await UserModel.create(user);
+        done(null, newUser);
+      }
+    )
+  );
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });

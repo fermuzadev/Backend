@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     age: { type: Number },
     password: { type: String, required: true },
+    provider: String,
     status: { type: String, default: "active", enum: ["active", "inactive"] },
     adress: { type: Address, default: {} },
     rol: { type: String, default: "user", enum: ["user", "admin"] },

@@ -60,6 +60,21 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+router.get(
+  "http://localhost:8080/api/github/callback",
+  passport.authenticate("github", { failureRedirect: "/login" }),
+  (req, res) => {
+    console.log("req.user", req.user);
+    req.session.user = req.user;
+    res.redirect("/profile");
+  }
+);
+
 router.post("/recovery-password", async (req, res) => {
   const { email, newPassword } = req.body;
   const user = await UserModel.findOne({ email });
