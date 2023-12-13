@@ -4,3 +4,9 @@ login
 env
 /node_modules
 /login
+node_modules    
+login
+.env
+env
+/node_modules
+/login
