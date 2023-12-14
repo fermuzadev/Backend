@@ -68,10 +68,10 @@ router.get(
 router.get(
   "http://localhost:8080/api/github/callback",
   passport.authenticate("github", { failureRedirect: "/login" }),
-  (req, res) => {
+  async (req, res) => {
     console.log("req.user", req.user);
     req.session.user = req.user;
-    res.redirect("/profile");
+    res.redirect("/realtimeproducts");
   }
 );
 
