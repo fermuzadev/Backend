@@ -1,26 +1,21 @@
 import mongoose, { Schema } from "mongoose";
 
-const Address = new Schema(
-  {
-    street: { type: String },
-    city: { type: String },
-    country: { type: String },
-  },
-  { _id: false }
-);
 const userSchema = new mongoose.Schema(
   {
-    first_name: { type: String },
-    last_name: { type: String },
+    name: { type: String },
     email: { type: String, required: true, unique: true },
-    age: { type: Number },
-    password: { type: String, required: true },
-    provider: String,
-    status: { type: String, default: "active", enum: ["active", "inactive"] },
-    adress: { type: Address, default: {} },
-    rol: { type: String, default: "user", enum: ["user", "admin"] },
+    role: { type: String, default: "user", enum: ["user", "admin"] },
+    order: {
+      type: [
+        {
+          type: mongoose.Schema.ObjectId,
+          ref: "Orders",
+        },
+      ],
+      default: [],
+    },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model("Users", userSchema);

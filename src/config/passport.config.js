@@ -14,7 +14,7 @@ const opts = {
 
 const githubOpts = {
   clientID: process.env.GHCLIENTID,
-  clientSecret: process.env.GITHUBCLIENTSECRET,
+  clientSecret: process.env.GHCLIENTSECRET,
   callbackURL: process.env.GHCALLBACK,
 };
 

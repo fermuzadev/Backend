@@ -66,10 +66,35 @@ export const saveJSONToFile = async (path, data) => {
   }
 };
 
+//error es clase madre
 export class Exception extends Error {
-  constructor(message, status) {
+  constructor(message, statusCode) {
     super(message);
-    this.statusCode = status;
+    this.statusCode = statusCode;
+  }
+}
+//Manejo statusCode fuera de la logica de negocio
+export class NotFoundException extends Exception {
+  constructor(message) {
+    super(message, 404);
+  }
+}
+
+export class BadRequestException extends Exception {
+  constructor(message) {
+    super(message, 400);
+  }
+}
+
+export class UnauthorizedException extends Exception {
+  constructor(message) {
+    super(message, 401);
+  }
+}
+
+export class ForbidenException extends Exception {
+  constructor(message) {
+    super(message, 403);
   }
 }
 

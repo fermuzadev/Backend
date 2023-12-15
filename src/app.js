@@ -16,6 +16,9 @@ import UserRouter from "./routes/user.router.js";
 import { init as initPassportConfig } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import usersRouter from "./routes/api/users.router.js";
+import businessRouter from "./routes/api/business.router.js";
+import ordersRouter from "./routes/api/orders.router.js";
 
 dotenv.config();
 
@@ -69,6 +72,10 @@ app.use(
   UserRouter
 );
 
+app.use("/api/users", usersRouter);
+app.use("/api/business", businessRouter);
+app.use("/api/orders", ordersRouter);
+
 //!Errorhandler middleware
 
 const middleware = (req, res, next) => {
@@ -78,16 +85,13 @@ const middleware = (req, res, next) => {
   next();
 };
 app.use(middleware);
-export const errorHandler = (error, req, res, next) => {
-  console.error(`Ha ocurrido un error : ${error.message}`);
-  console.error(`El stack es ${error.stack}`); //Muestra todo para saber donde esta el error
-  if (error instanceof Error) {
-    return res.status(401).send(error.message);
+app.use((error, req, res, next) => {
+  if (error instanceof Exception) {
+    return res
+      .status(error.status)
+      .json({ status: "error", message: "error.message" });
   }
-
   res.status(500).send("Algo se rompio, intente mas tarde");
-};
-
-app.use(errorHandler);
+});
 
 export default app;
