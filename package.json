@@ -9,6 +9,9 @@
     "start": "node .",
     "dev": "nodemon ."
   },
+  "engines": {
+    "node": "18.x"
+  },
   "keywords": [
     "multer",
     "javascript",
