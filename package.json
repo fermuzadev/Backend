@@ -22,7 +22,9 @@
     "mongoDB",
     "morgan",
     "ecommerce",
-    "bcrypt"
+    "bcrypt",
+    "passport",
+    "passport-github2"
   ],
   "author": "fermuzadev",
   "license": "MIT",

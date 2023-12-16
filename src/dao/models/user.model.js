@@ -12,9 +12,9 @@ const userSchema = new mongoose.Schema(
   {
     first_name: { type: String },
     last_name: { type: String },
-    email: { type: String, required: true, unique: true },
+    email: { type: String },
     age: { type: Number },
-    password: { type: String, required: true },
+    password: { type: String },
     provider: String,
     status: { type: String, default: "active", enum: ["active", "inactive"] },
     adress: { type: Address, default: {} },
@@ -23,4 +23,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model("users", userSchema);

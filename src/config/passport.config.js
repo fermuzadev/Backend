@@ -4,6 +4,7 @@ import GithubStrategy from "passport-github2";
 import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ const opts = {
 
 const githubOpts = {
   clientID: process.env.GHCLIENTID,
-  clientSecret: process.env.GITHUBCLIENTSECRET,
+  clientSecret: process.env.GHCLIENTSECRET,
   callbackURL: process.env.GHCALLBACK,
 };
 
@@ -48,7 +49,7 @@ export const init = () => {
         if (!user) {
           return done(new Error("Invalid user or password❌"));
         }
-        const isValidPass = await isValidPassword(password, user);
+        const isValidPass = isValidPassword(password, user);
         if (!isValidPass) {
           return done(new Error("Invalid user or password❌"));
         }
@@ -65,24 +66,28 @@ export const init = () => {
     "github",
     new GithubStrategy(
       githubOpts,
-      async (accessToken, refreshToken, profile, done) => {
-        console.log("profile", profile);
-        const email = profile._json.email;
-        let user = await UserModel.findOne({ email });
-        if (user) {
-          return done(null, user);
+      async (accessToken, refreshToken, profile, done, next) => {
+        try {
+          let email = profile._json.email;
+          let user = await UserModel.findOne({ email });
+          if (user) {
+            return done(null, user);
+          }
+          let nameSeparator = profile._json.name;
+          user = {
+            first_name: nameSeparator[0],
+            last_name: nameSeparator[1],
+            email: profile._json.email,
+            age: 32,
+            password: "",
+            provider: "GitHub",
+          };
+          const newUser = UserModel.create(user);
+          console.log("newUser", newUser);
+          done(null, newUser);
+        } catch (error) {
+          console.log("Github error passport config", error.message);
         }
-        let nameSeparator = profile._json.name;
-        user = {
-          first_name: nameSeparator[0],
-          last_name: nameSeparator[1],
-          email: profile._json.name,
-          age: 32,
-          password: "",
-          provider: "GitHub",
-        };
-        const newUser = await UserModel.create(user);
-        done(null, newUser);
       }
     )
   );

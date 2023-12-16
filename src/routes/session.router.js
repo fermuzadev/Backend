@@ -14,7 +14,7 @@ router.post(
 router.post(
   "/login",
   passport.authenticate("login", { failureRedirect: "/login" }),
-  async (req, res) => {
+  (req, res) => {
     req.session.user = req.user;
     res.redirect("/realtimeproducts");
   }
@@ -26,8 +26,6 @@ router.post("/login", async (req, res) => {
   } = req;
   try {
     let user = await UserModel.findOne({ email });
-    // if (!user) {
-    //HARDCODEO
     if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
       let user = {
         first_name: "Coderhouse",
@@ -66,12 +64,18 @@ router.get(
 );
 
 router.get(
-  "http://localhost:8080/api/github/callback",
-  passport.authenticate("github", { failureRedirect: "/login" }),
+  "/github/callback",
+  passport.authenticate("github", {
+    failureRedirect: "/login",
+  }),
   async (req, res) => {
-    console.log("req.user", req.user);
-    req.session.user = req.user;
-    res.redirect("/realtimeproducts");
+    try {
+      req.session.user = req.user;
+      res.redirect("/realtimeproducts");
+      return;
+    } catch (error) {
+      console.log("Github error session router", error.message);
+    }
   }
 );
 
