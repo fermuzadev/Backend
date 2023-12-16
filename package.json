@@ -7,9 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node .",
-    "dev": "nodemon .",
-    "build": "npm install && npm run transpile",
-    "transpile": "babel src -d dist"
+    "dev": "nodemon ."
   },
   "keywords": [
     "multer",
