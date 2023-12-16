@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import GithubStrategy from "passport-github2";
+import { Strategy as GithubStrategy } from "passport-github2";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
 import dotenv from "dotenv";
@@ -66,23 +67,29 @@ export const init = () => {
     "github",
     new GithubStrategy(
       githubOpts,
-      async (accessToken, refreshToken, profile, done, next) => {
+      async (accessToken, refreshToken, profile, done) => {
         try {
-          let email = profile._json.email;
+          let email;
+          if (profile._json.email) {
+            email = profile._json.email;
+          } else {
+            const githubId = profile.id;
+            email = githubId; // Asignar el ID de GitHub como email en caso de no haber email en el perfil.
+          }
           let user = await UserModel.findOne({ email });
           if (user) {
             return done(null, user);
           }
-          let nameSeparator = profile._json.name;
+          let nameSeparator = profile._json.name.split(" ");
           user = {
             first_name: nameSeparator[0],
             last_name: nameSeparator[1],
-            email: profile._json.email,
-            age: 32,
+            email,
+            age: "",
             password: "",
             provider: "GitHub",
           };
-          const newUser = UserModel.create(user);
+          const newUser = await UserModel.create(user); // Asegurarse de usar await aquí
           console.log("newUser", newUser);
           done(null, newUser);
         } catch (error) {
@@ -91,6 +98,7 @@ export const init = () => {
       }
     )
   );
+
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });
