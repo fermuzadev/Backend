@@ -2,13 +2,12 @@
   "name": "github-auth",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
-  "type": "module",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node .",
     "dev": "nodemon .",
-    "build": "esbuild src --bundle --minify --platform=node --target=node18 --outfile=dist/server.js"
+    "build": "esbuild ./src --bundle --minify --platform=node --target=node18 --outfile=dist/server.js"
   },
   "engines": {
     "node": "18.x"
