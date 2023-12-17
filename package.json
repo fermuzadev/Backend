@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node .",
     "dev": "nodemon .",
-    "build": "esbuild src --out-dir dist"
+    "build": "esbuild src outdir=dist"
   },
   "engines": {
     "node": "18.x"
