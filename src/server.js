@@ -10,9 +10,12 @@ import { __dirname } from "./utils.js";
 import init from "./dao/mongodb.js";
 import ProductModel from "./dao/models/product.model.js";
 import MessagesModel from "./dao/models/messages.model.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 await init();
-const PORT = 8080;
+const PORT = process.env.PORT;
+const URL_BASE = process.env.URL_BASE;
 //!Http server
 const serverHttp = http.createServer(app);
 //!Socket io server
@@ -51,5 +54,5 @@ io.on("connection", async (socketClient) => {
 });
 
 serverHttp.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on ${URL_BASE}${PORT}`);
 });

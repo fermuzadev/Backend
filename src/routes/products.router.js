@@ -10,10 +10,11 @@ import { __dirname } from "../utils.js";
 import ProductModel from "../dao/models/product.model.js";
 import { uploader } from "../utils.js";
 import mongoosePaginate from "mongoose-paginate-v2";
+import dotenv from "dotenv";
 
 const prodRouter = Router();
-const URL_BASE = `http://localhost:8080/img/`;
-const URL_PRODUCTS = "http://localhost:8080/api/products";
+const URL_BASE = process.env.URL_BASE;
+const URL_PRODUCTS = `${URL_BASE}${process.env.PORT}/api/products`;
 
 const buildResponse = (data) => {
   return {
