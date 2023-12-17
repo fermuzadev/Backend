@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 //FRONTEND
 (function () {
   const socket = io();
