@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node .",
     "dev": "nodemon .",
-    "build": "npm i esbuild && esbuild src --bundle --minify --platform=node --target=node18 --outfile=dist/server.js"
+    "build": "npm i esbuild && esbuild --bundle --minify --platform=node --target=node18 --outfile=dist/server.js"
   },
   "engines": {
     "node": "18.x"
