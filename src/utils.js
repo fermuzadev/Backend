@@ -1,10 +1,12 @@
 import { fileURLToPath } from "url";
 import path from "path";
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 import bcrypt, { compare } from "bcrypt";
 import fs from "fs/promises";
 import multer from "multer";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+
+import UserModel from "./dao/models/user.model.js";
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
@@ -82,28 +84,28 @@ export const createHash = (password) =>
 export const isValidPassword = (password, user) =>
   bcrypt.compareSync(password, user.password);
 
+export const tokenGenerator = (user) => {
+  const { _id, first_name, last_name, email } = user;
+  const payload = {
+    id: _id,
+    first_name,
+    last_name,
+    email,
+  };
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1m" });
+  return token;
+};
 
-  export const tokenGenerator = (user) => {
-    const { _id,first_name, last_name, email } = user;
-    const payload = {
-      id : _id,
-      first_name,
-      last_name,
-      email
-    };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '1m'});
-    return token;
+export const jwtAuth = (req, res, next) => {
+  const { authorization: token } = req.headers;
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
   }
-
-  export const jwtAuth = (req,res, next) => {
-    const {authorization : token} = req.headers;
-    if(!token) {
-      return res.status(401).json({message: 'Unauthorized'})
+  jwt.verify(token, JWT_SECRET, async (error, payload) => {
+    if (error) {
+      return res.status(403).json({ message: "No authorized" });
     }
-    jwt.verify(token , JWT_SECRET, (error, payload) => {
-      if(error) {
-        return res.status(403).json({message: 'No authorized'})
-      }
-      
-    }) 
-  }
+    req.user = await UserModel.findById(payload.id);
+    next();
+  });
+};
