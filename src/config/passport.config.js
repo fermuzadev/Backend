@@ -1,7 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
 import dotenv from "dotenv";
