@@ -96,6 +96,14 @@ export const isValidPassword = (password, user) =>
   }
 
   export const jwtAuth = (req,res, next) => {
-    const {} = req.headers;
-    jwt.verify()
+    const {authorization : token} = req.headers;
+    if(!token) {
+      return res.status(401).json({message: 'Unauthorized'})
+    }
+    jwt.verify(token , JWT_SECRET, (error, payload) => {
+      if(error) {
+        return res.status(403).json({message: 'No authorized'})
+      }
+      
+    }) 
   }
