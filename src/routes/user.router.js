@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { __dirname } from "../utils.js";
-
+import bcrypt from "bcrypt";
 import UserModel from "../dao/models/user.model.js";
 
 const router = Router();
@@ -19,6 +19,15 @@ const publicRouter = (req, res, next) => {
   next();
 };
 
+router.get("/loginjwt", async (req, res) => {
+  const {
+    body: { email, password },
+  } = req;
+  UserModel.findOne({ email });
+  if (!user) {
+    res.status(401).json({ message: "Correo o contraseña invalidos" });
+  }
+});
 router.get("/profile", privateRouter, (req, res) => {
   res.render("profile", { title: "User profile", user: req.session.user });
 });
