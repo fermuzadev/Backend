@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { __dirname } from "../utils.js";
 import bcrypt from "bcrypt";
 import UserModel from "../dao/models/user.model.js";
+import { __dirname, createHash, isValidPassword, jwtAuth, tokenGenerator } from "../utils.js";
 
 const router = Router();
 
@@ -19,15 +19,26 @@ const publicRouter = (req, res, next) => {
   next();
 };
 
-router.get("/loginjwt", async (req, res) => {
+router.post("/loginjwt", async (req, res) => {
   const {
     body: { email, password },
   } = req;
-  UserModel.findOne({ email });
+  const user = await UserModel.findOne({ email });
   if (!user) {
     res.status(401).json({ message: "Correo o contraseña invalidos" });
   }
+  if(!isValidPassword){
+  const isValidPassword = isValidPassword(password, user);
+  return res.status(401).json({message: 'Correo o contraseña invalidos'})
+  }
+  const token = tokenGenerator(user);
+  res.status(200).json({access_token: token})
+
 });
+
+router.get('/current', jwtAuth, (req, res) => {
+  res.status(200).json(req.res)
+})
 router.get("/profile", privateRouter, (req, res) => {
   res.render("profile", { title: "User profile", user: req.session.user });
 });

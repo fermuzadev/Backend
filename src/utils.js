@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 import UserModel from "./dao/models/user.model.js";
 
 dotenv.config();
+
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 
@@ -92,8 +93,7 @@ export const tokenGenerator = (user) => {
     last_name,
     email,
   };
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1m" });
-  return token;
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1m" });
 };
 
 export const jwtAuth = (req, res, next) => {
@@ -101,11 +101,12 @@ export const jwtAuth = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  jwt.verify(token, JWT_SECRET, async (error, payload) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (error, payload) => {
     if (error) {
       return res.status(403).json({ message: "No authorized" });
     }
-    req.user = await UserModel.findById(payload.id);
+    const userJWT = await UserModel.findById(payload.id);
+    req.user = userJWT;
     next();
   });
 };
