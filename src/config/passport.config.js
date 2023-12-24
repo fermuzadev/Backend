@@ -77,7 +77,17 @@ export const init = () => {
           }
           let user = await UserModel.findOne({ email });
           if (user) {
-            return done(null, user);
+            let nameSeparator = profile._json.name.split(" ");
+            user = {
+              first_name: nameSeparator[0],
+              last_name: nameSeparator[1],
+              email,
+              age: "",
+              password: "",
+              provider: "Github",
+            };
+            let newUser = await UserModel.create(user);
+            return done(null, newUser);
           }
           let nameSeparator = profile._json.name.split(" ");
           user = {
@@ -86,9 +96,9 @@ export const init = () => {
             email,
             age: "",
             password: "",
-            provider: "GitHub",
+            provider: "Github",
           };
-          const newUser = await UserModel.create(user); // Asegurarse de usar await aquí
+          let newUser = await UserModel.create(user); // Asegurarse de usar await aquí
           console.log("newUser", newUser);
           done(null, newUser);
         } catch (error) {

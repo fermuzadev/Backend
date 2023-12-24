@@ -1,7 +1,13 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import UserModel from "../dao/models/user.model.js";
-import { __dirname, createHash, isValidPassword, jwtAuth, tokenGenerator } from "../utils.js";
+import {
+  __dirname,
+  createHash,
+  isValidPassword,
+  jwtAuth,
+  tokenGenerator,
+} from "../utils.js";
 
 const router = Router();
 
@@ -27,24 +33,24 @@ router.post("/loginjwt", async (req, res) => {
   if (!user) {
     res.status(401).json({ message: "Correo o contraseña invalidos" });
   }
-  if(!isValidPassword){
-  const isValidPassword = isValidPassword(password, user);
-  return res.status(401).json({message: 'Correo o contraseña invalidos'})
+  if (!isValidPassword) {
+    const isValidPassword = isValidPassword(password, user);
+    return res.status(401).json({ message: "Correo o contraseña invalidos" });
   }
   const token = tokenGenerator(user);
-  res.status(200).json({access_token: token})
-
+  res.status(200).json({ access_token: token });
 });
 
-router.get('/current', jwtAuth, (req, res) => {
-  res.status(200).json(req.res)
-})
+router.get("/current", jwtAuth, (req, res) => {
+  res.status(200).json(req.user);
+});
 router.get("/profile", privateRouter, (req, res) => {
   res.render("profile", { title: "User profile", user: req.session.user });
 });
 router.get("/login", publicRouter, (req, res) => {
   res.render("login", { title: "User login" });
 });
+
 router.get("/register", publicRouter, (req, res) => {
   res.render("register", { title: "User register" });
 });
