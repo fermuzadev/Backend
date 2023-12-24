@@ -1,6 +1,4 @@
-##CodeClothes
-
-[![image](https://github.com/fermuzadev/codeclothes/assets/104037681/b2a3bcae-d9ac-4aed-b4c2-29b3ed43755e)]
+###CodeClothes
 
 Una aplicación de ropa de código.
 
