@@ -1,8 +1,8 @@
 # CodeClothes
 
-Una aplicación de ropa de código.
+E-commerce & Chat Full Stack MERN Web App
 
-#Tecnologías utilizadas
+## Tech:
 
 ![AXIOS](https://img.shields.io/badge/AXIOS-%235A29E4?style=for-the-badge&logo=axios)
 
