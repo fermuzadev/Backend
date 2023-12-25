@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
+import {Strategy as GoogleStrategy} from 'passport-google-oauth20'
 import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
 import dotenv from "dotenv";
@@ -18,6 +19,12 @@ const githubOpts = {
   clientSecret: process.env.GHCLIENTSECRET,
   callbackURL: process.env.GHCALLBACK,
 };
+
+const googleOpts = {
+  clientID: process.env.CLIENT_GOOGLE_ID,
+  clientSecret: process.env.CLIENT_GOOGLE_SECRET,
+  callbackURL: process.env.GOOGLECALLBACK,
+}
 
 export const init = () => {
   passport.use(
@@ -103,6 +110,53 @@ export const init = () => {
           done(null, newUser);
         } catch (error) {
           console.log("Github error passport config", error.message);
+        }
+      }
+    )
+  );
+
+  passport.use(
+    "google",
+    new GoogleStrategy(
+      googleOpts,
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          let email;
+          console.log(profile)
+          if (profile._json.email) {
+            email = profile._json.email;
+          } else {
+            const googleId = profile.id;
+            email = googleId; // Asignar el ID de GitHub como email en caso de no haber email en el perfil.
+          }
+          let user = await UserModel.findOne({ email });
+          if (user) {
+            let nameSeparator = profile._json.name.split(" ");
+            user = {
+              first_name: nameSeparator[0],
+              last_name: nameSeparator[1],
+              email,
+              age: "",
+              password: "",
+              provider: "Google",
+            };
+            let newUser = await UserModel.create(user);
+            return done(null, newUser);
+          }
+          let nameSeparator = profile._json.name.split(" ");
+          user = {
+            first_name: nameSeparator[0],
+            last_name: nameSeparator[1],
+            email,
+            age: "",
+            password: "",
+            provider: "Google",
+          };
+          let newUser = await UserModel.create(user); // Asegurarse de usar await aquí
+          console.log("newUser", newUser);
+          done(null, newUser);
+        } catch (error) {
+          console.log("Google error passport config", error.message);
         }
       }
     )
