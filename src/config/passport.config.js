@@ -126,8 +126,7 @@ export const init = () => {
           if (profile._json.email) {
             email = profile._json.email;
           } else {
-            ;
-            email = "";
+            email = profile.email;
           }
           let user = await UserModel.findOne({ email });
           if (user) {
