@@ -7,6 +7,7 @@ import MongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
 import { uploader } from "./utils.js";
 import sessionRouter from "./routes/session.router.js";
+import authRouter from "./routes/auth.router.js";
 import prodRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
@@ -57,7 +58,8 @@ app.use(
   uploader.single("thumbnails"),
   sessionRouter,
   UserRouter,
-  realTimeRouter
+  realTimeRouter,
+  authRouter
 );
 app.use(
   "/api",

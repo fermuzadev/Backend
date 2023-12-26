@@ -126,34 +126,31 @@ export const init = () => {
           if (profile._json.email) {
             email = profile._json.email;
           } else {
-            const googleId = profile.id;
-            email = googleId; // Asignar el ID de GitHub como email en caso de no haber email en el perfil.
+            ;
+            email = "";
           }
           let user = await UserModel.findOne({ email });
           if (user) {
-            let nameSeparator = profile._json.name.split(" ");
             user = {
-              first_name: nameSeparator[0],
-              last_name: nameSeparator[1],
+              first_name: profile._json.given_name,
+              last_name: profile._json.last_name,
               email,
-              age: "",
+              age: " ",
               password: "",
               provider: "Google",
             };
             let newUser = await UserModel.create(user);
             return done(null, newUser);
           }
-          let nameSeparator = profile._json.name.split(" ");
           user = {
-            first_name: nameSeparator[0],
-            last_name: nameSeparator[1],
+            first_name: profile._json.given_name,
+            last_name: profile._json.given_name,
             email,
             age: "",
             password: "",
             provider: "Google",
           };
           let newUser = await UserModel.create(user); // Asegurarse de usar await aquí
-          console.log("newUser", newUser);
           done(null, newUser);
         } catch (error) {
           console.log("Google error passport config", error.message);

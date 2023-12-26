@@ -5,13 +5,13 @@ import { createHash, isValidPassword } from "../utils.js";
 const router = Router();
 
 router.get(
-    "/google",
+    "/auth/google",
     passport.authenticate("google", { scope: ['profile'] })
   );
   
   
   router.get(
-    "/google/callback",
+    "/auth/google/callback",
     passport.authenticate("google", {
       failureRedirect: "/login",
     }),
