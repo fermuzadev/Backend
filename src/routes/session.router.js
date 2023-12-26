@@ -63,6 +63,7 @@ router.get(
   passport.authenticate("github", { scope: ["user:email"] })
 );
 
+
 router.get(
   "/github/callback",
   passport.authenticate("github", {
@@ -78,6 +79,28 @@ router.get(
     }
   }
 );
+
+// router.get(
+//   "/google",
+//   passport.authenticate("google", { scope: ['profile'] })
+// );
+
+
+// router.get(
+//   "/google/callback",
+//   passport.authenticate("google", {
+//     failureRedirect: "/login",
+//   }),
+//   async (req, res) => {
+//     try {
+//       req.session.user = req.user;
+//       res.redirect("/realtimeproducts");
+//       return;
+//     } catch (error) {
+//       console.log("Google error session router", error.message);
+//     }
+//   }
+// );
 
 router.post("/recovery-password", async (req, res) => {
   const { email, newPassword } = req.body;
