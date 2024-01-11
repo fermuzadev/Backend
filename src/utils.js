@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import multer from "multer";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import passport from "passport";
 
 dotenv.config();
 
@@ -37,6 +38,21 @@ export const verifyToken = (token) => {
       resolve(payload);
     });
   });
+};
+
+export const authMiddleware = (strategy) => (req, res, next) => {
+  passport.authenticate(strategy, function (error, user, info) {
+    if (error) {
+      return next(error);
+    }
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: info.message ? info.message : info.toString() });
+    }
+    req.user = user;
+    next();
+  })(req, res, next);
 };
 
 const storage = multer.diskStorage({

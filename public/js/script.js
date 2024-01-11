@@ -14,8 +14,10 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('data',data);
-        console.log('cookies', document.cookie)
+        console.log("data", data);
+        console.log("cookies", document.cookie);
+        alert("Login successfully. Redirecting to profile page...");
+        window.location.href = "/profile.html";
         // localStorage.setItem("token", data.access_token);
       })
       .catch((error) => {

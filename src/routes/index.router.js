@@ -1,7 +1,14 @@
 import { Router } from "express";
 import passport from "passport";
 import UserModel from "../dao/models/user.model.js";
-import { __dirname, verifyToken, isValidPassword, tokenGenerator, createHash} from "../utils.js";
+import {
+  __dirname,
+  verifyToken,
+  isValidPassword,
+  tokenGenerator,
+  authMiddleware,
+  createHash,
+} from "../utils.js";
 
 const router = Router();
 
@@ -32,16 +39,19 @@ router.post("/auth/login", async (req, res) => {
     return res.status(401).json({ message: "Email or password not valid" });
   }
   const token = tokenGenerator(user);
-  res.cookie("access_token", token, { maxAge: 60000, 
-    httpOnly: true
-   })
-  .status(200).json({status: 'success'});
+  res
+    .cookie("access_token", token, { maxAge: 60000, httpOnly: true })
+    .status(200)
+    .json({ status: "success" });
 });
 
-router.get('/current' ,passport.authenticate('jwt', {session: false}), (req, res) => {
-  res.send(req.user);
-})
-
+router.get(
+  "/current",
+  authMiddleware("jwt", { session: false }),
+  (req, res) => {
+    res.status(200).json(req.user);
+  }
+);
 
 router.get("/profile", privateRouter, (req, res) => {
   res
@@ -69,9 +79,9 @@ router.get("/user", async (req, res) => {
 router.post("/user", async (req, res) => {
   try {
     let { body } = req;
-    let {password} = req.body;
-    password = createHash(password)
-    let user = await UserModel.create({...body, password});
+    let { password } = req.body;
+    password = createHash(password);
+    let user = await UserModel.create({ ...body, password });
     res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ message: error.message });
