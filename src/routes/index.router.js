@@ -5,9 +5,16 @@
 //! const productManager = new ProductManager(prodPath);
 
 import { Router } from "express";
-import { __dirname } from "../utils.js";
-
 import UserModel from "../dao/models/user.model.js";
+import passport from "passport";
+import {
+  __dirname,
+  verifyToken,
+  isValidPassword,
+  tokenGenerator,
+  authMiddleware,
+  createHash,
+} from "../utils.js";
 
 const router = Router();
 
@@ -40,7 +47,51 @@ router.get("/", publicRouter, (req, res) => {
 });
 
 router.get("/recovery-password", publicRouter, (req, res) => {
-  res.render("recovery-password", { title: "Password Recover" });
+  res.render("recovery-password", { title: "Password Recover" })});
+
+router.post("/auth/login", async (req, res) => {
+  const {
+    body: { email, password },
+  } = req;
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    return res.status(401).json({ message: "Email or password not valid" });
+  }
+  const isValidPass = isValidPassword(password, user);
+  if (!isValidPass) {
+    return res.status(401).json({ message: "Email or password not valid" });
+  }
+  const token = tokenGenerator(user);
+  res
+    .cookie("access_token", token, { maxAge: 60000, httpOnly: true })
+    .status(200)
+    .json({ status: "success" });
+});
+
+router.get(
+  "/current",
+  authMiddleware("jwt", { session: false }),
+  (req, res) => {
+    res.status(200).json(req.user);
+  }
+);
+
+router.get("/profile", privateRouter, (req, res) => {
+  res
+    .status(200)
+    .render("profile", { title: "User profile", user: req.session.user });
+});
+
+router.get("/register", publicRouter, (req, res) => {
+  res.status(200).render("register", { title: "User register" });
+});
+
+router.get("/", publicRouter, (req, res) => {
+  res.status(200).render("register", { title: "User register" });
+});
+
+router.get("/login", publicRouter, (req, res) => {
+  res.status(200).render("login", { title: "User login" });
 });
 
 router.get("/user", async (req, res) => {
@@ -51,7 +102,9 @@ router.get("/user", async (req, res) => {
 router.post("/user", async (req, res) => {
   try {
     const { body } = req;
-    const user = await UserModel.create(body);
+    let { password } = req.body;
+    password = createHash(password);
+    let user = await UserModel.create({ ...body, password });
     res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -93,4 +146,4 @@ router.delete("/user/:uid", async (req, res) => {
   }
 });
 
-export default router;
+export default router

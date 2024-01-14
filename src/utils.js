@@ -5,10 +5,12 @@ import bcrypt, { compare } from "bcrypt";
 import fs from "fs/promises";
 import multer from "multer";
 import dotenv from "dotenv";
+import passport from "passport";
 
 import UserModel from "./dao/models/user.model.js";
 
 dotenv.config();
+
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -72,16 +74,8 @@ export const saveJSONToFile = async (path, data) => {
   }
 };
 
-export class Exception extends Error {
-  constructor(message, status) {
-    super(message);
-    this.statusCode = status;
-  }
-}
-
 export const createHash = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-
 export const isValidPassword = (password, user) =>
   bcrypt.compareSync(password, user.password);
 
@@ -110,3 +104,39 @@ export const jwtAuth = (req, res, next) => {
     next();
   });
 };
+
+
+export const verifyToken = (token) => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, process.env.JWT_TOKEN, (error, payload) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(payload);
+    });
+  });
+};
+
+export const authMiddleware = (strategy) => (req, res, next) => {
+  passport.authenticate(strategy, function (error, user, info) {
+    if (error) {
+      return next(error);
+    }
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: info.message ? info.message : info.toString() });
+    }
+    req.user = user;
+    next();
+  })(req, res, next);
+};
+
+
+
+export class Exception extends Error {
+  constructor(message, status) {
+    super(message);
+    this.statusCode = status;
+  }
+}

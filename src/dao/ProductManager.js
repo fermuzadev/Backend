@@ -1,6 +1,10 @@
 import { getRandomId, saveJSONToFile, getJSONFromFile } from "../utils.js";
 
+<<<<<<< HEAD
 //!Class ProductManager
+=======
+//Class ProductManager
+>>>>>>> origin/jwt-advanced
 class ProductManager {
   constructor(path) {
     this.path = path;
@@ -112,9 +116,15 @@ class ProductManager {
   }
 }
 
+<<<<<<< HEAD
 //!End Product Manager Class
 
 //!Testing
+=======
+//End Product Manager Class
+
+//Testing
+>>>>>>> origin/jwt-advanced
 
 export const testingJSON = async () => {
   try {

@@ -1,3 +1,4 @@
+
 //!FS
 //!import ProductManager from "../dao/ProductManager.js";
 //!import path from "path";
@@ -17,7 +18,7 @@ const cartsRouter = Router();
 //!HELPERS
 
 async function getCart() {
-  const products = await CartsModel.find().populate("products.productId");
+  const products = await cartsModel.find().populate("products.productId");
   return products;
 }
 
@@ -119,7 +120,7 @@ cartsRouter.put("/carts/:cid", async (req, res) => {
     if (!products || !Array.isArray(products)) {
       res.status(404).send("Not a valid data format");
       return;
-    }
+    }HEAD
     //!I use find&update cause it do the two action and return the object updated with new : true
     const result = await CartsModel.findOneAndUpdate(
       { _id: cid },

@@ -76,12 +76,17 @@
       productsListSocket.appendChild(prod);
     });
   }
+<<<<<<< HEAD
   //!Show realTime Products
+=======
+  //Show realTime Products
+>>>>>>> origin/jwt-advanced
 
   socket.on("products", (...products) => {
     showProductSocket(products);
   });
 
+<<<<<<< HEAD
   //!Reception Events from Backend
 
   socket.on("message_everyone", (message) => {
@@ -174,6 +179,9 @@
   });
 
   //!Reception Events from Backend
+=======
+  //Reception Events from Backend
+>>>>>>> origin/jwt-advanced
 
   socket.on("message_everyone", (message) => {
     console.log("message_everyone", message);

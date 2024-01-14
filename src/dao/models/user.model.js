@@ -12,10 +12,10 @@ const userSchema = new mongoose.Schema(
   {
     first_name: { type: String },
     last_name: { type: String },
-    email: { type: String },
     age: { type: Number },
-    password: { type: String },
     provider: { type: String, enum: ["Github", "Google", "Register"] },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     status: { type: String, default: "active", enum: ["active", "inactive"] },
     adress: { type: Address, default: {} },
     rol: { type: String, default: "user", enum: ["user", "admin"] },
@@ -24,3 +24,4 @@ const userSchema = new mongoose.Schema(
 );
 
 export default mongoose.model("users", userSchema);
+

@@ -1,20 +1,22 @@
-//!FS
-//! import ProductManager from "../dao/ProductManager.js";
-//! import path from "path";
-//! const prodPath = path.resolve(__dirname, "./dao/productos.json");
-//! const testingProducts = new ProductManager(prodPath);
+
+//FS
+// import ProductManager from "../dao/ProductManager.js";
+// import path from "path";
+// const prodPath = path.resolve(__dirname, "./dao/productos.json");
+// const testingProducts = new ProductManager(prodPath);
 
 import { Router } from "express";
 import { __dirname } from "../utils.js";
-
 import ProductModel from "../dao/models/product.model.js";
 import { uploader } from "../utils.js";
 import mongoosePaginate from "mongoose-paginate-v2";
 import dotenv from "dotenv";
 
+dotenv.config()
 const prodRouter = Router();
 const URL_BASE = process.env.URL_BASE;
 const URL_PRODUCTS = `${URL_BASE}${process.env.PORT}/api/products`;
+
 
 const buildResponse = (data) => {
   return {
@@ -71,8 +73,7 @@ prodRouter.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
     //! let productById = await ProductModel.findById(pid);
-
-    const paginateId = await ProductModel.paginate({ _id: pid }, { limit: 1 });
+    const paginateId = await productModel.paginate({ _id: pid }, { limit: 1 });
     if (!productById) {
       res.json({
         error: "Product Not Found",
@@ -124,7 +125,8 @@ prodRouter.post(
           status: `One or more required field in the JSON is empty, the product wasn't add or Code ${prodCode} already exists`,
         });
       } else {
-        await ProductModel.create({
+
+        await productModel.create({
           title: prodTitle,
           description: prodDescription,
           code: prodCode,
@@ -134,7 +136,8 @@ prodRouter.post(
           category: prodCategory,
           thumbnails: prodThumbnails,
         });
-        const newProd = await ProductModel.find();
+
+        const newProd = await productModel.find();
 
         res.status(201).send(newProd.find((prod) => prod.code === prodCode));
       }
@@ -159,7 +162,7 @@ prodRouter.put("/products/:pid", async (req, res) => {
     category: prodCategory,
     thumbnails: prodThumbnails,
   } = req.body;
-  await ProductModel.updateOne(
+  await productModel.updateOne(
     { _id: pid },
     {
       $set: {
@@ -175,6 +178,7 @@ prodRouter.put("/products/:pid", async (req, res) => {
     }
   );
   const products = await ProductModel.find();
+
   try {
     await res.status(204).end();
   } catch (error) {
@@ -187,8 +191,8 @@ prodRouter.put("/products/:pid", async (req, res) => {
 
 prodRouter.delete("/products/:pid", async (req, res) => {
   let { pid } = req.params;
-  await ProductModel.deleteOne({ _id: pid });
-  const products = await ProductModel.find();
+  await productModel.deleteOne({ _id: pid });
+  const products = await productModel.find();
   try {
     if (products.find((prod) => prod._id === pid)) {
       res.status(200).json({ message: `The product id ${pid} was deleted` });
