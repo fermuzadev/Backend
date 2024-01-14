@@ -1,7 +1,8 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
-import {Strategy as GoogleStrategy} from 'passport-google-oauth20'
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
 import dotenv from "dotenv";
@@ -24,7 +25,7 @@ const googleOpts = {
   clientID: process.env.CLIENT_GOOGLE_ID,
   clientSecret: process.env.CLIENT_GOOGLE_SECRET,
   callbackURL: process.env.GOOGLECALLBACK,
-}
+};
 
 export const init = () => {
   passport.use(
@@ -122,7 +123,7 @@ export const init = () => {
       async (accessToken, refreshToken, profile, done) => {
         try {
           let email;
-          console.log(profile)
+          console.log(profile);
           if (profile._json.email) {
             email = profile._json.email;
           } else {
@@ -165,4 +166,26 @@ export const init = () => {
     const user = await UserModel.findById(_id);
     done(null, user);
   });
+};
+
+function cookieExtractor(req) {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies["jwt"];
+  }
+  return token;
+}
+export const initJWT = () => {
+  passport.use(
+    "jwt",
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: process.env.JWT_SECRET,
+      },
+      (payload, done) => {
+        return done(null, payload);
+      }
+    )
+  );
 };
