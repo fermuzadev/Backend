@@ -90,11 +90,11 @@ export const init = () => {
               first_name: nameSeparator[0],
               last_name: nameSeparator[1],
               email,
-              age: "",
+              age: Math.random() *100,
               password: "",
               provider: "Github",
             };
-            let newUser = await UserModel.create(user);
+            let newUser = await UserModel.findOneAndUpdate({ email }, user);
             return done(null, newUser);
           }
           let nameSeparator = profile._json.name.split(" ");
@@ -123,11 +123,10 @@ export const init = () => {
       async (accessToken, refreshToken, profile, done) => {
         try {
           let email;
-          console.log(profile);
           if (profile._json.email) {
             email = profile._json.email;
           } else {
-            email = profile.email;
+            email = `${profile._json.given_name}@gmail.com`;
           }
           let user = await UserModel.findOne({ email });
           if (user) {
@@ -135,11 +134,10 @@ export const init = () => {
               first_name: profile._json.given_name,
               last_name: profile._json.last_name,
               email,
-              age: " ",
               password: "",
               provider: "Google",
             };
-            let newUser = await UserModel.create(user);
+            let newUser = await UserModel.findOneAndUpdate({ email },user);
             return done(null, newUser);
           }
           user = {
@@ -147,7 +145,7 @@ export const init = () => {
             last_name: profile._json.given_name,
             email,
             age: "",
-            password: "",
+            password: " ",
             provider: "Google",
           };
           let newUser = await UserModel.create(user); // Asegurarse de usar await aquí
