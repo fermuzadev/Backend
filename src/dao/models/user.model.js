@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     status: { type: String, default: "active", enum: ["active", "inactive"] },
     adress: { type: Address, default: {} },
-    rol: { type: String, default: "user", enum: ["user", "admin"] },
+    rol: { type: String, default: "user", enum: ["user","seller", "admin"] },
   },
   { timestamps: true }
 );

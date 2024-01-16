@@ -80,12 +80,13 @@ export const isValidPassword = (password, user) =>
   bcrypt.compareSync(password, user.password);
 
 export const tokenGenerator = (user) => {
-  const { _id, first_name, last_name, email } = user;
+  const { _id, first_name, last_name, email, rol } = user;
   const payload = {
     id: _id,
     first_name,
     last_name,
     email,
+    rol
   };
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1m" });
 };
@@ -117,7 +118,7 @@ export const verifyToken = (token) => {
   });
 };
 
-export const authMiddleware = (strategy) => (req, res, next) => {
+export const authenticationMiddleware = (strategy) => (req, res, next) => {
   passport.authenticate(strategy, function (error, user, info) {
     if (error) {
       return next(error);
@@ -132,6 +133,16 @@ export const authMiddleware = (strategy) => (req, res, next) => {
   })(req, res, next);
 };
 
+export const authorizationMiddleware = (rol) => (req,res,next) =>  {
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const {rol: userRol} = req.user;
+  if(userRol !== rol){
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  next();
+}
 
 
 export class Exception extends Error {

@@ -122,10 +122,18 @@ export const init = () => {
       googleOpts,
       async (accessToken, refreshToken, profile, done) => {
         try {
+          console.log(profile.id)
           let email;
+          console.log(profile.emails);
           if (profile._json.email) {
-            email = profile._json.email;
-          } else {
+            email = await profile._json.email;
+            console.log('profile._json.email', profile._json.email);
+          }
+          if(profile.email) {
+            email = profile.email
+            console.log('profile.email', profile.email);
+          }
+          else {
             email = `${profile._json.given_name}@gmail.com`;
           }
           let user = await UserModel.findOne({ email });

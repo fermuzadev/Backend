@@ -12,7 +12,8 @@ import {
   verifyToken,
   isValidPassword,
   tokenGenerator,
-  authMiddleware,
+  authenticationMiddleware,
+  authorizationMiddleware,
   createHash,
 } from "../utils.js";
 
@@ -70,11 +71,15 @@ router.post("/auth/login", async (req, res) => {
 
 router.get(
   "/current",
-  authMiddleware("jwt", { session: false }),
+  authenticationMiddleware("jwt", { session: false }),
   (req, res) => {
     res.status(200).json(req.user);
   }
 );
+
+router.get('/admin', authenticationMiddleware('jwt'), authorizationMiddleware('admin'), (req,res) => {
+  res.status(200).json({success:true});
+})
 
 router.get("/profile", privateRouter, (req, res) => {
   res

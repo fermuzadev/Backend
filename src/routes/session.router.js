@@ -38,7 +38,6 @@ router.post("/login", async (req, res) => {
       const { first_name, last_name, rol } = user;
       req.session.user = { first_name, last_name, email, rol };
       res.redirect("/realtimeproducts");
-
       return;
     } else {
       if (user) {
@@ -84,6 +83,8 @@ router.get(
   "/google",
   passport.authenticate("google", { scope: ['profile'] })
 );
+
+
 
 router.get(
   "/google/callback",
