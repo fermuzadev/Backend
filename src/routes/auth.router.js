@@ -4,6 +4,7 @@ import UserModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 const router = Router();
 
+
 router.get(
     "/auth/google",
     passport.authenticate("google", { scope: ['profile'] })
