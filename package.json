@@ -26,7 +26,11 @@
     "ecommerce",
     "bcrypt",
     "passport",
-    "passport-github2"
+    "passport-github2",
+    "jwt",
+    "passport-jwt",
+    "custom-router",
+    "regexp"
   ],
   "author": "fermuzadev",
   "license": "MIT",
