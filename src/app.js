@@ -71,6 +71,10 @@ app.use(
   UserRouter
 );
 
+app.get('*', (req, res) => {
+  res.status(404).send('Page not found');
+})
+
 //!Errorhandler middleware
 
 const middleware = (req, res, next) => {
