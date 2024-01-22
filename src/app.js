@@ -13,13 +13,15 @@ import cartsRouter from "./routes/carts.router.js";
 import indexRouter from "./routes/index.router.js";
 import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
-import UserRouter from "./routes/user.router.js";
+import userRouter from "./routes/user.router.js";
+import {UserRouter} from './routes/user.router.js'
 import { init as initPassportConfig } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
 
 dotenv.config();
 
+const User2Router = new UserRouter();
 const app = express();
 
 app.use(
@@ -57,9 +59,10 @@ app.use(
   "/",
   uploader.single("thumbnails"),
   sessionRouter,
-  UserRouter,
+  userRouter,
   realTimeRouter,
-  authRouter
+  authRouter,
+  User2Router.getRouter()
 );
 app.use(
   "/api",
@@ -68,7 +71,8 @@ app.use(
   cartsRouter,
   prodRouter,
   messagesRouter,
-  UserRouter
+  userRouter,
+  User2Router.getRouter()
 );
 
 app.get('*', (req, res) => {
