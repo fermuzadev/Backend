@@ -16,14 +16,14 @@ export default class RouterBase {
     }
 
     post() {
-
+        this.router.post(path, this.applyCallBacks(callback))
     }
     put() {
-
+        this.router.put(path, this.applyCallBacks(callback))
     }
 
     delete() {
-
+        this.router.delete(path, this.applyCallBacks(callback))
     }
     applyCallBacks(callbacks) {
         return callback.map((callback) => {
