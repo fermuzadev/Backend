@@ -8,8 +8,19 @@ import {
   jwtAuth,
   tokenGenerator,
 } from "../utils.js";
+import RouterBase from './RouterBase.js'
 
 const router = Router();
+
+
+export class UserRouter extends RouterBase {
+  init(){
+    this.get('/', function (req, res) {
+      res.send('Hello Coders 👍🏿')
+    });
+
+  }
+}
 
 const privateRouter = (req, res, next) => {
   if (!req.session.user) {
