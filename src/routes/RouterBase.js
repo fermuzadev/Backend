@@ -12,18 +12,18 @@ export default class RouterBase {
     }
     init() {};
     get(path, ...callbacks) {
-        this.router.get(path, this.applyCallBacks(callbacks))
+        this.router.get(path, this.generateCustomResponse, this.applyCallBacks(callbacks))
     }
 
     post() {
-        this.router.post(path, this.applyCallBacks(callbacks))
+        this.router.post(path, this.generateCustomResponse,this.applyCallBacks(callbacks))
     }
     put() {
-        this.router.put(path, this.applyCallBacks(callbacks))
+        this.router.put(path,this.generateCustomResponse, this.applyCallBacks(callbacks))
     }
 
     delete() {
-        this.router.delete(path, this.applyCallBacks(callbacks))
+        this.router.delete(path, this.generateCustomResponse,this.applyCallBacks(callbacks))
     }
     applyCallBacks(callbacks) {
         return callbacks.map((cb) => {
@@ -36,5 +36,23 @@ export default class RouterBase {
                 }
             }
         })
+    }
+    generateCustomResponse(req, res , next) {
+        res.sendSuccess = (payload) => {
+            res.status(200).json({success: true, payload});
+        };
+
+        res.sendServerError = (error) => {
+            res.status(500).json({success:false, error});
+        };
+        res.sendUserError = (error) => {
+            res.status(400).json({success:false, error})
+        };
+        res.sendNotFoundError = (error) => {
+            res.status(404).json({success:false, error})
+        };
+
+        next();
+        
     }
 }
