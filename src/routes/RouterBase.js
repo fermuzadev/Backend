@@ -11,25 +11,25 @@ export default class RouterBase {
         return this.router;
     }
     init() {};
-    get(path, ...callback) {
-        this.router.get(path, this.applyCallBacks(callback))
+    get(path, ...callbacks) {
+        this.router.get(path, this.applyCallBacks(callbacks))
     }
 
     post() {
-        this.router.post(path, this.applyCallBacks(callback))
+        this.router.post(path, this.applyCallBacks(callbacks))
     }
     put() {
-        this.router.put(path, this.applyCallBacks(callback))
+        this.router.put(path, this.applyCallBacks(callbacks))
     }
 
     delete() {
-        this.router.delete(path, this.applyCallBacks(callback))
+        this.router.delete(path, this.applyCallBacks(callbacks))
     }
     applyCallBacks(callbacks) {
-        return callback.map((callback) => {
+        return callbacks.map((cb) => {
             return async(...params) => {
                 try {
-                    await callback.apply(this, params);
+                    await cb.apply(this, params);
                 } catch (error) {
                     console.error('Ha ocurrido un error 👀', error.message);
                     params[1].status(500).json({message: error.message});
