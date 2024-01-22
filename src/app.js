@@ -20,6 +20,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const UserRouter = new UserRouter();
 const app = express();
 
 app.use(
