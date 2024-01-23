@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     status: { type: String, default: "active", enum: ["active", "inactive"] },
     adress: { type: Address, default: {} },
-    rol: { type: String, default: "user", enum: ["user","seller", "admin"] },
+    role: { type: String, default: "user", enum: ["user","seller", "admin"] },
+    cart: { type: Schema.Types.ObjectId, ref: "Carts" },
   },
   { timestamps: true }
 );

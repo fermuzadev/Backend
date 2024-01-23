@@ -15,6 +15,7 @@ const Products = new Schema(
 const cartSchema = new mongoose.Schema(
   {
     products: { type: [Products], default: [] },
+    userCart: {type: mongoose.Schema.Types.ObjectId, ref: "Users"},
   },
   { timestamps: true }
 );
