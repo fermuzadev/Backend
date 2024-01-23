@@ -15,7 +15,7 @@ const router = Router();
 
 export class UserRouter extends RouterBase {
   init(){
-    this.get('/test', function (req, res) {
+    this.get('/test', ['PUBLIC'], function (req, res) {
       res.sendSuccess('Hello Coders 👍🏿')
     });
 
