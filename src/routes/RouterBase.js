@@ -11,19 +11,19 @@ export default class RouterBase {
         return this.router;
     }
     init() {};
-    get(path, ...callbacks) {
-        this.router.get(path, this.generateCustomResponse, this.applyCallBacks(callbacks))
+    get(path, policies, ...callbacks) {
+        this.router.get(path, this.handlePolicies(policies),this.generateCustomResponse, this.applyCallBacks(callbacks))
     }
 
-    post() {
-        this.router.post(path, this.generateCustomResponse,this.applyCallBacks(callbacks))
+    post(path, policies, ...callbacks) {
+        this.router.post(path, this.handlePolicies(policies),this.generateCustomResponse,this.applyCallBacks(callbacks))
     }
-    put() {
-        this.router.put(path,this.generateCustomResponse, this.applyCallBacks(callbacks))
+    put(path, policies, ...callbacks) {
+        this.router.put(path,this.handlePolicies(policies),this.generateCustomResponse, this.applyCallBacks(callbacks))
     }
 
-    delete() {
-        this.router.delete(path, this.generateCustomResponse,this.applyCallBacks(callbacks))
+    delete(path, policies, ...callbacks) {
+        this.router.delete(path, this.handlePolicies(policies),this.generateCustomResponse,this.applyCallBacks(callbacks))
     }
     applyCallBacks(callbacks) {
         return callbacks.map((cb) => {
@@ -51,8 +51,37 @@ export default class RouterBase {
         res.sendNotFoundError = (error) => {
             res.status(404).json({success:false, error})
         };
-
         next();
-        
+    }
+
+    handlePolicies = (policies) => (req, res, next) => {
+        if (policies[0] === 'PUBLIC') {
+            return next();
+        }
+        const authorizationHeader = req.headers.authorization;
+        if (!authorizationHeader) {
+            return res.status(401).json({message: 'Unauthorized'});
+        }
+        //bear admin
+        //bear user
+        //bear premium
+        const token = authorizationHeader.split(' ')[1];
+        if(!validateToken(token)) {
+            return res.status(401).json({message: 'Unauthorized'})
+        }
+        const role = this.getRole(token);
+        //admin
+        //user
+        //premium(?)
+        if (!policies.includes(token.toUpperCase())) {
+            return res.status(403).json({message: 'Unauthorized'});
+        }
+        next();
+    }
+    getRole(token){
+        return token.toUpperCase();
+    }
+    validateToken(token) {
+        return true;
     }
 }
