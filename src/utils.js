@@ -80,14 +80,14 @@ export const isValidPassword = (password, user) =>
   bcrypt.compareSync(password, user.password);
 
 export const tokenGenerator = (user) => {
-  const { _id, first_name, last_name, dni, email, rol } = user;
+  const { _id, first_name, last_name, dni, email, role } = user;
   const payload = {
     id: _id,
     first_name,
     last_name,
     dni,
     email,
-    rol
+    role
   };
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1m" });
 };

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import UserModel from "../../dao/models/user.model.js";
-import { createHash, isValidPassword } from "../../utils.js";
+import { createHash, isValidPassword, verifyToken, tokenGenerator } from "../../utils.js";
 const router = Router();
 
 
@@ -55,4 +55,21 @@ router.get(
 
   })
 
+
+  router.post('/auth/login', async(req,res ) => {
+    const {email, password} = req.body;
+    if (!email || !password) {
+        return res.status(401).json({message: 'Email or password invalid'});
+    }
+    const user = await UserModel.findOne({email});
+    if(!user) {
+        return res.status(401).json({message: 'Email or password invalid'});
+    }
+    const validPassword = isValidPassword(password, user);
+    if (!validPassword){
+      return res.status(401).json({message: 'Email or password invalid'});
+    }
+    const token = tokenGenerator(user);
+    res.status(200).json({access_token: token})
+})
   export default router;
