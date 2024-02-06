@@ -5,7 +5,7 @@
 //! const productManager = new ProductManager(prodPath);
 
 import { Router } from "express";
-import UserModel from "../dao/models/user.model.js";
+import UserModel from "../../dao/models/user.model.js";
 import passport from "passport";
 import {
   __dirname,
@@ -15,7 +15,7 @@ import {
   authenticationMiddleware,
   authorizationMiddleware,
   createHash,
-} from "../utils.js";
+} from "../../utils.js";
 
 const router = Router();
 

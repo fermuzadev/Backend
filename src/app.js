@@ -7,14 +7,14 @@ import MongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
 import { uploader } from "./utils.js";
 import sessionRouter from "./routes/session.router.js";
-import authRouter from "./routes/auth.router.js";
-import prodRouter from "./routes/products.router.js";
-import cartsRouter from "./routes/carts.router.js";
-import indexRouter from "./routes/index.router.js";
+import authRouter from "./routes/api/auth.router.js";
+import prodRouter from "./routes/api/products.router.js";
+import cartsRouter from "./routes/api/carts.router.js";
+import indexRouter from "./routes/views/index.router.js";
 import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
-import userRouter from "./routes/user.router.js";
-import {UserRouter} from './routes/user.router.js'
+import userRouter from "./routes/api/user.router.js";
+import {UserRouter} from './routes/api/user.router.js'
 import { init as initPassportConfig } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
@@ -61,7 +61,6 @@ app.use(
   sessionRouter,
   userRouter,
   realTimeRouter,
-  authRouter,
   User2Router.getRouter()
 );
 app.use(
@@ -72,6 +71,7 @@ app.use(
   prodRouter,
   messagesRouter,
   userRouter,
+  authRouter,
   User2Router.getRouter()
 );
 

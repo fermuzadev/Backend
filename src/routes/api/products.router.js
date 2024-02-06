@@ -6,9 +6,9 @@
 // const testingProducts = new ProductManager(prodPath);
 
 import { Router } from "express";
-import { __dirname } from "../utils.js";
-import ProductModel from "../dao/models/product.model.js";
-import { uploader } from "../utils.js";
+import { __dirname } from "../../utils.js";
+import ProductModel from "../../dao/models/product.model.js";
+import { uploader } from "../../utils.js";
 import mongoosePaginate from "mongoose-paginate-v2";
 import dotenv from "dotenv";
 
