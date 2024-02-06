@@ -7,13 +7,13 @@ import http from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
 import { __dirname } from "./utils.js";
-import init from "./dao/mongodb.js";
+import initMongoDB from "./dao/mongodb.js";
 import ProductModel from "./dao/models/product.model.js";
 import MessagesModel from "./dao/models/messages.model.js";
 import dotenv from "dotenv";
 
 dotenv.config();
-await init();
+await initMongoDB();
 const PORT = process.env.PORT;
 const URL_BASE = process.env.URL_BASE;
 //!Http server

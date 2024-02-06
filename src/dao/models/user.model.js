@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-
+import paginator from 'mongoose-paginate-v2'
 const Address = new Schema(
   {
     street: { type: String },
@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
     first_name: { type: String },
     last_name: { type: String },
     age: { type: Number },
+    dni: {type:String, required:true, unique:true, index:true},
     provider: { type: String, enum: ["Github", "Google", "Register"] },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -24,5 +25,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.plugin(paginator);
 export default mongoose.model("users", userSchema);
 

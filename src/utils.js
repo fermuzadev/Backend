@@ -80,11 +80,12 @@ export const isValidPassword = (password, user) =>
   bcrypt.compareSync(password, user.password);
 
 export const tokenGenerator = (user) => {
-  const { _id, first_name, last_name, email, rol } = user;
+  const { _id, first_name, last_name, dni, email, rol } = user;
   const payload = {
     id: _id,
     first_name,
     last_name,
+    dni,
     email,
     rol
   };
@@ -109,7 +110,7 @@ export const jwtAuth = (req, res, next) => {
 
 export const verifyToken = (token) => {
   return new Promise((resolve, reject) => {
-    jwt.verify(token, process.env.JWT_TOKEN, (error, payload) => {
+    jwt.verify(token, process.env.JWT_, (error, payload) => {
       if (error) {
         return reject(error);
       }

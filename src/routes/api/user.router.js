@@ -1,14 +1,14 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import UserModel from "../dao/models/user.model.js";
+import UserModel from "../../dao/models/user.model.js";
 import {
   __dirname,
   createHash,
   isValidPassword,
   jwtAuth,
   tokenGenerator,
-} from "../utils.js";
-import RouterBase from './RouterBase.js'
+} from "../../utils.js";
+import RouterBase from '../RouterBase.js'
 
 const router = Router();
 
