@@ -174,13 +174,22 @@ export const init = () => {
   });
 };
 
+// function cookieExtractor(req) {
+//   let token = null;
+//   if (req && req.cookies) {
+//     token = req.cookies["jwt"];
+//   }
+//   return token;
+// }
+
 function cookieExtractor(req) {
   let token = null;
-  if (req && req.cookies) {
-    token = req.cookies["jwt"];
+  if (req && req.signedCookies) {
+    token = req.signedCookies["access_token"];
   }
   return token;
 }
+
 export const initJWT = () => {
   passport.use(
     "jwt",
