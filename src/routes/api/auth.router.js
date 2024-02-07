@@ -70,6 +70,6 @@ router.get(
       return res.status(401).json({message: 'Email or password invalid'});
     }
     const token = tokenGenerator(user);
-    res.status(200).json({access_token: token})
+    res.cookie('access_token', token, {maxAge:60000, httpOnly: true, signed:true}).status(200).json({message: 'Login successfully'})
 })
   export default router;
