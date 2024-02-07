@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-
+import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt'
 import { createHash, isValidPassword } from "../utils.js";
 import userModel from "../dao/models/user.model.js";
 
@@ -30,5 +30,27 @@ export const init = () => {
         );
       }
     })
+  );
+};
+
+function cookieExtractor(req) {
+  let token = null;
+  if (req && req.signedCookies) {
+    token = req.signedCookies["access_token"];
+  }
+  return token;
+}
+export const initJWT = () => {
+  passport.use(
+    "jwt",
+    new JwtStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: process.env.JWT_SECRET,
+      },
+      (payload, done) => {
+        return done(null, payload);
+      }
+    )
   );
 };
