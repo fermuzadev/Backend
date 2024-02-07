@@ -18,11 +18,16 @@ import {UserRouter} from './routes/api/user.router.js'
 import { init as initPassportConfig } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
 const User2Router = new UserRouter();
 const app = express();
+
+app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(morgan("dev"));
+
 
 app.use(
   expressSession({
