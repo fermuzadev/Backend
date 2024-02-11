@@ -15,7 +15,7 @@ import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/api/user.router.js";
 import {UserRouter} from './routes/api/user.router.js'
-import { init as initPassportConfig } from "./config/passport.config.js";
+import { init as initPassportConfig, initJWT  } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -54,6 +54,7 @@ app.set("view engine", "handlebars");
 //!App middleware
 //!Passport
 initPassportConfig();
+initJWT();
 
 app.use(passport.initialize());
 app.use(passport.session());
