@@ -1,5 +1,3 @@
-// import dotenv from "dotenv";
-// dotenv.config();
 
 //FRONTEND
 (function () {
@@ -16,9 +14,9 @@
   const thumbnails = document.getElementById("thumbnails");
   const idInputDelete = document.getElementById("idDelete");
   const productsListSocket = document.getElementById("productsSocket");
-  const URL_BASE = `${process.env.URL_BASE}${process.env.PORT}/img/`;
+  const URL_BASE = `http://localhost:3000/img/`;
 
-  deleteForm.addEventListener("submit", (ev) => {
+  deleteForm?.addEventListener("submit", (ev) => {
     ev.preventDefault();
     Swal.fire({
       title: "Are you sure?",

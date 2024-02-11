@@ -9,6 +9,7 @@ import {
   tokenGenerator,
 } from "../../utils.js";
 import RouterBase from '../RouterBase.js'
+import passport from 'passport'
 
 const router = Router();
 
@@ -74,12 +75,12 @@ router.get("/recovery-password", publicRouter, (req, res) => {
   res.render("recovery-password", { title: "Password Recover" });
 });
 
-router.get("/user", async (req, res) => {
+router.get("/user", passport.authorize('jwt', {session:false}) , async (req, res) => {
   const users = await UserModel.find();
   res.status(200).json(users);
 });
 
-router.post("/user", async (req, res) => {
+router.post("/user",passport.authorize('jwt', {session:false}), async (req, res) => {
   try {
     const { body } = req;
     const user = await UserModel.create(body);
@@ -89,7 +90,7 @@ router.post("/user", async (req, res) => {
   }
 });
 
-router.get("/user/:uid", async (req, res) => {
+router.get("/user/:uid", passport.authorize('jwt', {session:false}), async (req, res) => {
   const { uid } = req.params;
   try {
     const user = await UserModel.findById(uid);
@@ -103,14 +104,14 @@ router.get("/user/:uid", async (req, res) => {
   }
 });
 
-router.put("/user/:uid", async (req, res) => {
+router.put("/user/:uid",passport.authorize('jwt', {session:false}),  async (req, res) => {
   const { uid } = req.params;
   const { body } = req;
   const result = await UserModel.updateOne({ _id: uid }, { $set: body });
   res.status(204).end();
 });
 
-router.delete("/user/:uid", async (req, res) => {
+router.delete("/user/:uid",passport.authorize('jwt', {session:false}),  async (req, res) => {
   const { uid } = req.params;
   try {
     const deleted = await UserModel.deleteOne({ _id: uid });
