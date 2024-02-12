@@ -2,13 +2,14 @@ import { Router } from "express";
 import passport from "passport";
 import UserModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
+
 const router = Router();
 
 router.post(
   "/register",
   passport.authenticate("register", { failureRedirect: "/register" }),
   async (req, res) => {
-    res.redirect("/login");
+    res.redirect("/api/login");
   }
 );
 router.post(
@@ -66,7 +67,7 @@ router.get(
 router.get(
   "/github/callback",
   passport.authenticate("github", {
-    failureRedirect: "/login",
+    failureRedirect: "/api/login",
   }),
   async (req, res) => {
     try {
@@ -112,11 +113,11 @@ router.post("/recovery-password", async (req, res) => {
     { email },
     { $set: { password: createHash(newPassword) } }
   );
-  res.redirect("/login");
+  res.redirect("/api/login");
 });
 router.get("/logout", (req, res) => {
   req.session.destroy((error) => {
-    res.redirect("/login");
+    res.redirect("/api/login");
   });
 });
 export default router;
