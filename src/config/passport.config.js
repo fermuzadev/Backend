@@ -81,7 +81,7 @@ export const init = () => {
             email = profile._json.email;
           } else {
             const githubId = profile.id;
-            email = githubId; // Asignar el ID de GitHub como email en caso de no haber email en el perfil.
+            email = githubId; 
           }
           let user = await UserModel.findOne({ email });
           if (user) {
@@ -90,8 +90,8 @@ export const init = () => {
               first_name: nameSeparator[0],
               last_name: nameSeparator[1],
               email,
-              age: Math.random() *100,
-              password: "",
+              age: Math.random() * 100,
+              password: " ",
               provider: "Github",
             };
             let newUser = await UserModel.findOneAndUpdate({ email }, user);
@@ -102,8 +102,8 @@ export const init = () => {
             first_name: nameSeparator[0],
             last_name: nameSeparator[1],
             email,
-            age: "",
-            password: "",
+            age: Math.random() * 100,
+            password: " ",
             provider: "Github",
           };
           let newUser = await UserModel.create(user); // Asegurarse de usar await aquí
@@ -142,7 +142,7 @@ export const init = () => {
               first_name: profile._json.given_name,
               last_name: profile._json.last_name,
               email,
-              password: "",
+              password: " ",
               provider: "Google",
             };
             let newUser = await UserModel.findOneAndUpdate({ email },user);

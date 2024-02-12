@@ -14,7 +14,7 @@ const router = Router();
 router.get("/realtimeproducts", async (req, res) => {
   try {
     if (!req.session.user) {
-      return res.redirect("/login");
+      return res.redirect("/api/login");
     }
     const products = await ProductModel.find();
     res.render("realTimeProducts", {

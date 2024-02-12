@@ -64,10 +64,7 @@ app.use(passport.session());
 app.use(
   "/",
   uploader.single("thumbnails"),
-  sessionRouter,
-  userRouter,
   realTimeRouter,
-  User2Router.getRouter()
 );
 app.use(
   "/api",

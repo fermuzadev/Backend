@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
     first_name: { type: String },
     last_name: { type: String },
     age: { type: Number },
-    dni: {type:String, required:true, unique:true, index:true},
+    dni: {type:String, required:true, unique:true, index:true,default: "active"},
     provider: { type: String, enum: ["Github", "Google", "Register"] },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
