@@ -5,7 +5,7 @@
       email: document.getElementById("email-input").value,
       password: document.getElementById("password-input").value,
     };
-    fetch("/auth/login", {
+    fetch("/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

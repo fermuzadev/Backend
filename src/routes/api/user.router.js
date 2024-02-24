@@ -15,7 +15,7 @@ const router = Router();
 
 
 export class UserRouter extends RouterBase {
-  init(){
+  init() {
     this.get('/test', ['PUBLIC'], function (req, res) {
       res.sendSuccess('Hello Coders 👍🏿')
     });
@@ -43,11 +43,11 @@ router.post("/loginjwt", async (req, res) => {
   } = req;
   const user = await UserModel.findOne({ email });
   if (!user) {
-    res.status(401).json({ message: "Correo o contraseña invalidos" });
+    res.status(401).json({ message: "Email or password not valid" });
   }
   if (!isValidPassword) {
     const isValidPassword = isValidPassword(password, user);
-    return res.status(401).json({ message: "Correo o contraseña invalidos" });
+    return res.status(401).json({ message: "Email or password not valid" });
   }
   const token = tokenGenerator(user);
   res.status(200).json({ access_token: token });
@@ -75,12 +75,12 @@ router.get("/recovery-password", publicRouter, (req, res) => {
   res.render("recovery-password", { title: "Password Recover" });
 });
 
-router.get("/user", passport.authorize('jwt', {session:false}) , async (req, res) => {
+router.get("/user", passport.authenticate('jwt', { session: false }), async (req, res) => {
   const users = await UserModel.find();
   res.status(200).json(users);
 });
 
-router.post("/user",passport.authorize('jwt', {session:false}), async (req, res) => {
+router.post("/user", passport.authorize('jwt', { session: false }), async (req, res) => {
   try {
     const { body } = req;
     const user = await UserModel.create(body);
@@ -90,7 +90,7 @@ router.post("/user",passport.authorize('jwt', {session:false}), async (req, res)
   }
 });
 
-router.get("/user/:uid", passport.authorize('jwt', {session:false}), async (req, res) => {
+router.get("/user/:uid", passport.authorize('jwt', { session: false }), async (req, res) => {
   const { uid } = req.params;
   try {
     const user = await UserModel.findById(uid);
@@ -104,14 +104,14 @@ router.get("/user/:uid", passport.authorize('jwt', {session:false}), async (req,
   }
 });
 
-router.put("/user/:uid",passport.authorize('jwt', {session:false}),  async (req, res) => {
+router.put("/user/:uid", passport.authorize('jwt', { session: false }), async (req, res) => {
   const { uid } = req.params;
   const { body } = req;
   const result = await UserModel.updateOne({ _id: uid }, { $set: body });
   res.status(204).end();
 });
 
-router.delete("/user/:uid",passport.authorize('jwt', {session:false}),  async (req, res) => {
+router.delete("/user/:uid", passport.authorize('jwt', { session: false }), async (req, res) => {
   const { uid } = req.params;
   try {
     const deleted = await UserModel.deleteOne({ _id: uid });

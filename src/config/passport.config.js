@@ -81,7 +81,7 @@ export const init = () => {
             email = profile._json.email;
           } else {
             const githubId = profile.id;
-            email = githubId; 
+            email = githubId;
           }
           let user = await UserModel.findOne({ email });
           if (user) {
@@ -129,7 +129,7 @@ export const init = () => {
             email = await profile._json.email;
             console.log('profile._json.email', profile._json.email);
           }
-          if(profile.email) {
+          if (profile.email) {
             email = profile.email
             console.log('profile.email', profile.email);
           }
@@ -145,7 +145,7 @@ export const init = () => {
               password: " ",
               provider: "Google",
             };
-            let newUser = await UserModel.findOneAndUpdate({ email },user);
+            let newUser = await UserModel.findOneAndUpdate({ email }, user);
             return done(null, newUser);
           }
           user = {

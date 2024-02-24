@@ -134,16 +134,21 @@ export const authenticationMiddleware = (strategy) => (req, res, next) => {
   })(req, res, next);
 };
 
-export const authorizationMiddleware = (rol) => (req,res,next) =>  {
+export const authorizationMiddleware = (rol) => (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  const {rol: userRol} = req.user;
-  if(userRol !== rol){
+  const { rol: userRol } = req.user;
+  if (userRol !== rol) {
     return res.status(403).json({ message: "Forbidden" });
   }
   next();
 }
+
+export const authPolicies = (roles) => (req, res, next) => {
+  if (roles.includes('')) { }
+}
+
 
 
 export class Exception extends Error {
