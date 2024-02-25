@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { __dirname } from "../../utils.js";
-
+import passport from "passport";
 import UserModel from "../../dao/models/user.model.js";
+import { authPolicies } from "../../utils.js";
 
 const router = Router();
 
@@ -41,12 +42,12 @@ router.get("/login", publicRouter, (req, res) => {
   res.render("login", { title: "User login" });
 });
 
-router.get("/user", async (req, res) => {
+router.get("/user", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const users = await UserModel.find();
-  res.status(200).json(users);
+  res.status(200).json({ user: req.user });
 });
 
-router.post("/user", async (req, res) => {
+router.post("/user", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   try {
     const { body } = req;
     const user = await UserModel.create(body);
@@ -56,7 +57,7 @@ router.post("/user", async (req, res) => {
   }
 });
 
-router.get("/user/:uid", async (req, res) => {
+router.get("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const { uid } = req.params;
   try {
     const user = await UserModel.findById(uid);
@@ -70,14 +71,14 @@ router.get("/user/:uid", async (req, res) => {
   }
 });
 
-router.put("/user/:uid", async (req, res) => {
+router.put("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const { uid } = req.params;
   const { body } = req;
   const result = await UserModel.updateOne({ _id: uid }, { $set: body });
   res.status(204).end();
 });
 
-router.delete("/user/:uid", async (req, res) => {
+router.delete("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const { uid } = req.params;
   try {
     const deleted = await UserModel.deleteOne({ _id: uid });

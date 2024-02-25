@@ -83,26 +83,39 @@ export const createHash = (password) =>
 export const isValidPassword = (password, user) =>
   bcrypt.compareSync(password, user.password);
 
-  export const tokenGenerator = (user) => {
-    const { _id, first_name, last_name, dni, email, role } = user;
-    const payload = {
-      id: _id,
-      first_name,
-      last_name,
-      dni,
-      email,
-      role
-    };
-    return JWT.sign(payload, process.env.JWT_SECRET, { expiresIn: "1m" });
+export const tokenGenerator = (user) => {
+  const { _id, first_name, last_name, dni, email, role } = user;
+  const payload = {
+    id: _id,
+    first_name,
+    last_name,
+    dni,
+    email,
+    role
   };
+  return JWT.sign(payload, process.env.JWT_SECRET, { expiresIn: "1m" });
+};
 
 export const verifyToken = (token) => {
   return new Promise((resolve, reject) => {
     JWT.verify(token, process.env.JWT_SECRET, (error, payload) => {
-      if (error)  {
+      if (error) {
         return reject(error)
       }
       resolve(payload)
     })
   })
+}
+
+// role: { type: String, default: "student", enum: ["student", "professor", "admin"] },
+
+export const authPolicies = (roles) => (req, res, next) => {
+  if (roles.includes('student')) {
+    return next()
+  }
+  const { role } = req.user
+  if (!roles.includes(role)) {
+    return res.status(403).json({ message: 'No permissions' })
+  }
+  next()
 }

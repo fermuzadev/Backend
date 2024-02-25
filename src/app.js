@@ -13,7 +13,7 @@ import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/api/user.router.js";
 import sessionRouter from "./routes/session.router.js";
 import authRouter from './routes/api/auth.router.js'
-import { init as initPassportConfig } from "./config/passport.config.js";
+import { init as initPassportConfig, initJWT } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -48,7 +48,9 @@ app.set("view engine", "handlebars");
 
 //!App middleware
 //!Passport
+initJWT()
 initPassportConfig();
+
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -58,13 +60,13 @@ app.use(passport.session());
 app.use(
   "/",
   uploader.single("thumbnails"),
-  userRouter,
   realTimeRouter,
   sessionRouter
 );
 app.use(
   "/api",
   indexRouter,
+  userRouter,
   cartsRouter,
   prodRouter,
   messagesRouter,
