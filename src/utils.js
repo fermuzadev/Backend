@@ -146,10 +146,17 @@ export const authorizationMiddleware = (rol) => (req, res, next) => {
 }
 
 export const authPolicies = (roles) => (req, res, next) => {
-  if (roles.includes('')) { }
+  if (roles.includes('admin')) {
+    return next();
+  }
+  if (!roles.includes('role')) {
+    return res.status(403).json({ message: 'No permissions' })
+  }
+  next();
+
 }
 
-
+// role: { type: String, default: "user", enum: ["user", "seller", "admin"] },
 
 export class Exception extends Error {
   constructor(message, status) {
