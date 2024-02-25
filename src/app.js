@@ -14,7 +14,7 @@ import indexRouter from "./routes/views/index.router.js";
 import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/api/user.router.js";
-import { UserRouter } from './routes/api/user.router.js'
+// import { UserRouter } from './routes/api/user.router.js'
 import { init as initPassportConfig, initJWT } from "./config/passport.config.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
@@ -22,7 +22,7 @@ import cookieParser from "cookie-parser";
 
 dotenv.config();
 
-const User2Router = new UserRouter();
+// const User2Router = new UserRouter();
 const app = express();
 
 app.use(cookieParser(process.env.SESSION_SECRET));
@@ -69,13 +69,13 @@ app.use(
 app.use(
   "/api",
   sessionRouter,
-  indexRouter,
+  // indexRouter,
   cartsRouter,
   prodRouter,
   messagesRouter,
   userRouter,
   authRouter,
-  User2Router.getRouter()
+  // User2Router.getRouter()
 );
 
 app.get('*', (req, res) => {

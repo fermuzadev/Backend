@@ -8,20 +8,21 @@ import {
   jwtAuth,
   tokenGenerator,
 } from "../../utils.js";
-import RouterBase from '../RouterBase.js'
+// import RouterBase from '../RouterBase.js'
 import passport from 'passport'
+import { authPolicies } from "../../utils.js";
 
 const router = Router();
 
 
-export class UserRouter extends RouterBase {
-  init() {
-    this.get('/test', ['PUBLIC'], function (req, res) {
-      res.sendSuccess('Hello Coders 👍🏿')
-    });
+// export class UserRouter extends RouterBase {
+//   init() {
+//     this.get('/test', ['PUBLIC'], function (req, res) {
+//       res.sendSuccess('Hello Coders 👍🏿')
+//     });
 
-  }
-}
+//   }
+// }
 
 const privateRouter = (req, res, next) => {
   if (!req.session.user) {
@@ -75,12 +76,12 @@ router.get("/recovery-password", publicRouter, (req, res) => {
   res.render("recovery-password", { title: "Password Recover" });
 });
 
-router.get("/user", passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get("/user", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const users = await UserModel.find();
   res.status(200).json(users);
 });
 
-router.post("/user", passport.authorize('jwt', { session: false }), async (req, res) => {
+router.post("/user", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   try {
     const { body } = req;
     const user = await UserModel.create(body);
@@ -90,7 +91,7 @@ router.post("/user", passport.authorize('jwt', { session: false }), async (req, 
   }
 });
 
-router.get("/user/:uid", passport.authorize('jwt', { session: false }), async (req, res) => {
+router.get("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const { uid } = req.params;
   try {
     const user = await UserModel.findById(uid);
@@ -104,14 +105,14 @@ router.get("/user/:uid", passport.authorize('jwt', { session: false }), async (r
   }
 });
 
-router.put("/user/:uid", passport.authorize('jwt', { session: false }), async (req, res) => {
+router.put("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const { uid } = req.params;
   const { body } = req;
   const result = await UserModel.updateOne({ _id: uid }, { $set: body });
   res.status(204).end();
 });
 
-router.delete("/user/:uid", passport.authorize('jwt', { session: false }), async (req, res) => {
+router.delete("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const { uid } = req.params;
   try {
     const deleted = await UserModel.deleteOne({ _id: uid });
