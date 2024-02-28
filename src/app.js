@@ -17,6 +17,7 @@ import { init as initPassportConfig, initJWT } from "./config/passport.config.js
 import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import coursesRouter from './routes/api/courses.router.js'
 
 dotenv.config();
 
@@ -70,7 +71,8 @@ app.use(
   cartsRouter,
   prodRouter,
   messagesRouter,
-  authRouter
+  authRouter,
+  coursesRouter
   // sessionRouter
   //!userRouter
 );
