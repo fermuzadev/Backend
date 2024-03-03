@@ -69,7 +69,7 @@ app.use(
 app.use(
   "/api",
   sessionRouter,
-  // indexRouter,
+  indexRouter,
   cartsRouter,
   prodRouter,
   messagesRouter,

@@ -15,7 +15,6 @@ const Products = new Schema(
 const cartSchema = new mongoose.Schema(
   {
     products: { type: [Products], default: [] },
-    userCart: {type: mongoose.Schema.Types.ObjectId, ref: "Users"},
   },
   { timestamps: true }
 );
@@ -24,6 +23,6 @@ cartSchema.pre("find", function () {
   this.populate("products.productId");
 });
 
-cartSchema.pre("save", function () {}); // Validation
+cartSchema.pre("save", function () { }); // Validation
 cartSchema.plugin(mongoosePaginate);
 export default mongoose.model("Carts", cartSchema);
