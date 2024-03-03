@@ -6,7 +6,6 @@ import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
 import dotenv from "dotenv";
-import fetch from "node-fetch";
 
 dotenv.config();
 
@@ -174,18 +173,10 @@ export const init = () => {
   });
 };
 
-// function cookieExtractor(req) {
-//   let token = null;
-//   if (req && req.cookies) {
-//     token = req.cookies["jwt"];
-//   }
-//   return token;
-// }
-
 function cookieExtractor(req) {
   let token = null;
-  if (req && req.signedCookies) {
-    token = req.signedCookies["access_token"];
+  if (req && req.cookies) {
+    token = req.cookies["access_token"];
   }
   return token;
 }

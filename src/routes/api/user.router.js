@@ -77,7 +77,7 @@ router.get("/recovery-password", publicRouter, (req, res) => {
 });
 
 router.get("/user", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
-  const users = await UserModel.find();
+  const users = await UserModel.find()
   res.status(200).json(users);
 });
 
