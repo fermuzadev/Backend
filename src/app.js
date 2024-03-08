@@ -1,4 +1,5 @@
 import express from "express";
+import config from "./config.js";
 import expressSession from "express-session";
 import passport from "passport";
 import handlebars from "express-handlebars";
@@ -17,25 +18,23 @@ import userRouter from "./routes/api/user.router.js";
 // import { UserRouter } from './routes/api/user.router.js'
 import { init as initPassportConfig, initJWT } from "./config/passport.config.js";
 import morgan from "morgan";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
-dotenv.config();
 
 // const User2Router = new UserRouter();
 const app = express();
 
-app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(cookieParser(config.sessionSecret));
 app.use(morgan("dev"));
 
 
 app.use(
   expressSession({
-    secret: process.env.SESSION_SECRET,
+    secret: config.sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
+      mongoUrl: config.db.mongodbUri,
       mongoOptions: {},
       ttl: 120,
     }),
@@ -64,6 +63,8 @@ app.use(passport.session());
 app.use(
   "/",
   uploader.single("thumbnails"),
+  authRouter,
+  sessionRouter,
   realTimeRouter,
 );
 app.use(

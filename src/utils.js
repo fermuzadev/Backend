@@ -1,15 +1,13 @@
 import { fileURLToPath } from "url";
+import config from "./config.js";
 import path from "path";
 import jwt from "jsonwebtoken";
 import bcrypt, { compare } from "bcrypt";
 import fs from "fs/promises";
 import multer from "multer";
-import dotenv from "dotenv";
 import passport from "passport";
 
 import UserModel from "./dao/models/user.model.js";
-
-dotenv.config();
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -89,7 +87,7 @@ export const tokenGenerator = (user) => {
     email,
     role
   };
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1m" });
+  return jwt.sign(payload, config.jwtSecret, { expiresIn: "1m" });
 };
 
 export const jwtAuth = (req, res, next) => {
@@ -97,7 +95,7 @@ export const jwtAuth = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  jwt.verify(token, process.env.JWT_SECRET, async (error, payload) => {
+  jwt.verify(token, config.jwtSecret, async (error, payload) => {
     if (error) {
       return res.status(403).json({ message: "No authorized" });
     }
@@ -110,7 +108,7 @@ export const jwtAuth = (req, res, next) => {
 
 export const verifyToken = (token) => {
   return new Promise((resolve, reject) => {
-    jwt.verify(token, process.env.JWT_, (error, payload) => {
+    jwt.verify(token, config.jwtSecret, (error, payload) => {
       if (error) {
         return reject(error);
       }
