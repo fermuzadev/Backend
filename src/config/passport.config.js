@@ -1,13 +1,12 @@
 import passport from "passport";
+import config from "../config.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
-import dotenv from "dotenv";
 
-dotenv.config();
 
 const opts = {
   usernameField: "email",
@@ -15,16 +14,16 @@ const opts = {
 };
 
 const githubOpts = {
-  clientID: process.env.GHCLIENTID,
-  clientSecret: process.env.GHCLIENTSECRET,
-  callbackURL: process.env.GHCALLBACK,
+  clientID: config.github.clientID,
+  clientSecret: config.github.clientSecret,
+  callbackURL: config.github.callbackURL,
 };
 
 const googleOpts = {
-  clientID: process.env.CLIENT_GOOGLE_ID,
-  clientSecret: process.env.CLIENT_GOOGLE_SECRET,
-  callbackURL: process.env.GOOGLECALLBACK,
-};
+  clientID: config.google.clientID,
+  clientSecret: config.google.clientSecret,
+  callbackURL: config.google.callbackURL
+}
 
 export const init = () => {
   passport.use(
@@ -187,7 +186,7 @@ export const initJWT = () => {
     new JWTStrategy(
       {
         jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey: process.env.JWT_SECRET,
+        secretOrKey: config.jwtSecret,
       },
       (payload, done) => {
         return done(null, payload);

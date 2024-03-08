@@ -30,7 +30,7 @@
                   <td>{{this.stock}}</td>
                   <td>{{this.category}}</td>
                   <td><img src={{this.thumbnails}} class="card-img-top img-fluid img-thumbnail" alt="..."></td>
-                  <td><a href=`${process.env.URL_BASE}${process.env.PORT}/api/products/{{this._id}} role=button` class="btn btn-secondary`">Add to cart</a></td>
+                  <td><a href=`${config.url}${config.port}/api/products/{{this._id}} role=button` class="btn btn-secondary`">Add to cart</a></td>
                 </tr>
               {{/each}}
             </tbody>

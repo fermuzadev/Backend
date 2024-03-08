@@ -6,16 +6,15 @@
 // const testingProducts = new ProductManager(prodPath);
 
 import { Router } from "express";
+import config from "../../config.js";
 import { __dirname } from "../../utils.js";
 import ProductModel from "../../dao/models/product.model.js";
 import { uploader } from "../../utils.js";
 import mongoosePaginate from "mongoose-paginate-v2";
-import dotenv from "dotenv";
 
-dotenv.config()
 const prodRouter = Router();
-const URL_BASE = process.env.URL_BASE;
-const URL_PRODUCTS = `${URL_BASE}${process.env.PORT}/api/products`;
+const URL_BASE = config.url;
+const URL_PRODUCTS = `${URL_BASE}${config.port}/api/products`;
 
 
 const buildResponse = (data) => {
@@ -29,14 +28,12 @@ const buildResponse = (data) => {
     hasPrevPage: data.hasPrevPage,
     hasNextPage: data.hasNextPage,
     prevLink: data.hasPrevPage
-      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.prevPage}${
-          data.category ? `&category=${data.category}` : ""
-        }${data.stock ? `&stock=${data.stock}` : ""}`
+      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.prevPage}${data.category ? `&category=${data.category}` : ""
+      }${data.stock ? `&stock=${data.stock}` : ""}`
       : "",
     nextLink: data.hasNextPage
-      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.nextPage}${
-          data.category ? `&category=${data.category}` : ""
-        }${data.stock ? `&stock=${data.stock}` : ""}`
+      ? `${URL_PRODUCTS}?limit=${data.limit}&page=${data.nextPage}${data.category ? `&category=${data.category}` : ""
+      }${data.stock ? `&stock=${data.stock}` : ""}`
       : "",
   };
 };
