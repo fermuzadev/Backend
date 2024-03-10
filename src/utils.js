@@ -1,5 +1,5 @@
 import { fileURLToPath } from "url";
-import config from "./config.js";
+import config from "./config/config.js";
 import path from "path";
 import jwt from "jsonwebtoken";
 import bcrypt, { compare } from "bcrypt";

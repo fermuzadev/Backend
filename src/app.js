@@ -1,5 +1,5 @@
 import express from "express";
-import config from "./config.js";
+import config from "./config/config.js";
 import expressSession from "express-session";
 import passport from "passport";
 import handlebars from "express-handlebars";

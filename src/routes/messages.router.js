@@ -1,16 +1,15 @@
 import { Router } from "express";
-import { __dirname } from "../utils.js";
-
-import MessagesModel from "../dao/models/messages.model.js";
+import MessagesController from "../controllers/messages.controller.js";
 
 const messagesRouter = Router();
 
 messagesRouter.get("/messages", async (req, res, next) => {
   try {
-    const messages = await MessagesModel.find();
+    const messages = await MessagesController.get();
     res.status(200).render("chat", messages);
   } catch (error) {
     console.log('An error has ocurred while trying to get messages', error.message)
+    next(error)
   }
 });
 

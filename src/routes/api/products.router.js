@@ -6,7 +6,7 @@
 // const testingProducts = new ProductManager(prodPath);
 
 import { Router } from "express";
-import config from "../../config.js";
+import config from "../../config/config.js";
 import { __dirname } from "../../utils.js";
 import ProductModel from "../../dao/models/product.model.js";
 import { uploader } from "../../utils.js";
