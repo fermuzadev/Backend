@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import UserModel from "../dao/models/user.model.js";
+import UsersController from "../controllers/users.controller.js";
 import { createHash, isValidPassword } from "../utils.js";
 
 const router = Router();
@@ -26,7 +26,7 @@ router.post("/login", async (req, res) => {
     body: { email, password },
   } = req;
   try {
-    let user = await UserModel.findOne({ email });
+    let user = await UsersController.get({ email });
     if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
       let user = {
         first_name: "Coderhouse",
@@ -105,13 +105,13 @@ router.get(
 
 router.post("/recovery-password", async (req, res) => {
   const { email, newPassword } = req.body;
-  const user = await UserModel.findOne({ email });
+  const user = await UsersController.get({ email });
   if (!user) {
     return res.status(401).send("User not found");
   }
-  await UserModel.updateOne(
+  await UsersController.update(
     { email },
-    { $set: { password: createHash(newPassword) } }
+    { password: createHash(newPassword) }
   );
   res.redirect("/api/login");
 });

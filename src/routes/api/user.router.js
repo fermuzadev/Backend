@@ -1,6 +1,5 @@
 import { Router } from "express";
-import bcrypt from "bcrypt";
-import UserModel from "../../dao/models/user.model.js";
+import UsersController from "../../controllers/users.controller.js";
 import {
   __dirname,
   createHash,
@@ -42,7 +41,7 @@ router.post("/loginjwt", async (req, res) => {
   const {
     body: { email, password },
   } = req;
-  const user = await UserModel.findOne({ email });
+  const user = await UsersController.get({ email });
   if (!user) {
     res.status(401).json({ message: "Email or password not valid" });
   }
@@ -77,14 +76,14 @@ router.get("/recovery-password", publicRouter, (req, res) => {
 });
 
 router.get("/user", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
-  const users = await UserModel.find()
+  const users = await UsersController.get()
   res.status(200).json(users);
 });
 
 router.post("/user", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   try {
     const { body } = req;
-    const user = await UserModel.create(body);
+    const user = await UsersController.create(body);
     res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -94,7 +93,7 @@ router.post("/user", passport.authenticate('jwt', { session: false }), authPolic
 router.get("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const { uid } = req.params;
   try {
-    const user = await UserModel.findById(uid);
+    const user = await UsersController.getById(uid)
     if (!user) {
       res.status(404).json({ message: "User not found" });
     } else {
@@ -108,14 +107,14 @@ router.get("/user/:uid", passport.authenticate('jwt', { session: false }), authP
 router.put("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const { uid } = req.params;
   const { body } = req;
-  const result = await UserModel.updateOne({ _id: uid }, { $set: body });
+  await UsersController.updateById(uid, body)
   res.status(204).end();
 });
 
 router.delete("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
   const { uid } = req.params;
   try {
-    const deleted = await UserModel.deleteOne({ _id: uid });
+    const deleted = await UsersController.deleteById(uid)
     if (!deleted) {
       res.status(404).json({ message: "User not found" });
     } else {

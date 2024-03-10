@@ -4,7 +4,7 @@
 //! const testingProducts = new ProductManager(prodPath);
 //!BACKEND
 import http from "http";
-import config from './config.js'
+import config from "./config/config.js";
 import { Server } from "socket.io";
 import app from "./app.js";
 import { __dirname } from "./utils.js";
