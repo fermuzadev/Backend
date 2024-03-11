@@ -10,14 +10,14 @@ export default class ProductsServices {
     }
 
     static create(payload) {
-        return CartsDao.create(payload)
+        return ProductsDao.create(payload)
     }
 
     static update(filter, data) {
-        return CartsDao.update(filter, data)
+        return ProductsDao.update(filter, data)
     }
 
     static deleteById(uid) {
-        return CartsDao.deleteById({ _id: uid })
+        return ProductsDao.deleteById({ _id: uid })
     }
 }

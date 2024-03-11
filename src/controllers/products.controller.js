@@ -5,6 +5,7 @@ export default class ProductsController {
         const products = await ProductsServices.findAll(query)
         return products
     }
+
     static async getById(pid) {
         const product = await ProductsServices.findById(pid)
         if (!product) {

@@ -70,8 +70,8 @@ prodRouter.get("/products", async (req, res) => {
 prodRouter.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
-    let productById = await ProductsController.getById(pid)
-    const paginateId = await productModel.paginate({ _id: pid }, { limit: 1 });
+    let productById = await ProductsController.getById(pid);
+    const paginateId = await ProductModel.paginate({ _id: pid }, { limit: 1 });
     if (!productById) {
       res.json({
         error: "Product Not Found",
@@ -93,9 +93,12 @@ prodRouter.post(
   uploader.single("thumbnails"),
   async (req, res) => {
     try {
-      const filename = req.file.filename;
-      const imageURL = `${URL_BASE}${filename}`;
-      const {
+      if (req.file) {
+        const filename = req.file.filename;
+        const imageURL = `${URL_BASE}${filename}`;
+        let thumbnails = imageURL
+      }
+      let {
         title: prodTitle,
         description: prodDescription,
         code: prodCode,
@@ -103,10 +106,9 @@ prodRouter.post(
         status: prodStatus,
         stock: prodStock,
         category: prodCategory,
+        thumbnails: prodThumbnails,
       } = req.body;
-
-      const prodThumbnails = imageURL || "";
-      const products = await ProductModel.find();
+      const products = await ProductsController.get();
 
       if (
         !(
@@ -124,7 +126,7 @@ prodRouter.post(
         });
       } else {
 
-        await productModel.create({
+        await ProductsController.create({
           title: prodTitle,
           description: prodDescription,
           code: prodCode,
@@ -135,7 +137,7 @@ prodRouter.post(
           thumbnails: prodThumbnails,
         });
 
-        const newProd = await productModel.find();
+        const newProd = await ProductsController.get();
 
         res.status(201).send(newProd.find((prod) => prod.code === prodCode));
       }
@@ -160,22 +162,20 @@ prodRouter.put("/products/:pid", async (req, res) => {
     category: prodCategory,
     thumbnails: prodThumbnails,
   } = req.body;
-  await productModel.updateOne(
+  await ProductsController.update(
     { _id: pid },
     {
-      $set: {
-        title: prodTitle,
-        description: prodDescription,
-        code: prodCode,
-        price: prodPrice,
-        status: prodStatus,
-        stock: prodStock,
-        category: prodCategory,
-        thumbnails: prodThumbnails,
-      },
-    }
+      title: prodTitle,
+      description: prodDescription,
+      code: prodCode,
+      price: prodPrice,
+      status: prodStatus,
+      stock: prodStock,
+      category: prodCategory,
+      thumbnails: prodThumbnails,
+    },
   );
-  const products = await ProductModel.find();
+  const products = await ProductsController.get();
 
   try {
     await res.status(204).end();
@@ -189,8 +189,8 @@ prodRouter.put("/products/:pid", async (req, res) => {
 
 prodRouter.delete("/products/:pid", async (req, res) => {
   let { pid } = req.params;
-  await productModel.deleteOne({ _id: pid });
-  const products = await productModel.find();
+  await ProductsController.deleteById(pid);
+  const products = await ProductsController.get()
   try {
     if (products.find((prod) => prod._id === pid)) {
       res.status(200).json({ message: `The product id ${pid} was deleted` });
