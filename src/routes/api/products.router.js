@@ -9,6 +9,7 @@ import { Router } from "express";
 import config from "../../config/config.js";
 import { __dirname } from "../../utils.js";
 import ProductModel from "../../dao/models/product.model.js";
+import ProductsController from "../../controllers/products.controller.js";
 import { uploader } from "../../utils.js";
 import mongoosePaginate from "mongoose-paginate-v2";
 
@@ -69,7 +70,7 @@ prodRouter.get("/products", async (req, res) => {
 prodRouter.get("/products/:pid", async (req, res) => {
   try {
     let { pid } = req.params;
-    //! let productById = await ProductModel.findById(pid);
+    let productById = await ProductsController.getById(pid)
     const paginateId = await productModel.paginate({ _id: pid }, { limit: 1 });
     if (!productById) {
       res.json({

@@ -1,48 +1,23 @@
-
-//!FS
-//!import ProductManager from "../dao/ProductManager.js";
-//!import path from "path";
-//! const cartPath = path.resolve(__dirname, "../dao/carrito.json");
-//! const prodPath = path.resolve(__dirname, "../dao/productos.json");
-//! const instanceProducts = new ProductManager(prodPath);
-//!import { getRandomId, saveJSONToFile, getJSONFromFile } from "../utils.js";
-
 import { Router } from "express";
-import { __dirname } from "../../utils.js";
-import CartsModel from "../../dao/models/carts.model.js";
-import productModel from "../../dao/models/product.model.js";
-import { Exception } from "../../utils.js";
+import CartsController from "../../controllers/carts.controller.js";
+import ProductsController from "../../controllers/products.controller.js";
 
 const cartsRouter = Router();
 
 //!HELPERS
 
-async function getCart() {
-  const products = await CartsModel.find().populate("products.productId");
-  return products;
-}
-
-async function addCart() {
-  let newCart = await CartsModel.create();
-  return newCart;
-}
 //!POST METHODS
 
 cartsRouter.post("/carts", async (req, res) => {
-  let newCart;
-  let carts = await getCart();
-  newCart = await addCart();
-  carts.push(newCart);
-  await CartsModel.create(carts);
+  const newCart = await CartsController.create();
   res.status(201).send(newCart);
 });
 
 cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    let cart = await CartsModel.findOne({ _id: cid });
-    let product = await productModel.findOne({ _id: pid });
-
+    let cart = await CartsController.get()
+    let product = await ProductsController.getById(pid);
     if (!product) {
       //!if product id dont't exists in products array
       res.status(404).send({
@@ -58,25 +33,18 @@ cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
         .json({ status: "Error", message: `The cart ID ${cid} doesn't exist` });
       return;
     }
-
-    const productFind = cart.products.find(
-      (cartProduct) => cartProduct.productId === pid
-    );
-
+    let productFind = await CartsController.findProducts(cid, pid)
     if (productFind) {
       //!if product exists inside cart array
-      productFind.quantity++;
-      //!await CartsModel.updateOne({ _id: cid }, newCart);
-      res.status(201).send(cart);
+      await CartsController.update({ _id: cid }, { products: productFind });
+      return res.status(201).json(productFind);
     } else {
       //!If the products doesn't exists into the cart array
-      cart.products.push({ productId: pid, quantity: 1 });
-      //!await CartsModel.updateOne({ _id: cid }, { products: cart });
-      res.status(201).send(cart);
+      const newProduct = await CartsController.updateAddToSet({ _id: cid }, { products: { productId: pid, quantity: 1 } });
+      res.status(201).json(newProduct);
     }
-    await cart.save();
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: "error",
       message: error.message,
     });
@@ -86,7 +54,7 @@ cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
 //!GET METHODS
 cartsRouter.get("/carts/:cid", async (req, res) => {
   let { cid } = req.params;
-  let cart = await CartsModel.find({ _id: cid }).populate("products.productId");
+  let cart = await CartsController.getById(cid);
   if (cart) {
     res.status(200).json(cart);
   } else {
@@ -120,12 +88,11 @@ cartsRouter.put("/carts/:cid", async (req, res) => {
     if (!products || !Array.isArray(products)) {
       res.status(404).send("Not a valid data format");
       return;
-    } HEAD
+    }
     //!I use find&update cause it do the two action and return the object updated with new : true
-    const result = await CartsModel.findOneAndUpdate(
+    const result = await CartsController.updateSet(
       { _id: cid },
-      { $set: { products: products } },
-      { new: true }
+      { products: products }
     );
     if (result) {
       res.status(200).send(result);
@@ -146,9 +113,9 @@ cartsRouter.put("/carts/:cid/products/:pid", async (req, res) => {
         .json(`The quantity must be a number for the product ${pid}`);
       return;
     }
-    const result = await CartsModel.updateOne(
+    const result = await CartsController.update(
       { _id: cid, "products.productId": pid },
-      { $set: { "products.$.quantity": quantity } }
+      { "products.$.quantity": quantity }
     );
     res.status(200).send("Product updated");
   } catch (error) {
@@ -159,8 +126,7 @@ cartsRouter.put("/carts/:cid/products/:pid", async (req, res) => {
 
 cartsRouter.delete("/carts/:cid", async (req, res) => {
   let { cid } = req.params;
-  let cart = await getCart();
-  let findCart = await CartsModel.findOne({ _id: cid });
+  let findCart = await CartsController.getById(cid);
   if (!findCart) {
     res.status(404).json({
       message: `Cart ${cid} not found`,
@@ -168,7 +134,7 @@ cartsRouter.delete("/carts/:cid", async (req, res) => {
     return;
   }
   try {
-    await CartsModel.updateOne({ _id: cid }, { $set: { products: [] } });
+    await CartsController.update({ _id: cid }, { products: [] });
     res.status(200).json({ message: `The cart ${cid} was empty` });
   } catch (error) {
     res.status(404).json({
@@ -180,7 +146,7 @@ cartsRouter.delete("/carts/:cid", async (req, res) => {
 
 cartsRouter.delete("/carts/:cid/product/:pid", async (req, res) => {
   let { cid, pid } = req.params;
-  let findCart = await CartsModel.findOne({ _id: cid });
+  let findCart = await CartsController.getById(cid);
   if (!findCart) {
     res.status(404).json({
       message: `Cart ${cid} not found`,
@@ -194,9 +160,9 @@ cartsRouter.delete("/carts/:cid/product/:pid", async (req, res) => {
     //!If its founded
     if (indexProduct !== -1) {
       findCart.products.splice(indexProduct, 1);
-      await CartsModel.findOneAndUpdate(
+      await CartsController.update(
         { _id: cid },
-        { $set: { products: findCart.products } }
+        { products: findCart.products }
       );
       res
         .status(200)

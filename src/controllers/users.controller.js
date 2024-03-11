@@ -11,6 +11,7 @@ export default class UsersController {
         if (!user) {
             throw new Error("User not found")
         }
+        return user;
     }
 
     static async create(data) {
