@@ -50,15 +50,6 @@ export default class CartsController {
         return cart
     }
 
-    // static async updateCart(cid, pid) {
-    //     const cart = await CartsController.getById(cid)
-    //     const isAlready = await CartsController.findProducts(cid, pid)
-    //     if (isAlready) {
-    //         cart.products.quantity++
-    //         return cart
-    //     }
-    // }
-
     static async create(data) {
         let carts = await CartsController.get()
         const newCarts = await CartsServices.create(data)

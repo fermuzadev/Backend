@@ -13,6 +13,7 @@ dotenv.config({ path: pathEnvFile })
 export default {
     port: process.env.PORT,
     env: process.env.ENV,
+    persistence: process.env.PERSISTENCE || mongoDb,
     db: {
         mongodbUri: process.env.MONGODB_URI,
     },

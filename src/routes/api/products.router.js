@@ -1,16 +1,11 @@
 
-//FS
-// import ProductManager from "../dao/ProductManager.js";
-// import path from "path";
-// const prodPath = path.resolve(__dirname, "./dao/productos.json");
-// const testingProducts = new ProductManager(prodPath);
 
 import { Router } from "express";
+import passport from "passport";
 import config from "../../config/config.js";
-import { __dirname } from "../../utils.js";
 import ProductModel from "../../dao/models/product.model.js";
 import ProductsController from "../../controllers/products.controller.js";
-import { uploader } from "../../utils.js";
+import { uploader, __dirname, authorizationMiddleware } from "../../utils.js";
 import mongoosePaginate from "mongoose-paginate-v2";
 
 const prodRouter = Router();
@@ -89,7 +84,7 @@ prodRouter.get("/products/:pid", async (req, res) => {
 });
 
 prodRouter.post(
-  "/products",
+  "/products", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"),
   uploader.single("thumbnails"),
   async (req, res) => {
     try {
@@ -150,7 +145,7 @@ prodRouter.post(
   }
 );
 
-prodRouter.put("/products/:pid", async (req, res) => {
+prodRouter.put("/products/:pid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   let { pid } = req.params;
   const {
     title: prodTitle,
@@ -175,7 +170,6 @@ prodRouter.put("/products/:pid", async (req, res) => {
       thumbnails: prodThumbnails,
     },
   );
-  const products = await ProductsController.get();
 
   try {
     await res.status(204).end();
@@ -187,7 +181,7 @@ prodRouter.put("/products/:pid", async (req, res) => {
   }
 });
 
-prodRouter.delete("/products/:pid", async (req, res) => {
+prodRouter.delete("/products/:pid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   let { pid } = req.params;
   await ProductsController.deleteById(pid);
   const products = await ProductsController.get()

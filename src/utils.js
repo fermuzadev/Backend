@@ -74,18 +74,19 @@ export const saveJSONToFile = async (path, data) => {
 
 export const createHash = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-export const isValidPassword = (password, user) =>
-  bcrypt.compareSync(password, user.password);
+export const isValidPassword = async (password, user) =>
+  await bcrypt.compareSync(password, user.password);
 
 export const tokenGenerator = (user) => {
-  const { _id, first_name, last_name, dni, email, role } = user;
+  const { _id, first_name, last_name, dni, email, role, carts } = user;
   const payload = {
     id: _id,
     first_name,
     last_name,
     dni,
     email,
-    role
+    role,
+    carts
   };
   return jwt.sign(payload, config.jwtSecret, { expiresIn: "1m" });
 };
@@ -136,25 +137,25 @@ export const authorizationMiddleware = (rol) => (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  const { rol: userRol } = req.user;
+  const { role: userRol } = req.user;
+  console.log(userRol)
   if (userRol !== rol) {
     return res.status(403).json({ message: "Forbidden" });
   }
   next();
 }
 
-export const authPolicies = (roles) => (req, res, next) => {
-  if (roles.includes('admin')) {
+
+export const authPolicies = (role) => (req, res, next) => {
+  console.log('role', role)
+  if (role.includes('admin')) {
     return next();
   }
-  if (!roles.includes('role')) {
+  if (!role.includes('role')) {
     return res.status(403).json({ message: 'No permissions' })
   }
   next();
-
 }
-
-// role: { type: String, default: "user", enum: ["user", "seller", "admin"] },
 
 export class Exception extends Error {
   constructor(message, status) {

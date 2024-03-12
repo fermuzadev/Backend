@@ -1,24 +1,27 @@
-import UsersDao from "../dao/users.dao.js";
-
+import { usersRepository } from "../repositories/index.js";
 
 export default class UsersServices {
     static findAll(filter = {}) {
-        return UsersDao.get(filter)
+        return usersRepository.get(filter)
+    }
+
+    static findDtoData(filter = {}) {
+        return usersRepository.getFilterData(filter)
     }
 
     static findById(uid) {
-        return UsersDao.getById({ _id: uid })
+        return usersRepository.getByID({ _id: uid })
     }
 
     static create(payload) {
-        return UsersDao.create(payload)
+        return usersRepository.create(payload)
     }
 
     static update(filter, data) {
-        return UsersDao.update(filter, data)
+        return usersRepository.update(filter, data)
     }
 
     static deleteById(uid) {
-        return UsersDao.deleteById({ _id: uid })
+        return usersRepository.deleteById({ _id: uid })
     }
 }
