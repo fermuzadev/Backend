@@ -1,23 +1,22 @@
-import ProductsDao from "../dao/products.dao.js";
-
+import { productsRepository } from "../repositories/index.js";
 export default class ProductsServices {
     static findAll(filter = {}) {
-        return ProductsDao.get(filter)
+        return productsRepository.get(filter)
     }
 
     static findById(pid) {
-        return ProductsDao.getById({ _id: pid })
+        return productsRepository.getById({ _id: pid })
     }
 
     static create(payload) {
-        return ProductsDao.create(payload)
+        return productsRepository.create(payload)
     }
 
     static update(filter, data) {
-        return ProductsDao.update(filter, data)
+        return productsRepository.update(filter, data)
     }
 
     static deleteById(uid) {
-        return ProductsDao.deleteById({ _id: uid })
+        return productsRepository.deleteById({ _id: uid })
     }
 }

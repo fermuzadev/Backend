@@ -6,6 +6,11 @@ export default class UsersController {
         return users
     }
 
+    static async getDtoData(data) {
+        const user = await UsersServices.findDtoData(data)
+        return user;
+    }
+
     static async getById(uid) {
         const user = await UsersServices.findById(uid)
         if (!user) {

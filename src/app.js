@@ -11,7 +11,7 @@ import sessionRouter from "./routes/session.router.js";
 import authRouter from "./routes/api/auth.router.js";
 import prodRouter from "./routes/api/products.router.js";
 import cartsRouter from "./routes/api/carts.router.js";
-import indexRouter from "./routes/views/index.router.js";
+// import indexRouter from "./routes/views/index.router.js";
 import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/api/user.router.js";
@@ -70,7 +70,7 @@ app.use(
 app.use(
   "/api",
   sessionRouter,
-  indexRouter,
+  // indexRouter,
   cartsRouter,
   prodRouter,
   messagesRouter,

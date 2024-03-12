@@ -1,15 +1,18 @@
 import { Router } from "express";
 import UsersController from "../../controllers/users.controller.js";
+import passport from 'passport'
 import {
   __dirname,
   createHash,
+  verifyToken,
   isValidPassword,
   jwtAuth,
   tokenGenerator,
+  authorizationMiddleware,
+  authenticationMiddleware
 } from "../../utils.js";
+import userModel from "../../dao/models/user.model.js";
 // import RouterBase from '../RouterBase.js'
-import passport from 'passport'
-import { authPolicies } from "../../utils.js";
 
 const router = Router();
 
@@ -32,7 +35,7 @@ const privateRouter = (req, res, next) => {
 
 const publicRouter = (req, res, next) => {
   if (req.session.user) {
-    return res.redirect("/profile");
+    return res.redirect("/api/profile");
   }
   next();
 };
@@ -41,21 +44,29 @@ router.post("/loginjwt", async (req, res) => {
   const {
     body: { email, password },
   } = req;
-  const user = await UsersController.get({ email });
+  let user = await UsersController.get({ email });
+  user = user[0]
   if (!user) {
-    res.status(401).json({ message: "Email or password not valid" });
+    return res.status(401).json({ message: "Email or password not valid" });
   }
-  if (!isValidPassword) {
-    const isValidPassword = isValidPassword(password, user);
+  const isValidPass = isValidPassword(password, user)
+  if (!isValidPass) {
     return res.status(401).json({ message: "Email or password not valid" });
   }
   const token = tokenGenerator(user);
-  res.status(200).json({ access_token: token });
+  res
+    .cookie("access_token", token, { maxAge: 30000, httpOnly: true })
+    .status(200)
+    .json({ status: "success" });
 });
 
-router.get("/current", jwtAuth, (req, res) => {
-  res.status(200).json(req.user);
+router.get("/current", authenticationMiddleware("jwt", { session: false }), async (req, res) => {
+
+  let filterData = await UsersController.getDtoData(req.user);
+  res.status(200).json(filterData);
 });
+
+
 router.get("/profile", privateRouter, (req, res) => {
   res.render("profile", { title: "User profile", user: req.session.user });
 });
@@ -75,12 +86,12 @@ router.get("/recovery-password", publicRouter, (req, res) => {
   res.render("recovery-password", { title: "Password Recover" });
 });
 
-router.get("/user", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
+router.get("/user", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   const users = await UsersController.get()
   res.status(200).json(users);
 });
 
-router.post("/user", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
+router.post("/user", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   try {
     const { body } = req;
     const user = await UsersController.create(body);
@@ -90,7 +101,7 @@ router.post("/user", passport.authenticate('jwt', { session: false }), authPolic
   }
 });
 
-router.get("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
+router.get("/user/:uid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   const { uid } = req.params;
   try {
     const user = await UsersController.getById(uid)
@@ -104,14 +115,14 @@ router.get("/user/:uid", passport.authenticate('jwt', { session: false }), authP
   }
 });
 
-router.put("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
+router.put("/user/:uid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   const { uid } = req.params;
   const { body } = req;
   await UsersController.updateById(uid, body)
   res.status(204).end();
 });
 
-router.delete("/user/:uid", passport.authenticate('jwt', { session: false }), authPolicies(['admin']), async (req, res) => {
+router.delete("/user/:uid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   const { uid } = req.params;
   try {
     const deleted = await UsersController.deleteById(uid)
