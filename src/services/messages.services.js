@@ -1,8 +1,7 @@
-import MessagesDao from "../dao/messages.dao.js";
-
+import { messagesRepository } from "../repositories/index.js";
 export default class MessagesService {
     static findAll(filter = {}) {
-        return MessagesDao.get(filter);
+        return messagesRepository.get(filter);
     }
 
 }

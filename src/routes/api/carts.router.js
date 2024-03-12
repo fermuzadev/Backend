@@ -1,6 +1,10 @@
 import { Router } from "express";
+import passport from "passport";
 import CartsController from "../../controllers/carts.controller.js";
 import ProductsController from "../../controllers/products.controller.js";
+import UsersController from "../../controllers/users.controller.js";
+import { authorizationMiddleware } from "../../utils.js";
+import TicketServices from "../../services/ticket.services.js";
 
 const cartsRouter = Router();
 
@@ -13,7 +17,7 @@ cartsRouter.post("/carts", async (req, res) => {
   res.status(201).send(newCart);
 });
 
-cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
+cartsRouter.post("/carts/:cid/product/:pid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("user"), async (req, res) => {
   try {
     const { cid, pid } = req.params;
     let cart = await CartsController.get()
@@ -33,6 +37,12 @@ cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
         .json({ status: "Error", message: `The cart ID ${cid} doesn't exist` });
       return;
     }
+    const userActive = await UsersController.getById(req.user.id)
+    const { carts } = userActive
+    const cartUser = carts.find(cart => cart.cartId.toString() === cid)
+    if (!cartUser) {
+      return res.status(403).json({ message: 'No permissions' })
+    }
     let productFind = await CartsController.findProducts(cid, pid)
     if (productFind) {
       //!if product exists inside cart array
@@ -51,6 +61,46 @@ cartsRouter.post("/carts/:cid/product/:pid", async (req, res) => {
   }
 });
 
+cartsRouter.post("/carts/:cid/purchase", passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const cart = await CartsController.getById(cid);
+    const { products } = cart
+    let productPurchaseId = []
+    let ticket = {
+      amount: 0
+    }
+
+    for (const product of products) {
+      const productFind = await ProductsController.getById(product.productId)
+      if (product.quantity <= 0 || productFind.stock < product.quantity) {
+        continue;
+      }
+      productPurchaseId.push(product.productId.toString())
+      await ProductsController.update({ _id: product.productId }, { stock: productFind.stock - product.quantity })
+      ticket.amount += productFind.price * product.quantity
+    }
+
+    ticket = {
+      ...ticket,
+      code: Date.now(),
+      purchase_datetime: new Date().toLocaleString(),
+      purchaser: req.user.email
+    }
+
+    await TicketServices.create(ticket)
+    const cartUpdate = await CartsController.getById(cid);
+    const { products: productsUpdate } = cartUpdate
+    console.log(productPurchaseId)
+    const updatedProducts = products.filter(product => !productPurchaseId.includes(product.productId.toString()));
+    await CartsController.update({ _id: cid }, { products: updatedProducts })
+
+    res.status(201).json(ticket)
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message })
+  }
+})
+
 //!GET METHODS
 cartsRouter.get("/carts/:cid", async (req, res) => {
   let { cid } = req.params;
@@ -66,7 +116,7 @@ cartsRouter.get("/carts/:cid", async (req, res) => {
 });
 
 cartsRouter.get("/carts", async (req, res) => {
-  let cart = await getCart();
+  let cart = await CartsController.get();
   try {
     res.status(200).json(cart);
   } catch (error) {

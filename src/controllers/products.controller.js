@@ -1,3 +1,10 @@
+
+//FS
+// import ProductManager from "../dao/ProductManager.js";
+// import path from "path";
+// const prodPath = path.resolve(__dirname, "./dao/productos.json");
+// const testingProducts = new ProductManager(prodPath);
+
 import ProductsServices from "../services/products.services.js";
 
 export default class ProductsController {
