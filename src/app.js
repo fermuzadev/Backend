@@ -18,29 +18,27 @@ import viewCart from './routes/views/carts.router.js'
 import { init as initPassportConfig, initJWT } from "./config/passport.config.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import dotenv from 'dotenv'
 
 
-dotenv.config()
 // const User2Router = new UserRouter();
 const app = express();
 
-app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(cookieParser(config.sessionSecret));
 app.use(morgan("dev"));
 
 
-app.use(
-  expressSession({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
-      mongoOptions: {},
-      ttl: 120,
-    }),
-  })
-);
+// app.use(
+//   expressSession({
+//     secret: config.sessionSecret,
+//     resave: false,
+//     saveUninitialized: false,
+//     store: MongoStore.create({
+//       mongoUrl: config.db.mongodbUri,
+//       mongoOptions: {},
+//       ttl: 120,
+//     }),
+//   })
+// );
 //!Express
 app.use(express.json()); //Middleware incorporado
 app.use(express.urlencoded({ extended: true }));
@@ -67,7 +65,7 @@ app.use(
   authRouter,
   sessionRouter,
   realTimeRouter,
-  viewCart
+
 );
 app.use(
   "/api",
