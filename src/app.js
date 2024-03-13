@@ -18,22 +18,24 @@ import viewCart from './routes/views/carts.router.js'
 import { init as initPassportConfig, initJWT } from "./config/passport.config.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import dotenv from 'dotenv'
 
 
+dotenv.config()
 // const User2Router = new UserRouter();
 const app = express();
 
-app.use(cookieParser(config.sessionSecret));
+app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(morgan("dev"));
 
 
 app.use(
   expressSession({
-    secret: config.sessionSecret,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: config.db.mongodbUri,
+      mongoUrl: process.env.MONGODB_URI,
       mongoOptions: {},
       ttl: 120,
     }),
