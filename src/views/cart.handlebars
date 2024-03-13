@@ -1,0 +1,47 @@
+
+  <div class="container">
+    <h1 class="text-center my-4">Cart id {{this.cid}}</h1>
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <table id="main" class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+                {{#each payload}}
+                <tr>
+                    <td>{{this.productId._id}}</td>
+                    <td>{{this.productId.title}}</td>
+                    <td>{{this.productId.price}}</td>
+                    <td>{{this.productId.stock}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td><button id={{this.productId._id}} class="btnDelete">Eliminar</button></td>
+                </tr>
+                {{/each}}
+                </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div style="flex: 1;">
+        <button type="submit" value="{{this.cartId}}" id="btnBuy">Comprar</button>
+    </div>
+    <div style="flex: 1;">
+        <button type="button" id="volverBtn">Volver</button>
+    </div>
+</div>
+<script src="/js/cart.js"></script>
+  <script>
+    document.getElementById('volverBtn').addEventListener('click', function() {
+        window.history.back();
+    });
+</script>

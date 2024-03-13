@@ -7,7 +7,7 @@ export default class CartsDao {
     }
 
     getById(cid) {
-        return cartsModel.findById(cid)
+        return cartsModel.findById(cid).populate("products.productId")
     }
 
     create(data) {

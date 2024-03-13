@@ -134,7 +134,6 @@ cartsRouter.get("/carts", async (req, res) => {
 
 //!PUT METHODS
 
-//!This function update the cart with a put method with postman in an Array format(it replaces the quantity, it isn't an add method)
 cartsRouter.put("/carts/:cid", async (req, res) => {
   const { cid } = req.params;
   const products = req.body;

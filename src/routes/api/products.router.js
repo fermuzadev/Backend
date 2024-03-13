@@ -172,7 +172,7 @@ prodRouter.put("/products/:pid", passport.authenticate('jwt', { session: false }
   );
 
   try {
-    await res.status(204).end();
+    res.status(204).end();
   } catch (error) {
     res.status(400).json({
       status: "error",

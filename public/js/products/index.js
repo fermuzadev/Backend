@@ -14,7 +14,6 @@
   const thumbnails = document.getElementById("thumbnails");
   const idInputDelete = document.getElementById("idDelete");
   const productsListSocket = document.getElementById("productsSocket");
-  const URL_BASE = `http://localhost:8080/img/`;
 
   deleteForm?.addEventListener("submit", (ev) => {
     ev.preventDefault();
