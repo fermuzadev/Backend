@@ -19,9 +19,11 @@ const cartSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-cartSchema.pre("find", function () {
-  this.populate("products.productId");
-});
+cartSchema.pre('find', function () {
+  this.populate('products.productId')
+}).pre('findOne', function () {
+  this.populate('products.productId')
+})
 
 cartSchema.pre("save", function () { }); // Validation
 cartSchema.plugin(mongoosePaginate);
