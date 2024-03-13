@@ -30,5 +30,9 @@ export default {
         clientID: process.env.CLIENT_GOOGLE_ID,
         clientSecret: process.env.CLIENT_GOOGLE_SECRET,
         callbackURL: process.env.GOOGLECALLBACK
+    },
+    gmail: {
+        email: process.env.GMAIL_USER,
+        password: process.env.GMAIL_PASSWORD
     }
 };
