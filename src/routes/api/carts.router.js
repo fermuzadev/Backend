@@ -5,6 +5,8 @@ import ProductsController from "../../controllers/products.controller.js";
 import UsersController from "../../controllers/users.controller.js";
 import { authorizationMiddleware } from "../../utils.js";
 import TicketServices from "../../services/ticket.services.js";
+import EmailController from "../../controllers/email.controller.js";
+
 
 const cartsRouter = Router();
 
@@ -80,7 +82,9 @@ cartsRouter.post("/carts/:cid/purchase", passport.authenticate('jwt', { session:
       await ProductsController.update({ _id: product.productId }, { stock: productFind.stock - product.quantity })
       ticket.amount += productFind.price * product.quantity
     }
-
+    if (ticket.amount === 0) {
+      return res.status(400).json({ status: "error", message: "The cart is empty" })
+    }
     ticket = {
       ...ticket,
       code: Date.now(),
@@ -88,10 +92,11 @@ cartsRouter.post("/carts/:cid/purchase", passport.authenticate('jwt', { session:
       purchaser: req.user.email
     }
 
-    await TicketServices.create(ticket)
+    const ticketCreated = await TicketServices.create(ticket)
+    const ticketEmail = await TicketServices.findAll({ code: ticketCreated.code })
+    await EmailController.sendTicketEmail(ticketEmail[0])
     const cartUpdate = await CartsController.getById(cid);
     const { products: productsUpdate } = cartUpdate
-    console.log(productPurchaseId)
     const updatedProducts = products.filter(product => !productPurchaseId.includes(product.productId.toString()));
     await CartsController.update({ _id: cid }, { products: updatedProducts })
 

@@ -1,11 +1,11 @@
 import ticketModel from "../dao/models/ticket.model.js"
 export default class TicketServices {
     static findAll(filter = {}) {
-        return ticketModel.get(filter)
+        return ticketModel.find(filter)
     }
 
-    static findById(cid) {
-        return ticketModel.getById({ _id: cid })
+    static findById(tid) {
+        return ticketModel.findById({ _id: tid })
     }
 
     static create(payload) {
@@ -24,7 +24,7 @@ export default class TicketServices {
         return ticketModel.update(filter, data)
     }
 
-    static deleteById(cid) {
-        return ticketModel.deleteById({ _id: cid })
+    static deleteById(tid) {
+        return ticketModel.deleteById({ _id: tid })
     }
 }
