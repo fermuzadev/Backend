@@ -14,6 +14,7 @@ import cartsRouter from "./routes/api/carts.router.js";
 import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/api/user.router.js";
+import viewCart from './routes/views/carts.router.js'
 import { init as initPassportConfig, initJWT } from "./config/passport.config.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
@@ -64,6 +65,7 @@ app.use(
   authRouter,
   sessionRouter,
   realTimeRouter,
+  viewCart
 );
 app.use(
   "/api",
