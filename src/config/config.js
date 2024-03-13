@@ -8,7 +8,7 @@ if (process.env.ENV === 'production') {
 } else {
     pathEnvFile = './.env.development'
 }
-dotenv.config({ path: pathEnvFile })
+dotenv.config()
 
 export default {
     port: process.env.PORT,
