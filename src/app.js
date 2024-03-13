@@ -27,18 +27,18 @@ app.use(cookieParser(config.sessionSecret));
 app.use(morgan("dev"));
 
 
-// app.use(
-//   expressSession({
-//     secret: config.sessionSecret,
-//     resave: false,
-//     saveUninitialized: false,
-//     store: MongoStore.create({
-//       mongoUrl: config.db.mongodbUri,
-//       mongoOptions: {},
-//       ttl: 120,
-//     }),
-//   })
-// );
+app.use(
+  expressSession({
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: config.db.mongodbUri,
+      mongoOptions: {},
+      ttl: 120,
+    }),
+  })
+);
 //!Express
 app.use(express.json()); //Middleware incorporado
 app.use(express.urlencoded({ extended: true }));
