@@ -11,11 +11,9 @@ import sessionRouter from "./routes/session.router.js";
 import authRouter from "./routes/api/auth.router.js";
 import prodRouter from "./routes/api/products.router.js";
 import cartsRouter from "./routes/api/carts.router.js";
-// import indexRouter from "./routes/views/index.router.js";
 import realTimeRouter from "./routes/realtimeproducts.router.js";
 import messagesRouter from "./routes/messages.router.js";
 import userRouter from "./routes/api/user.router.js";
-// import { UserRouter } from './routes/api/user.router.js'
 import { init as initPassportConfig, initJWT } from "./config/passport.config.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
@@ -75,7 +73,7 @@ app.use(
   prodRouter,
   messagesRouter,
   userRouter,
-  authRouter,
+  authRouter
   // User2Router.getRouter()
 );
 
@@ -94,7 +92,7 @@ const middleware = (req, res, next) => {
 app.use(middleware);
 export const errorHandler = (error, req, res, next) => {
   console.error(`Ha ocurrido un error : ${error.message}`);
-  console.error(`El stack es ${error.stack}`); //Muestra todo para saber donde esta el error
+  console.error(`El stack es ${error.stack}`);
   if (error instanceof Error) {
     return res.status(401).send(error.message);
   }
