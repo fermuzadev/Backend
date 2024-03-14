@@ -18,11 +18,12 @@ import viewCart from './routes/views/carts.router.js'
 import { init as initPassportConfig, initJWT } from "./config/passport.config.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import cors from 'cors'
 
 
 // const User2Router = new UserRouter();
 const app = express();
-
+app.use(cors())
 app.use(cookieParser(config.sessionSecret));
 app.use(morgan("dev"));
 
