@@ -7,7 +7,6 @@
 import { Router } from "express";
 import { __dirname } from "../utils.js";
 import ProductModel from "../dao/models/product.model.js";
-import UserModel from "../dao/models/user.model.js";
 
 const router = Router();
 

@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     status: { type: String, default: "active", enum: ["active", "inactive"] },
     adress: { type: Address, default: {} },
-    role: { type: String, default: "user", enum: ["user", "seller", "admin"] },
+    role: { type: String, default: "user", enum: ["user", "premium", "admin"] },
     carts: { type: [Carts], default: [] },
   },
   { timestamps: true }

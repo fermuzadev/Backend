@@ -33,7 +33,9 @@
           fetch(`http://localhost:8080/api/carts/${idToDelete}`,
             {
               method: "DELETE"
-            }).then(res => res.json()).then(res => console.log(res))
+            }).then(res => res.json()).then(res => {
+              window.location.reload()
+            })
             .catch(err => console.log(err));
         } catch (error) {
           console.log(error)

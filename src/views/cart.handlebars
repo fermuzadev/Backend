@@ -1,4 +1,16 @@
-
+<article>
+  <header>
+    <p><b>Welcome { {{user.role}} } to the Online Store App</b></p>
+  </header>
+  <p><b>User name: </b> <i>{{user.first_name}}</i></p>
+  <p><b>Last name: </b> <i>{{user.last_name}}</i></p>
+  <p><b>Mail : </b><i>{{user.email}}</i></p>
+  <p><b>Cart : </b><i>{{cartId}}</i></p>
+  <footer>
+    <a href="/api/products" role="button">Store</a>
+    <a href="/api/logout" role="button">Logout</a> 
+  </footer>
+</article>
   <div class="container">
     <h1 class="text-center my-4">Cart id {{this.cid}}</h1>
     <div class="row">
@@ -35,7 +47,7 @@
     </div>
   </div>
     <div style="flex: 1;">
-        <button type="submit" id="comprarBtn" data-cartId="{{this.cid}}" >Comprar</button>
+        <button type="button" data-cartId="{{this.cid}}" >Comprar</button>
     </div>
        <div style="flex: 1;">
         <button type="submit" id="vaciarBtn" data-cartId="{{this.cid}}">Vaciar Carrito</button>

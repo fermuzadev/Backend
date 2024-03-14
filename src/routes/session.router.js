@@ -1,7 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import UsersController from "../controllers/users.controller.js";
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isValidPassword, tokenGenerator } from "../utils.js";
 
 const router = Router();
 
@@ -15,9 +15,25 @@ router.post(
 router.post(
   "/login",
   passport.authenticate("login", { failureRedirect: "/login" }),
-  (req, res) => {
+  async (req, res) => {
     req.session.user = req.user;
-    res.redirect("/realtimeproducts");
+    const {
+      body: { email, password },
+    } = req;
+    let user = await UsersController.get({ email });
+    user = user[0]
+    if (!user) {
+      return res.status(401).json({ message: "Email or password not valid" });
+    }
+    const isValidPass = isValidPassword(password, user)
+    if (!isValidPass) {
+      return res.status(401).json({ message: "Email or password not valid" });
+    }
+    const token = tokenGenerator(user);
+    res
+      .cookie("access_token", token, { maxAge: 30000, httpOnly: true })
+      .status(200)
+      .redirect("/realtimeproducts");
   }
 );
 
@@ -37,7 +53,7 @@ router.post("/login", async (req, res) => {
         rol: "admin",
       };
       const { first_name, last_name, rol } = user;
-      req.session.user = { first_name, last_name, email, rol };
+      req.session.user = { first_name, last_name, email, rol, carts };
       res.redirect("/realtimeproducts");
       return;
     } else {

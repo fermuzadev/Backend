@@ -1,4 +1,11 @@
-
+  <header>
+    <p><b>Welcome { {{user.role}} } to the Online Store App</b></p>
+  </header>
+  <p><b>Cart : </b><i data-cartid="{{cartId}}">{{cartId}}</i></p>
+  <footer>
+    <a href="/cart/{{cartId}}" role="button">Cart</a>
+    <a href="/api/logout" role="button">Logout</a> 
+  </footer>
   <div class="container">
     <h1 class="text-center my-4">Products</h1>
     <div class="row">
@@ -30,7 +37,7 @@
                   <td>{{this.stock}}</td>
                   <td>{{this.category}}</td>
                   <td><img src={{this.thumbnails}} class="card-img-top img-fluid img-thumbnail" alt="..."></td>
-                  <td><a href="/api/products/{{this._id}}" role="button" class="btn btn-secondary">Add to cart</a></td>
+                  <td><a href="/cart/{{cartId}}" role="button" class="btn btn-secondary" id="addToCart" data-productId="{{this._id}}">Add to cart</a></td>
                 </tr>
               {{/each}}
             </tbody>
@@ -46,3 +53,28 @@
       </div>
     </div>
   </div>
+  <script>
+    const addProductToCart = document.getElementById("addToCart");
+    const cartId = document.querySelector("[data-cartid]").dataset.cartid
+    addProductToCart.addEventListener("click", (event) => {
+      event.preventDefault();
+      const productId = addProductToCart.dataset.productid
+      try {
+        fetch(`/api/carts/${cartId}/product/${productId}`, {
+          method: "POST"
+        }).then((response) => {
+          if (response.ok) {
+            alert("Product added to cart");
+            response.json()
+          }
+        }).then((data) => {
+          window.location.href = `/cart/${cartId}`
+          console.log(data)
+        }).catch((error) => {
+          console.log(error);
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  </script>

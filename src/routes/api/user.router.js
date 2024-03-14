@@ -35,7 +35,7 @@ const privateRouter = (req, res, next) => {
 
 const publicRouter = (req, res, next) => {
   if (req.session.user) {
-    return res.redirect("/api/profile");
+    return res.redirect("/realtimeproducts");
   }
   next();
 };

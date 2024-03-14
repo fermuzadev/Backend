@@ -13,7 +13,7 @@ const URL_BASE = config.url;
 const URL_PRODUCTS = `${URL_BASE}${config.port}/api/products`;
 
 
-const buildResponse = (data) => {
+const buildResponse = (data, user) => {
   return {
     status: "success",
     payload: data.docs.map((product) => product.toJSON()),
@@ -21,6 +21,8 @@ const buildResponse = (data) => {
     prevPage: data.prevPage,
     nextPage: data.nextPage,
     page: data.page,
+    user,
+    cartId: user.carts.map((cart) => cart.cartId),
     hasPrevPage: data.hasPrevPage,
     hasNextPage: data.hasNextPage,
     prevLink: data.hasPrevPage
@@ -50,10 +52,9 @@ prodRouter.get("/products", async (req, res) => {
       criteria.query = query;
     }
     const paginate = await ProductModel.paginate(criteria, opts);
-    // res.status(200).render("home", buildResponse(paginate));
     res
       .status(200)
-      .render("products", buildResponse({ ...paginate, category, stock }));
+      .render("products", buildResponse({ ...paginate, category, stock }, req.session.user));
   } catch (error) {
     res.status(404).json({
       status: "error",
