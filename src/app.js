@@ -65,18 +65,17 @@ app.use(
   authRouter,
   sessionRouter,
   realTimeRouter,
+  viewCart
 
 );
 app.use(
   "/api",
   sessionRouter,
-  // indexRouter,
   cartsRouter,
   prodRouter,
   messagesRouter,
   userRouter,
   authRouter
-  // User2Router.getRouter()
 );
 
 app.get('*', (req, res) => {

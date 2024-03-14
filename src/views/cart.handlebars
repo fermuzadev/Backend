@@ -19,10 +19,12 @@
                 <tr>
                     <td>{{this.productId._id}}</td>
                     <td>{{this.productId.title}}</td>
-                    <td>{{this.productId.price}}</td>
-                    <td>{{this.productId.stock}}</td>
-                    <td>{{this.quantity}}</td>
-                    <td><button id={{this.productId._id}} class="btnDelete">Eliminar</button></td>
+                    <td id="price">{{this.productId.price}}</td>
+                    <td id="stock">{{this.productId.stock}}</td>
+                    <td id="quantity">{{this.quantity}}</td>
+                    <td><button type="submit" id={{this.productId._id}} class="btnDelete">Eliminar</button></td>
+                </tr>
+                <tr id="cartSocket">
                 </tr>
                 {{/each}}
                 </tr>
@@ -33,12 +35,17 @@
     </div>
   </div>
     <div style="flex: 1;">
-        <button type="submit" value="{{this.cartId}}" id="btnBuy">Comprar</button>
+        <button type="submit" id="comprarBtn" data-cartId="{{this.cid}}" >Comprar</button>
+    </div>
+       <div style="flex: 1;">
+        <button type="submit" id="vaciarBtn" data-cartId="{{this.cid}}">Vaciar Carrito</button>
     </div>
     <div style="flex: 1;">
         <button type="button" id="volverBtn">Volver</button>
     </div>
+
 </div>
+<script src="/socket.io/socket.io.js"></script>
 <script src="/js/cart.js"></script>
   <script>
     document.getElementById('volverBtn').addEventListener('click', function() {
