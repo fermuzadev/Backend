@@ -37,7 +37,7 @@
                   <td>{{this.stock}}</td>
                   <td>{{this.category}}</td>
                   <td><img src={{this.thumbnails}} class="card-img-top img-fluid img-thumbnail" alt="..."></td>
-                  <td><a href="/cart/{{cartId}}" role="button" class="btn btn-secondary" id="addToCart" data-productId="{{this._id}}">Add to cart</a></td>
+                  <td><a href="/cart/{{cartId}}" role="button" class="btn btn-secondary addToCart" data-productid="{{this._id}}">Add to cart</a></td>
                 </tr>
               {{/each}}
             </tbody>
@@ -53,28 +53,4 @@
       </div>
     </div>
   </div>
-  <script>
-    const addProductToCart = document.getElementById("addToCart");
-    const cartId = document.querySelector("[data-cartid]").dataset.cartid
-    addProductToCart.addEventListener("click", (event) => {
-      event.preventDefault();
-      const productId = addProductToCart.dataset.productid
-      try {
-        fetch(`/api/carts/${cartId}/product/${productId}`, {
-          method: "POST"
-        }).then((response) => {
-          if (response.ok) {
-            alert("Product added to cart");
-            response.json()
-          }
-        }).then((data) => {
-          window.location.href = `/cart/${cartId}`
-          console.log(data)
-        }).catch((error) => {
-          console.log(error);
-        })
-      } catch (error) {
-        console.log(error);
-      }
-    });
-  </script>
+  <script src="/js/products/product.js"></script>

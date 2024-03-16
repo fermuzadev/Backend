@@ -32,7 +32,7 @@ export default class CartsController {
         const cart = await CartsController.getById(cid)
 
         const productFind = cart.products.find(
-            (cartProduct) => cartProduct.productId.toString() === pid
+            (cartProduct) => cartProduct.productId._id.toString() === pid
         );
         if (productFind) {
             productFind.quantity++

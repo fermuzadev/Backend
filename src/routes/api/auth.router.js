@@ -70,7 +70,7 @@ router.post('/auth/login', async (req, res) => {
     return res.status(401).json({ message: 'Email or password invalid' });
   }
   const token = tokenGenerator(user);
-  res.cookie('access_token', token, { maxAge: 30000, httpOnly: true, signed: true }).status(200).json({ message: 'Login successfully' })
+  res.cookie('access_token', token, { maxAge: 300000, httpOnly: true, signed: true }).status(200).json({ message: 'Login successfully' })
 })
 
 

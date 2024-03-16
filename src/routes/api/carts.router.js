@@ -209,7 +209,7 @@ cartsRouter.delete("/carts/:cid/product/:pid", async (req, res) => {
   }
   try {
     const indexProduct = findCart.products.findIndex(
-      (cartProduct) => cartProduct.productId.toString() === pid
+      (cartProduct) => cartProduct.productId._id.toString() === pid
     );
     //!If its founded
     if (indexProduct !== -1) {

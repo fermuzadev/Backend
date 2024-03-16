@@ -3,7 +3,7 @@
   let carts = [];
   const buyButton = document.getElementById("comprarBtn");
   const emptyButton = document.getElementById("vaciarBtn");
-  const deleteButton = document.getElementsByClassName("btnDelete");
+  const deleteButton = document.getElementById("btnDelete");
   const price = document.getElementById("price");
   const quantity = document.getElementById("quantity");
   const stock = document.getElementById("stock");
@@ -11,7 +11,6 @@
 
   emptyButton.addEventListener("click", (ev) => {
     ev.preventDefault();
-    console.log('aprete el boton')
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -24,7 +23,7 @@
       if (result.isConfirmed) {
         Swal.fire(
           "Deleted!",
-          `Your cart ${emptyButton.dataset.cartId} has been deleted.`,
+          `Your cart ${emptyButton.dataset.cartId} has been empty.`,
           "success"
         );
         let idToDelete;
@@ -33,8 +32,12 @@
           fetch(`http://localhost:8080/api/carts/${idToDelete}`,
             {
               method: "DELETE"
-            }).then(res => res.json()).then(res => {
-              window.location.reload()
+            }).then(res => {
+              if (res.status === 200) {
+                window.location.reload()
+              }
+            }).then(data => {
+              console.log(data)
             })
             .catch(err => console.log(err));
         } catch (error) {
@@ -46,6 +49,27 @@
         return;
       }
     });
+  });
+
+  deleteButton?.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    const productDelete = deleteButton.dataset.deleteid
+    const cartId = emptyButton.dataset.cartid
+    try {
+      fetch(`http://localhost:8080/api/carts/${cartId}/product/${productDelete}`,
+        {
+          method: "DELETE"
+        }).then(res => {
+          if (res.status === 200) {
+            window.location.reload()
+          }
+        }).then(data => {
+          console.log(data)
+        })
+        .catch(err => console.log(err));
+    } catch (error) {
+      console.log(error)
+    }
   });
 
   // form.addEventListener("click", (ev) => {

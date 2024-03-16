@@ -31,7 +31,7 @@ router.post(
     }
     const token = tokenGenerator(user);
     res
-      .cookie("access_token", token, { maxAge: 30000, httpOnly: true })
+      .cookie("access_token", token, { maxAge: 300000, httpOnly: true })
       .status(200)
       .redirect("/realtimeproducts");
   }
