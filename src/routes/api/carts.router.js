@@ -74,11 +74,11 @@ cartsRouter.post("/carts/:cid/purchase", passport.authenticate('jwt', { session:
     }
 
     for (const product of products) {
-      const productFind = await ProductsController.getById(product.productId)
+      const productFind = await ProductsController.getById(product.productId._id)
       if (product.quantity <= 0 || productFind.stock < product.quantity) {
         continue;
       }
-      productPurchaseId.push(product.productId.toString())
+      productPurchaseId.push(product.productId._id)
       await ProductsController.update({ _id: product.productId }, { stock: productFind.stock - product.quantity })
       ticket.amount += productFind.price * product.quantity
     }
@@ -97,7 +97,7 @@ cartsRouter.post("/carts/:cid/purchase", passport.authenticate('jwt', { session:
     await EmailController.sendTicketEmail(ticketEmail[0])
     const cartUpdate = await CartsController.getById(cid);
     const { products: productsUpdate } = cartUpdate
-    const updatedProducts = products.filter(product => !productPurchaseId.includes(product.productId.toString()));
+    const updatedProducts = products.filter(product => !productPurchaseId.includes(product.productId._id));
     await CartsController.update({ _id: cid }, { products: updatedProducts })
 
     res.status(201).json(ticket)

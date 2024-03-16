@@ -72,22 +72,20 @@
     }
   });
 
-  buyButton?.addEventListener("click", (ev) => {
+  buyButton?.addEventListener("click", async (ev) => {
     ev.preventDefault();
-    const cartId = buyButton.dataset.cartid
+    const cartId = buyButton.dataset.cartid;
     try {
-      fetch(`http://localhost:8080/api/carts/${cartId}/purchase`,
-        {
-          method: "POST"
-        }).then(res => {
-          res.json()
-        }).then(data => {
-          alert(data)
-        })
-        .catch(err => console.log(err));
+      const response = await fetch(`http://localhost:8080/api/carts/${cartId}/purchase`, {
+        method: "POST"
+      });
+      const data = await response.json();
+      alert(JSON.stringify(data));
+      window.location.reload();
     } catch (error) {
-      alert(error)
+      alert(error);
     }
   });
+
 
 })();
