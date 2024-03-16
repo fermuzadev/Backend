@@ -6,6 +6,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
+import CartsController from "../controllers/carts.controller.js";
 
 
 const opts = {
@@ -34,10 +35,15 @@ export const init = () => {
         if (user) {
           return done(new Error("User already register"));
         }
+        const userCart = await CartsController.create()
         const newUser = await UserModel.create({
           ...req.body,
           password: createHash(password),
+          carts: {
+            cartId: userCart._id
+          }
         });
+        console.log('newUser passport', newUser)
         done(null, newUser);
       } catch (error) {
         return done(
@@ -120,16 +126,12 @@ export const init = () => {
       googleOpts,
       async (accessToken, refreshToken, profile, done) => {
         try {
-          console.log(profile.id)
           let email;
-          console.log(profile.emails);
           if (profile._json.email) {
             email = await profile._json.email;
-            console.log('profile._json.email', profile._json.email);
           }
           if (profile.email) {
             email = profile.email
-            console.log('profile.email', profile.email);
           }
           else {
             email = `${profile._json.given_name}@gmail.com`;

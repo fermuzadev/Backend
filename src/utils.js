@@ -138,7 +138,6 @@ export const authorizationMiddleware = (rol) => (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
   const { role: userRol } = req.user;
-  console.log(userRol)
   if (userRol !== rol) {
     return res.status(403).json({ message: "Forbidden" });
   }
@@ -147,7 +146,6 @@ export const authorizationMiddleware = (rol) => (req, res, next) => {
 
 
 export const authPolicies = (role) => (req, res, next) => {
-  console.log('role', role)
   if (role.includes('admin')) {
     return next();
   }

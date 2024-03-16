@@ -4,9 +4,7 @@
         button.addEventListener("click", (event) => {
             event.preventDefault();
             let cartId = document.querySelector("[data-cartid]").dataset.cartid;
-            console.log('cartId', cartId);
             let productId = button.dataset.productid;
-            console.log(productId);
             try {
                 fetch(`/api/carts/${cartId}/product/${productId}`, {
                     method: "POST"

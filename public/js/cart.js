@@ -72,53 +72,22 @@
     }
   });
 
-  // form.addEventListener("click", (ev) => {
-  //   ev.preventDefault();
-  //   try {
-  //     products.push({
-  //       title: title.value,
-  //       description: description.value,
-  //       code: code.value,
-  //       price: price.value,
-  //       stock: stock.value,
-  //       category: category.value,
-  //       thumbnails: thumbnails.file,
-  //     });
-  //     socket.emit("productSocket", products);
-  //     showProductSocket(products);
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // });
+  buyButton?.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    const cartId = buyButton.dataset.cartid
+    try {
+      fetch(`http://localhost:8080/api/carts/${cartId}/purchase`,
+        {
+          method: "POST"
+        }).then(res => {
+          res.json()
+        }).then(data => {
+          alert(data)
+        })
+        .catch(err => console.log(err));
+    } catch (error) {
+      alert(error)
+    }
+  });
 
-  // function showProductSocket(products) {
-  //   productsListSocket.innerHTML = "";
-  //   products.forEach((product) => {
-  //     const prod = document.createElement("div");
-  //     prod.className = "card";
-  //     prod.innerHTML = `  
-  //       <img src=${product.thumbnails} class="card-img-top" alt="...">
-  //       <div class="card-body">
-  //         <h5 class="card-title">Product Title: ${product.title}</h5>
-  //         <p class="card-text">ID: ${product._id}</p>
-  //         <p class="card-text">CODE: ${product.code}.</p>
-  //         <p class="card-text">Description: ${product.description}.</p>
-  //         <p class="card-text">Price: ${product.price}.</p>
-  //         <p class="card-text">Category${product.category}.</p>
-  //         <p class="card-text"><small class="text-muted">Stock: ${product.stock}</small></p>
-  //       </div>`;
-  //     productsListSocket.appendChild(prod);
-  //   });
-  // }
-  //Show realTime Products
-
-  // socket.on("products", (...products) => {
-  //   showProductSocket(products);
-  // });
-
-  //Reception Events from Backend
-
-  // socket.on("message_everyone", (message) => {
-  //   console.log("message_everyone", message);
-  // });
 })();

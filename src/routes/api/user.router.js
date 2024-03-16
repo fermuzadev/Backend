@@ -12,6 +12,7 @@ import {
   authenticationMiddleware
 } from "../../utils.js";
 import userModel from "../../dao/models/user.model.js";
+import CartsController from "../../controllers/carts.controller.js";
 // import RouterBase from '../RouterBase.js'
 
 const router = Router();
@@ -74,7 +75,7 @@ router.get("/login", publicRouter, (req, res) => {
   res.render("login", { title: "User login" });
 });
 
-router.get("/register", publicRouter, (req, res) => {
+router.get("/register", publicRouter, async (req, res) => {
   res.render("register", { title: "User register" });
 });
 
