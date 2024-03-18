@@ -29,7 +29,7 @@
         let idToDelete;
         idToDelete = emptyButton.dataset.cartid
         try {
-          fetch(`http://localhost:8080/api/carts/${idToDelete}`,
+          fetch(`/api/carts/${idToDelete}`,
             {
               method: "DELETE"
             }).then(res => {
@@ -56,7 +56,7 @@
     const productDelete = deleteButton.dataset.deleteid
     const cartId = emptyButton.dataset.cartid
     try {
-      fetch(`http://localhost:8080/api/carts/${cartId}/product/${productDelete}`,
+      fetch(`/api/carts/${cartId}/product/${productDelete}`,
         {
           method: "DELETE"
         }).then(res => {
@@ -76,7 +76,7 @@
     ev.preventDefault();
     const cartId = buyButton.dataset.cartid;
     try {
-      const response = await fetch(`http://localhost:8080/api/carts/${cartId}/purchase`, {
+      const response = await fetch(`/api/carts/${cartId}/purchase`, {
         method: "POST"
       });
       const data = await response.json();
