@@ -10,7 +10,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
 
 const prodRouter = Router();
 const URL_BASE = config.url;
-const URL_PRODUCTS = `${URL_BASE}${config.port}/api/products`;
+const URL_PRODUCTS = `/api/products`;
 
 
 const buildResponse = (data, user) => {
@@ -91,7 +91,7 @@ prodRouter.post(
     try {
       if (req.file) {
         const filename = req.file.filename;
-        const imageURL = `${URL_BASE}${filename}`;
+        const imageURL = `/${filename}`;
         let thumbnails = imageURL
       }
       let {
