@@ -10,6 +10,5 @@ export default class UsersDto {
         // this.password = user.password
         // this.status = user.status
         this.role = user.role
-        this.carts = user.carts.map(cart => cart.cartId)
     }
 }

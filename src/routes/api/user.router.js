@@ -88,8 +88,19 @@ router.get("/recovery-password", publicRouter, (req, res) => {
 });
 
 router.get("/user", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
-  const users = await UsersController.get()
-  res.status(200).json(users);
+  try {
+    const users = await UsersController.get();
+    let response = [];
+    for (const user of users) {
+      const dtoData = await UsersController.getDtoData(user);
+      response.push(dtoData);
+    }
+    res.status(200).json(response);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
 });
 
 router.post("/user", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
@@ -136,5 +147,10 @@ router.delete("/user/:uid", passport.authenticate('jwt', { session: false }), au
     return res.status(500).json({ message: error.message });
   }
 });
+
+router.delete("/user", async (req, res) => {
+
+
+})
 
 export default router;

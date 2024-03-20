@@ -9,7 +9,6 @@ import { uploader, __dirname, authorizationMiddleware } from "../../utils.js";
 import mongoosePaginate from "mongoose-paginate-v2";
 
 const prodRouter = Router();
-const URL_BASE = config.url;
 const URL_PRODUCTS = `/api/products`;
 
 
@@ -91,7 +90,7 @@ prodRouter.post(
     try {
       if (req.file) {
         const filename = req.file.filename;
-        const imageURL = `/${filename}`;
+        const imageURL = `/img/${filename}`;
         let thumbnails = imageURL
       }
       let {
