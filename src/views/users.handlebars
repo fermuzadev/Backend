@@ -1,0 +1,42 @@
+  <header>
+    <p><b>Welcome { {{user.role}} } to the Online Store App</b></p>
+  </header>
+  <footer>
+    <a href="/api/logout" role="button">Logout</a> 
+  </footer>
+  <div class="container">
+    <h1 class="text-center my-4">Users</h1>
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <table id="main" class="table">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>New Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each payload}}
+                <tr>
+                  <td>{{this._id}}</td>
+                  <td>{{this.first_name}}</td>
+                  <td>{{this.last_name}}</td>
+                  <td>{{this.email}}</td>
+                  <td>{{this.role}} </td>
+                  <input type="text" name="role" id="role">
+                  <td><a href="/cart/{{cartId}}" role="button" class="btn btn-secondary btnDelete" data-userid="{{this._id}}">Delete</a></td>
+                  <td><a href="/cart/{{cartId}}" role="button" class="btn btn-secondary roleBtn" data-userid="{{this._id}}">Delete</a></td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/js/users/users.js"></script>

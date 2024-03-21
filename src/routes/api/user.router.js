@@ -26,6 +26,12 @@ const router = Router();
 //   }
 // }
 
+const buildResponse = (payload, user) => {
+  return {
+    payload,
+    user,
+  }
+}
 const privateRouter = (req, res, next) => {
   if (!req.session.user) {
     return res.redirect("/login");
@@ -94,7 +100,7 @@ router.get("/user", passport.authenticate('jwt', { session: false }), authorizat
       const dtoData = await UsersController.getDtoData(user);
       response.push(dtoData);
     }
-    res.status(200).json(response);
+    res.status(200).render('users', buildResponse(response, req.user));
 
   } catch (error) {
     res.status(500).json({ error: error.message });
