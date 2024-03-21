@@ -17,7 +17,10 @@
                 <th>Last name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th></th>
+                <th></th>
                 <th>New Role</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -28,9 +31,10 @@
                   <td>{{this.last_name}}</td>
                   <td>{{this.email}}</td>
                   <td>{{this.role}} </td>
-                  <input type="text" name="role" id="role">
-                  <td><a href="/cart/{{cartId}}" role="button" class="btn btn-secondary btnDelete" data-userid="{{this._id}}">Delete</a></td>
-                  <td><a href="/cart/{{cartId}}" role="button" class="btn btn-secondary roleBtn" data-userid="{{this._id}}">Delete</a></td>
+                  <td><button type="submit" role="button" class="btn btn-secondary btnDelete" data-userid="{{this._id}}">Delete</button></td>
+                  <td><button type="submit" role="button" class="btn btn-secondary user" data-userid="{{this._id}}">User</button></td>
+                  <td><button  type="submit" role="button" class="btn btn-secondary premium" data-userid="{{this._id}}">Premium</></td>
+                  <td><button type="submit"  role="button" class="btn btn-secondary admin" data-userid="{{this._id}}">Admin</></td>
                 </tr>
               {{/each}}
             </tbody>

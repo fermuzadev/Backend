@@ -135,17 +135,18 @@ router.get("/user/:uid", passport.authenticate('jwt', { session: false }), autho
 router.put("/user/:uid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   const { uid } = req.params;
   const { body } = req;
-  await UsersController.updateById(uid, body)
+  await UsersController.update({ _id: uid }, body)
   res.status(204).end();
 });
 
 router.delete("/user/:uid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   const { uid } = req.params;
   try {
-    const deleted = await UsersController.deleteById(uid)
-    if (!deleted) {
+    const found = await UsersController.getById(uid)
+    if (!found) {
       res.status(404).json({ message: "User not found" });
     } else {
+      await UsersController.deleteById(uid)
       return res.status(204).end();
     }
   } catch (error) {
@@ -153,6 +154,8 @@ router.delete("/user/:uid", passport.authenticate('jwt', { session: false }), au
   }
 });
 
+
+//Delete users with two days of inactivity
 router.delete("/user", async (req, res) => {
   try {
     const users = await UsersController.get();

@@ -37,7 +37,6 @@
         } catch (error) {
           console.log(error)
         }
-        // socket.emit("idToDelete", idToDelete);
       } else {
         console.log(`The action was cancelled`);
         return;
