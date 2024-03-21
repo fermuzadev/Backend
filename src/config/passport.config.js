@@ -43,7 +43,6 @@ export const init = () => {
             cartId: userCart._id
           }
         });
-        console.log('newUser passport', newUser)
         done(null, newUser);
       } catch (error) {
         return done(

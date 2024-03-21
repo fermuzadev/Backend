@@ -11,8 +11,7 @@ import {
   authorizationMiddleware,
   authenticationMiddleware
 } from "../../utils.js";
-import userModel from "../../dao/models/user.model.js";
-import CartsController from "../../controllers/carts.controller.js";
+import EmailController from "../../controllers/email.controller.js";
 // import RouterBase from '../RouterBase.js'
 
 const router = Router();
@@ -149,8 +148,18 @@ router.delete("/user/:uid", passport.authenticate('jwt', { session: false }), au
 });
 
 router.delete("/user", async (req, res) => {
-
-
+  try {
+    const users = await UsersController.get();
+    const twoDays = 2 * 24 * 60 * 60 * 1000;
+    const usersFilter = users.filter((user) => Date.now() - user.last_time >= twoDays)
+    for (const user of usersFilter) {
+      await EmailController.sendInactivityEmail(user);
+      await UsersController.deleteById(user._id);
+    }
+    res.status(204).end();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 })
 
 export default router;

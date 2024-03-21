@@ -40,6 +40,18 @@ export default class CartsController {
         }
     }
 
+    static async findProductInCarts(pid) {
+        const carts = await CartsController.get();
+        for (const cart of carts) {
+            const { products } = cart;
+            for (const product of products) {
+                if (product.productId._id.toString() === pid) {
+                    return cart._id;
+                }
+            }
+        }
+        return null;
+    }
     static async addProductsToCart(cid, data) {
         const cart = await CartsController.getById(cid)
         if (!cart) {

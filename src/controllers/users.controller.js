@@ -6,6 +6,19 @@ export default class UsersController {
         return users
     }
 
+    static async getCarts(cartId) {
+
+        const users = await UsersServices.findAll()
+        for (const user of users) {
+            let { carts } = user
+            for (const cart of carts) {
+                if (cart.cartId._id.toString() === cartId.toString()) {
+                    return user
+                }
+            }
+        }
+    }
+
     static async getDtoData(data) {
         const user = await UsersServices.findDtoData(data)
         return user;

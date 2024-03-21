@@ -19,7 +19,7 @@ cartsRouter.post("/carts", async (req, res) => {
   res.status(201).json(newCart);
 });
 
-cartsRouter.post("/carts/:cid/product/:pid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("user"), async (req, res) => {
+cartsRouter.post("/carts/:cid/product/:pid", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const { cid, pid } = req.params;
     let cart = await CartsController.get()

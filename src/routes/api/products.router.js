@@ -7,10 +7,13 @@ import ProductModel from "../../dao/models/product.model.js";
 import ProductsController from "../../controllers/products.controller.js";
 import { uploader, __dirname, authorizationMiddleware } from "../../utils.js";
 import mongoosePaginate from "mongoose-paginate-v2";
+import CartsController from "../../controllers/carts.controller.js";
+import UsersController from "../../controllers/users.controller.js";
+import EmailController from "../../controllers/email.controller.js";
+
 
 const prodRouter = Router();
 const URL_PRODUCTS = `/api/products`;
-
 
 const buildResponse = (data, user) => {
   return {
@@ -183,16 +186,25 @@ prodRouter.put("/products/:pid", passport.authenticate('jwt', { session: false }
 
 prodRouter.delete("/products/:pid", passport.authenticate('jwt', { session: false }), authorizationMiddleware("admin"), async (req, res) => {
   let { pid } = req.params;
-  await ProductsController.deleteById(pid);
   const products = await ProductsController.get()
   try {
-    if (products.find((prod) => prod._id === pid)) {
-      res.status(200).json({ message: `The product id ${pid} was deleted` });
+    if (products.find((prod) => prod._id.toString() === pid)) {
+      const cartsWithProduct = await CartsController.findProductInCarts(pid)
+      if (cartsWithProduct) {
+        const user = await UsersController.getCarts(cartsWithProduct)
+        if (user.role === 'premium') {
+          await EmailController.sendProductDeletedEmail(user, pid)
+          await ProductsController.deleteById(pid);
+          return res.status(200).json({ message: `The product id ${pid} was deleted` });
+        }
+      }
+      await ProductsController.deleteById(pid);
+      return res.status(200).json({ message: `The product id ${pid} was deleted` });
     } else {
-      res.status(404).json({ message: `The product ${pid} not found` });
+      return res.status(404).json({ message: `The product ${pid} not found` });
     }
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       status: "error",
       message: error.message,
     });

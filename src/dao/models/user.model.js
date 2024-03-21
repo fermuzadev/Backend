@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema(
     adress: { type: Address, default: {} },
     role: { type: String, default: "user", enum: ["user", "premium", "admin"] },
     carts: { type: [Carts], default: [] },
+    last_time: { type: Date, default: Date.now },
   },
   { timestamps: true }
 

@@ -1,13 +1,7 @@
 (function () {
-  const socket = io();
-  let carts = [];
   const buyButton = document.getElementById("comprarBtn");
   const emptyButton = document.getElementById("vaciarBtn");
   const deleteButton = document.getElementById("btnDelete");
-  const price = document.getElementById("price");
-  const quantity = document.getElementById("quantity");
-  const stock = document.getElementById("stock");
-  const productsListSocket = document.getElementById("productsSocket");
 
   emptyButton.addEventListener("click", (ev) => {
     ev.preventDefault();
@@ -86,6 +80,4 @@
       alert(error);
     }
   });
-
-
 })();

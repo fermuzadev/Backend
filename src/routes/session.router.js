@@ -29,6 +29,7 @@ router.post(
     if (!isValidPass) {
       return res.status(401).json({ message: "Email or password not valid" });
     }
+    await UsersController.update({ email }, { last_time: Date.now() })
     const token = tokenGenerator(user);
     res
       .cookie("access_token", token, { maxAge: 300000, httpOnly: true })
